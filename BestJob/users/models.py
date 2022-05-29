@@ -15,7 +15,7 @@ class User(AbstractUser):
     role = models.ForeignKey(Role, null=True, db_constraint=False, on_delete=models.CASCADE)
 
 
-class EmployeeProfile(models.Model):
+class WorkerProfile(models.Model):
     """профиль для соискателя"""
     user = models.ForeignKey(User, null=False, db_index=True, on_delete=models.CASCADE)
     data = models.TextField()
