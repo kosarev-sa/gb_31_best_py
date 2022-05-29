@@ -6,12 +6,12 @@ from django.urls import reverse_lazy
 from django.views.generic import UpdateView, FormView
 
 from users.forms import EmployeeProfileForm, EmployerProfileForm, ModeratorProfileForm, UserLoginForm, UserRegisterForm
-from users.models import EmployeeProfile, EmployerProfile, ModeratorProfile, User
+from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User
 
 
 class EmployeeProfileView(UpdateView):
     """view для профиля соискателя"""
-    model = EmployeeProfile
+    model = WorkerProfile
     template_name = 'employee_profile.html'
     form_class = EmployeeProfileForm
 

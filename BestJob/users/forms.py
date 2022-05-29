@@ -2,14 +2,14 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 from news.models import News
-from users.models import EmployeeProfile, EmployerProfile, ModeratorProfile, User
+from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User
 
 
 class EmployeeProfileForm(forms.ModelForm):
     """формы для профиля соискателя"""
 
     class Meta:
-        model = EmployeeProfile
+        model = WorkerProfile
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):

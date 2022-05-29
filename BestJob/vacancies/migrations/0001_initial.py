@@ -10,14 +10,16 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('approvals', '0001_initial'),
+        ('users', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CV',
+            name='Vacancy',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('data', models.TextField()),
+                ('employee_profile_id', models.ForeignKey(db_constraint=False, on_delete=django.db.models.deletion.CASCADE, to='users.employerprofile')),
                 ('status', models.ForeignKey(db_constraint=False, on_delete=django.db.models.deletion.CASCADE, to='approvals.approvalstatus')),
             ],
         ),
