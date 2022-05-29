@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    <ul>
+
+        <li>
+            <a href="{% url 'vacancies:create_vacancy' %}">создать вакансию</a>
+        </li>
+
+        <li>
+            <a href="{% url 'users:employer_profile' '1' %}">вернуться в профиль</a>
+        </li>
+    </ul>
+
+{% endblock %}
+
+{% block content %}
+    <table width="100%">
+        <tr>
+            <td width="60%">
+                резюме
+            </td>
+            <td>
+                статус
+            </td>
+            <td>
+                <a href="{% url 'vacancies:update_vacancy' '1' %}">редактировать</a>
+            </td>
+            <td>
+                <a href="{% url 'vacancies:delete_vacancy' '1' %}">удалить</a>
+            </td>
+            <td>
+                <a href="{% url 'vacancies:distribute_vacancy' '1' %}">разместить</a>
+            </td>
+
+        </tr>
+    </table>
+{% endblock %}
+

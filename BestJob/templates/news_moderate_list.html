@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    <ul>
+
+        <li>
+            <a href="{% url 'news:create_news' %}">создать новость [модератор]</a>
+        </li>
+    </ul>
+
+{% endblock %}
+
+{% block content %}
+    <table width="100%">
+        <tr>
+            <td width="60%">
+                новость
+            </td>
+            <td>
+                <a href="{% url 'news:update_news' '1'%}">редактировать</a>
+            </td>
+            <td>
+                <a href="{% url 'news:delete_news' '1' %}">удалить</a>
+            </td>
+        </tr>
+    </table>
+{% endblock %}
+

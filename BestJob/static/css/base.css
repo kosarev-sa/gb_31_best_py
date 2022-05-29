@@ -1,0 +1,34 @@
+.parent {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    grid-template-rows: 2fr 8fr 1fr;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    /*width: 100vh;*/
+    height: 100vh;
+}
+
+.header {
+    grid-area: 1 / 1 / 2 / 3;
+    background-color: grey;
+    text-align: center;
+
+}
+
+.menu {
+    grid-area: 2 / 1 / 3 / 2;
+    background-color: darkseagreen;
+}
+
+.content {
+    grid-area: 2 / 2 / 3 / 3;
+    background-color: lightgray;
+
+}
+
+.footer {
+    grid-area: 3 / 1 / 4 / 3;
+    background-color: grey;
+    text-align: center;
+
+}

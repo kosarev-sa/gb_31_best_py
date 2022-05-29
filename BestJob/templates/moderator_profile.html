@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    <ul>
+        <li>
+            <a href="{% url 'news:moderate_news' %}">новости</a>
+        </li>
+        <li>
+            <a href="{% url 'news:moderate_news' %}">резюме на модерацию</a>
+        </li>
+        <li>
+            <a href="{% url 'news:moderate_news' %}">вакансии на модерацию</a>
+        </li>
+    </ul>
+
+{% endblock %}
+
+{% block content %}
+
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.data }}
+        <br>
+        <input type="submit" value="сохранить">
+    </form>
+
+{% endblock %}
+

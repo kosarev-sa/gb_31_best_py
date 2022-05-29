@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    <ul>
+        <li>
+            <a href="{% url 'index' %}">вернуться на главную</a>
+        </li>
+    </ul>
+
+{% endblock %}
+
+{% block content %}
+
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.username }}
+        <br>
+        {{ form.password }}
+        <br>
+        <input type="submit" value="войти">
+    </form>
+
+{% endblock %}
+
