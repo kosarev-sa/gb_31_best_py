@@ -9,7 +9,7 @@ from users.forms import EmployeeProfileForm, EmployerProfileForm, ModeratorProfi
 from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User
 
 
-class EmployeeProfileView(UpdateView):
+class WorkerProfileView(UpdateView):
     """view для профиля соискателя"""
     model = WorkerProfile
     template_name = 'employee_profile.html'
@@ -18,7 +18,7 @@ class EmployeeProfileView(UpdateView):
     # success_url = reverse_lazy()
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(EmployeeProfileView, self).get_context_data(**kwargs)
+        context = super(WorkerProfileView, self).get_context_data(**kwargs)
         return context
 
 
