@@ -14,6 +14,8 @@ def load_from_json(file_name):
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
+
+        # Запуск после создания пользователя.
         news = load_from_json(JSON_PATH + 'news.json')
         News.objects.all().delete()
         today = datetime.datetime.now(tz=datetime.timezone.utc)
