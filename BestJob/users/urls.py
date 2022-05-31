@@ -22,7 +22,7 @@ from users.views import WorkerProfileView, EmployerProfileView, ModeratorProfile
 app_name = 'users'
 
 urlpatterns = [
-    path('employee_profile/<int:pk>/', WorkerProfileView.as_view(), name='employee_profile'),
+    path('worker_profile/<int:pk>/', WorkerProfileView.as_view(), name='worker_profile'),
     path('employer_profile/<int:pk>/', EmployerProfileView.as_view(), name='employer_profile'),
     path('moderator_profile/<int:pk>/', ModeratorProfileView.as_view(), name='moderator_profile'),
     path('login/', UserLoginView.as_view(), name='login'),

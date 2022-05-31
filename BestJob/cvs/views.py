@@ -9,7 +9,7 @@ from cvs.models import CV
 
 
 class CVList(TemplateView):
-    """view главной страницы с новостями"""
+    """view список резюме"""
     template_name = 'cv_list.html'
     list_of_news = CV.objects.all()
 
@@ -20,7 +20,7 @@ class CVList(TemplateView):
 
 
 class CVCreate(CreateView):
-    """view для создания новостей"""
+    """view создание резюме"""
     model = CV
     template_name = 'cv_create.html'
     form_class = CVCreateForm
@@ -32,7 +32,7 @@ class CVCreate(CreateView):
 
 
 class CVUpdate(UpdateView):
-    """view для обновления новостей"""
+    """view изменение резюме"""
     model = CV
     template_name = 'cv_update.html'
     form_class = CVUpdateForm
@@ -44,7 +44,7 @@ class CVUpdate(UpdateView):
 
 
 class CVDelete(DeleteView):
-    """view для обновления новостей"""
+    """view удаление резюме"""
     model = CV
     template_name = 'cv_delete.html'
     form_class = CVDeleteForm
@@ -56,7 +56,7 @@ class CVDelete(DeleteView):
 
 
 class CVDistribute(UpdateView):
-    """view для обновления новостей"""
+    """view для обновления резюме"""
     model = CV
     template_name = 'cv_distribute.html'
     form_class = CVDistributeForm

@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView, FormView
 
-from users.forms import EmployeeProfileForm, EmployerProfileForm, ModeratorProfileForm, UserLoginForm, UserRegisterForm
+from users.forms import WorkerProfileForm, EmployerProfileForm, ModeratorProfileForm, UserLoginForm, UserRegisterForm
 from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User
 
 
@@ -13,7 +13,7 @@ class WorkerProfileView(UpdateView):
     """view для профиля соискателя"""
     model = WorkerProfile
     template_name = 'employee_profile.html'
-    form_class = EmployeeProfileForm
+    form_class = WorkerProfileForm
 
     # success_url = reverse_lazy()
 

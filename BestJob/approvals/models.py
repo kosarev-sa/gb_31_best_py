@@ -6,3 +6,4 @@ from django.db import models
 class ApprovalStatus(models.Model):
     """model of status approval"""
     status = models.CharField(max_length=100, unique=True)
+
