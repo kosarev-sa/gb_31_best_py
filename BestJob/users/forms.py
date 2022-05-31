@@ -5,7 +5,7 @@ from news.models import News
 from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User
 
 
-class EmployeeProfileForm(forms.ModelForm):
+class WorkerProfileForm(forms.ModelForm):
     """формы для профиля соискателя"""
 
     class Meta:
@@ -13,7 +13,7 @@ class EmployeeProfileForm(forms.ModelForm):
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
-        super(EmployeeProfileForm, self).__init__(*args, **kwargs)
+        super(WorkerProfileForm, self).__init__(*args, **kwargs)
         self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
 
 
