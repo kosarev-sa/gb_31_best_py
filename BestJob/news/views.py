@@ -11,11 +11,11 @@ from news.models import News
 class NewsView(TemplateView):
     """view главной страницы с новостями"""
     template_name = 'news.html'
-    list_of_news = News.objects.all()
+    list_of_news = News.objects.all().order_by('-created')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(NewsView, self).get_context_data(**kwargs)
-        context['news'] = self.list_of_news
+        context['news_list'] = self.list_of_news
         return context
 
 
