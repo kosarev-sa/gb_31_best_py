@@ -14,7 +14,9 @@
 
     <form method="post" action="">
         {% csrf_token %}
-        {{ form.data }}
+        {{ form.title }}
+        <br>
+        {{ form.body }}
         <br>
         <input type="submit" value="создать">
     </form>

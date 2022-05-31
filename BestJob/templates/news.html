@@ -30,29 +30,13 @@
 {% endblock %}
 
 {% block content %}
-    <a href="{% url 'news:create_news' %}">
-        Создать новость
-    </a>
     <table width="100%">
         {% for item in news_list %}
-            {% if item.is_active %}
-                <tr>
-                    <td>{{ item.created|date:"Y-m-d H:i:s" }}</td>
-                    <td>{{ item.title }}</td>
-                    <td>{{ item.body }}</td>
-                    <td>
-                        <a href="{% url 'news:update_news' item.pk %}">
-                            изменить
-                        </a>
-                    </td>
-                    <td>
-                        <a href="{% url 'news:delete_news' item.pk %}">
-                            удалить
-                        </a>
-                    </td>
-                </tr>
-            {% endif %}
-
+            <tr>
+                <td>{{ item.created|date:"Y-m-d H:i:s" }}</td>
+                <td>{{ item.title }}</td>
+                <td>{{ item.body }}</td>
+            </tr>
         {% empty %}
 {#            Убрать потом!!!!!!#}
             <tr>
@@ -66,7 +50,6 @@
                     новость 2
                 </td>
             </tr>
-
         {% endfor %}
     </table>
 {% endblock %}

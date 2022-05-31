@@ -1,10 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    <ul>
+        <li>
+            <a href="{% url 'news:moderate_news' %}">вернуться к списку</a>
+        </li>
+    </ul>
+
+{% endblock %}
+
+{% block content %}
+
+    {% include "inc_confirm_delete.html" %}
+
+{% endblock %}
