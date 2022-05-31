@@ -2,27 +2,8 @@ from django.db import models
 
 # Create your models here.
 from approvals.models import ApprovalStatus
-from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills
+from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills, Moving, EducationLevel
 from users.models import WorkerProfile
-
-
-class EducationLevel(models.IntegerChoices):
-    """Уровень образования (выбор одного значения)"""
-    SECONDARY = 1, "Среднее"
-    SPEC_SEC = 2, "Среднее специальное"
-    INC_HIGHER = 3, "Неоконченное высшее"
-    HIGHER = 4, "Высшее"
-    BACHELOR = 5, "Бакалавр"
-    MASTER = 6, "Магистр"
-    CANDIDATE = 7, "Кандидат наук"
-    DOCTOR = 8, "Доктор наук"
-
-
-class Moving(models.IntegerChoices):
-    """Переезд (выбор одного значения)"""
-    UNREAL = 1, "Невозможен"
-    REAL = 2, "Возможен"
-    DESIRE = 3, "Желателен"
 
 
 class CV(models.Model):
