@@ -1,0 +1,18 @@
+[
+  {
+    "code": "FULL",
+    "schedule": "Полный день"
+  },
+  {
+    "code": "CHANGE",
+    "schedule": "Сменный график"
+  },
+  {
+    "code": "FLEX",
+    "schedule": "Гибкий график"
+  },
+   {
+    "code": "TELEWORK",
+    "schedule": "Удаленная работа"
+  }
+]

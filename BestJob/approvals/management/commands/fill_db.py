@@ -5,8 +5,10 @@ import json
 
 from news.models import News
 from users.models import Role, User
+from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills
 
 JSON_PATH = 'news/fixtures/'
+JSON_PATH_SEARCH = 'search/fixtures/'
 
 def load_from_json(file_name):
     with open(file_name, mode='r', encoding='utf-8') as infile:
@@ -30,3 +32,53 @@ class Command(BaseCommand):
             j_news['updated'] = today
             new_news = News(**j_news)
             new_news.save()
+
+        languages = load_from_json(JSON_PATH_SEARCH + 'languages.json')
+        Languages.objects.all().delete()
+
+        for l in languages:
+            j_lang = {}
+            j_lang['code'] = l.get('code')
+            j_lang['language'] = l.get('language')
+            new_lang = Languages(**j_lang)
+            new_lang.save()
+
+        levels = load_from_json(JSON_PATH_SEARCH + 'languagelevel.json')
+        LanguageLevels.objects.all().delete()
+
+        for l in levels:
+            j_level = {}
+            j_level['code'] = l.get('code')
+            j_level['level'] = l.get('level')
+            new_level = LanguageLevels(**j_level)
+            new_level.save()
+
+        employments = load_from_json(JSON_PATH_SEARCH + 'employments.json')
+        Employments.objects.all().delete()
+
+        for e in employments:
+            j_empl = {}
+            j_empl['code'] = e.get('code')
+            j_empl['employment'] = e.get('employment')
+            new_empl = Employments(**j_empl)
+            new_empl.save()
+
+        schedules = load_from_json(JSON_PATH_SEARCH + 'work_schedules.json')
+        WorkSchedules.objects.all().delete()
+
+        for sch in schedules:
+            j_sch = {}
+            j_sch['code'] = sch.get('code')
+            j_sch['schedule'] = sch.get('schedule')
+            new_sch = WorkSchedules(**j_sch)
+            new_sch.save()
+
+        skills = load_from_json(JSON_PATH_SEARCH + 'main_skills.json')
+        MainSkills.objects.all().delete()
+
+        for s in skills:
+            j_skill = {}
+            j_skill['code'] = s.get('code')
+            j_skill['skill'] = s.get('skill')
+            new_skill = MainSkills(**j_skill)
+            new_skill.save()
