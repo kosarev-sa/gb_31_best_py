@@ -12,11 +12,10 @@ from news.models import News
 class NewsView(TemplateView):
     """view главной страницы с новостями"""
     template_name = 'news.html'
-    list_of_news = News.objects.filter(is_active=True).order_by('-created')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(NewsView, self).get_context_data(**kwargs)
-        context['news_list'] = self.list_of_news
+        context['news_list'] = News.objects.filter(is_active=True).order_by('-created')
         return context
 
 
@@ -37,9 +36,10 @@ class NewsCreate(CreateView):
     form_class = NewsCreateForm
     success_url = reverse_lazy('news:moderate_news')
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(NewsCreate, self).get_context_data(**kwargs)
-        return context
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        form.save()
+        return super(NewsCreate, self).form_valid(form)
 
 
 class NewsUpdate(UpdateView):
@@ -49,7 +49,7 @@ class NewsUpdate(UpdateView):
     form_class = NewsUpdateForm
     success_url = reverse_lazy('news:moderate_news')
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super(NewsUpdate, self).get_context_data(**kwargs)
         return context
 

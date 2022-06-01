@@ -6,7 +6,7 @@ from news.models import News
 class NewsCreateForm(forms.ModelForm):
     class Meta:
         model = News
-        fields = '__all__'
+        exclude = ['author']
 
     def __init__(self, *args, **kwargs):
         super(NewsCreateForm, self).__init__(*args, **kwargs)
@@ -17,7 +17,7 @@ class NewsCreateForm(forms.ModelForm):
 class NewsUpdateForm(forms.ModelForm):
     class Meta:
         model = News
-        fields = '__all__'
+        fields = ['title', 'body', 'is_active']
 
     def __init__(self, *args, **kwargs):
         super(NewsUpdateForm, self).__init__(*args, **kwargs)
