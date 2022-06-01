@@ -7,7 +7,7 @@ from news.models import News
 from users.models import Role, User
 from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills
 
-JSON_PATH = 'news/fixtures/'
+JSON_PATH_NEWS = 'news/fixtures/'
 JSON_PATH_SEARCH = 'search/fixtures/'
 
 def load_from_json(file_name):
@@ -18,7 +18,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # Запуск после создания пользователя.
-        news = load_from_json(JSON_PATH + 'news.json')
+        news = load_from_json(JSON_PATH_NEWS + 'news.json')
         News.objects.all().delete()
         today = datetime.datetime.now(tz=datetime.timezone.utc)
 
