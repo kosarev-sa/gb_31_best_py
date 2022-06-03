@@ -121,5 +121,4 @@ class Command(BaseCommand):
             j_cat['code'] = c.get('code')
             j_cat['name'] = c.get('name')
             new_cat = Category(**j_cat)
-            new_cat.save()categories = load_from_json(JSON_PATH_SEARCH + 'categories.json')
-            
+            new_cat.save()
