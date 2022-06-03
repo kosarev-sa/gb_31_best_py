@@ -14,11 +14,19 @@
 
     <form method="post" action="">
         {% csrf_token %}
+        Вы регистрируетесь как:
+        <br>
+        {{ form.role }}
+        <br>
+        <br>
         {{ form.username }}
+        <br>
+        {{ form.email }}
         <br>
         {{ form.password1 }}
         <br>
         {{ form.password2 }}
+        {{ form.password1.help_text }}
         <br>
         <input type="submit" value="зарегистрироваться">
     </form>
