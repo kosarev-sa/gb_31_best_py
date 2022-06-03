@@ -5,7 +5,7 @@ import json
 
 from news.models import News
 from users.models import Role, User
-from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills
+from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills, Category
 
 JSON_PATH_NEWS = 'news/fixtures/'
 JSON_PATH_SEARCH = 'search/fixtures/'
@@ -82,3 +82,13 @@ class Command(BaseCommand):
             j_skill['skill'] = s.get('skill')
             new_skill = MainSkills(**j_skill)
             new_skill.save()
+
+        categories = load_from_json(JSON_PATH_SEARCH + 'categories.json')
+        Category.objects.all().delete()
+
+        for c in categories:
+            j_cat = {}
+            j_cat['code'] = c.get('code')
+            j_cat['name'] = c.get('name')
+            new_cat = Category(**j_cat)
+            new_cat.save()
