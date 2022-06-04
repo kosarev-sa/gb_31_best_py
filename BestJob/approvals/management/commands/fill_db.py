@@ -3,12 +3,15 @@ import datetime
 from django.core.management import BaseCommand
 import json
 
+from approvals.models import ApprovalStatus
 from news.models import News
-from users.models import Role, User
+from users.models import Role, User, EmployerProfile
 from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills
 
 JSON_PATH_NEWS = 'news/fixtures/'
 JSON_PATH_SEARCH = 'search/fixtures/'
+JSON_PATH_USERS = 'users/fixtures/'
+JSON_PATH_APPROVAL = 'approvals/fixtures/'
 
 def load_from_json(file_name):
     with open(file_name, mode='r', encoding='utf-8') as infile:
@@ -82,3 +85,28 @@ class Command(BaseCommand):
             j_skill['skill'] = s.get('skill')
             new_skill = MainSkills(**j_skill)
             new_skill.save()
+
+        approvals = load_from_json(JSON_PATH_APPROVAL + 'status.json')
+        ApprovalStatus.objects.all().delete()
+
+        for approval in approvals:
+            appr = approval.get('fields')
+            new_appr = ApprovalStatus(**appr)
+            new_appr.save()
+
+        employers = load_from_json(JSON_PATH_USERS + 'employers.json')
+        EmployerProfile.objects.all().delete()
+
+        for employer in employers:
+            emp = employer.get('fields')
+
+            user = emp.get('user')
+            _user = User.objects.get(id=user)
+            emp['user'] = _user  # Заменяем юзера объектом
+
+            status = emp.get('status')
+            _status = ApprovalStatus.objects.get(id=status)
+            emp['status'] = _status  # Заменяем юзера объектом
+
+            new_employer = EmployerProfile(**emp)
+            new_employer.save()

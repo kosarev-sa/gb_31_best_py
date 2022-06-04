@@ -16,14 +16,17 @@ Including another URLconf
 from django.urls import path
 
 from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
-from users.views import WorkerProfileView, EmployerProfileView, ModeratorProfileView, UserLoginView, UserRegisterView, \
-    UserLogoutView
+from users.views import WorkerProfileView, EmployerProfileView, ModeratorProfileView, \
+    UserLoginView, UserRegisterView, \
+    UserLogoutView, EmployerProfileFormView, EmployerDetailView
 
 app_name = 'users'
 
 urlpatterns = [
     path('worker_profile/<int:pk>/', WorkerProfileView.as_view(), name='worker_profile'),
-    path('employer_profile/<int:pk>/', EmployerProfileView.as_view(), name='employer_profile'),
+    path('employers/', EmployerProfileView.as_view(), name='employers'),
+    path('employer/<int:pk>', EmployerDetailView.as_view(), name='employers_detail'),
+    path('employer_profile/<int:pk>/', EmployerProfileFormView.as_view(), name='employer_profile'),
     path('moderator_profile/<int:pk>/', ModeratorProfileView.as_view(), name='moderator_profile'),
     path('login/', UserLoginView.as_view(), name='login'),
     path('registration/', UserRegisterView.as_view(), name='registration'),

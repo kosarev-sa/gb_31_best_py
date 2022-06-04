@@ -129,7 +129,13 @@ STATICFILES_DIRS = (BASE_DIR / 'static',)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# модель юзера у нас воя, поэтому добавляем в настройки
+# пути для сохранения изображений при локальной работе. В BestJob.urls добавлено:
+# if settings.DEBUG:
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# модель юзера у нас своя, поэтому добавляем в настройки
 AUTH_USER_MODEL = "users.User"
 
 # наша страница после логина
