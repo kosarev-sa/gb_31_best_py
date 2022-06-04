@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -110,7 +110,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-Ru'
 
 TIME_ZONE = 'UTC'
 
@@ -129,14 +129,26 @@ STATICFILES_DIRS = (BASE_DIR / 'static',)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# пути для сохранения изображений при локальной работе. В BestJob.urls добавлено:
+# Пути для сохранения изображений при локальной работе. В BestJob.urls добавлено:
 # if settings.DEBUG:
 #     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# модель юзера у нас своя, поэтому добавляем в настройки
+# модель юзера у нас cвоя, поэтому добавляем в настройки
+
 AUTH_USER_MODEL = "users.User"
 
 # наша страница после логина
 LOGIN_REDIRECT_URL = 'index'
+
+#время действия ключа подтверждения email [ч]
+USER_EMAIL_KEY_LIFETIME = 48
+
+# настройки для подтверждения email
+# для получения в термина ссылки  sudo python3 -m smtpd -n -c DebuggingServer localhost:25
+DOMAIN_NAME = '127.0.0.1:8000'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 25
+EMAIL_USER_SSL = True if os.getenv('EMAIL_USER_SSL') == 'True' else False
+EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None

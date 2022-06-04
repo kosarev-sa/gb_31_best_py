@@ -50,3 +50,8 @@ class WorkSchedules(models.Model):
     code = models.CharField(max_length=10, unique=True)
     schedule = models.CharField(max_length=100, unique=True)
 
+
+class Category(models.Model):
+    """Специализации. code: PROG, name: Программист"""
+    code = models.CharField(max_length=10, unique=True)
+    name = models.CharField(max_length=100, unique=True)

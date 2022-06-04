@@ -16,9 +16,10 @@ Including another URLconf
 from django.urls import path
 
 from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
-from users.views import WorkerProfileView, EmployerProfileView, ModeratorProfileView, \
-    UserLoginView, UserRegisterView, \
-    UserLogoutView, EmployerProfileFormView, EmployerDetailView
+
+from users.views import WorkerProfileView, EmployerProfileView, ModeratorProfileView, UserLoginView, UserRegisterView, \
+    UserLogoutView, EmployerProfileFormView, EmployerDetailView, UserEmailVarifyView, UserVarifyStatusView, PassResetView, \
+    PassResetDoneView, PassResetConfirmView, PassResetCompletedView
 
 app_name = 'users'
 
@@ -31,5 +32,14 @@ urlpatterns = [
     path('login/', UserLoginView.as_view(), name='login'),
     path('registration/', UserRegisterView.as_view(), name='registration'),
     path('logout/', UserLogoutView.as_view(), name='logout'),
+    path('verify/<str:username>/<str:email>/<str:activation_key>/', UserRegisterView.verify, name='verify'),
+    path('verify_status', UserVarifyStatusView.as_view(), name='verify_status'),
+    path('email_verify', UserEmailVarifyView.as_view(), name='email_verify'),
+    path('password_reset/', PassResetView.as_view(), name='password_reset'),
+    path('password_reset/done/', PassResetDoneView.as_view(), name='password_reset_done'),
+    path('password_reset/confirm/<uidb64>/<token>/', PassResetConfirmView.as_view(),
+         name='password_reset_confirm'),
+    path('password-reset/complete/', PassResetCompletedView.as_view(),
+         name='password_reset_complete'),
 
 ]

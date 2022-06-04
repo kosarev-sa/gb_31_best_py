@@ -1,12 +1,14 @@
 import datetime
 
+from django.contrib.auth.hashers import make_password
 from django.core.management import BaseCommand
 import json
 
 from approvals.models import ApprovalStatus
 from news.models import News
+
 from users.models import Role, User, EmployerProfile
-from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills
+from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills, Category
 
 JSON_PATH_NEWS = 'news/fixtures/'
 JSON_PATH_SEARCH = 'search/fixtures/'
@@ -17,8 +19,35 @@ def load_from_json(file_name):
     with open(file_name, mode='r', encoding='utf-8') as infile:
         return json.load(infile)
 
+
 class Command(BaseCommand):
     def handle(self, *args, **options):
+
+        # Добавление ролей пользователей (Модерато, Работодатель, соискатель)
+        roles = load_from_json(JSON_PATH_ROLES + 'roles.json')
+        Role.objects.all().delete()
+
+        for role in roles:
+            new_role = Role(pk=role['pk'],
+                            role_name=role['role_name'])
+            new_role.save()
+            print(f'роль "{new_role}" была добавлена')
+
+        # Добавление пользователей
+        users = load_from_json(JSON_PATH_ROLES + 'users.json')
+        News.objects.all().delete()
+        User.objects.all().delete()
+
+        for user in users:
+            new_user = User(pk=user['pk'],
+                            username=user['username'],
+                            email=user['email'],
+                            role_id=user['role_id'],
+                            password=make_password(user['password']),
+                            is_active=1)
+            new_user.save()
+            print(f'юзер {new_user.username} с паролем "1" был добавлен')
+
 
         # Запуск после создания пользователя.
         news = load_from_json(JSON_PATH_NEWS + 'news.json')
@@ -86,6 +115,16 @@ class Command(BaseCommand):
             new_skill = MainSkills(**j_skill)
             new_skill.save()
 
+        categories = load_from_json(JSON_PATH_SEARCH + 'categories.json')
+        Category.objects.all().delete()
+
+        for c in categories:
+            j_cat = {}
+            j_cat['code'] = c.get('code')
+            j_cat['name'] = c.get('name')
+            new_cat = Category(**j_cat)
+            new_cat.save()
+
         approvals = load_from_json(JSON_PATH_APPROVAL + 'status.json')
         ApprovalStatus.objects.all().delete()
 
@@ -110,3 +149,4 @@ class Command(BaseCommand):
 
             new_employer = EmployerProfile(**emp)
             new_employer.save()
+
