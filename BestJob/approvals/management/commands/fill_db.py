@@ -14,6 +14,7 @@ JSON_PATH_NEWS = 'news/fixtures/'
 JSON_PATH_SEARCH = 'search/fixtures/'
 JSON_PATH_USERS = 'users/fixtures/'
 JSON_PATH_APPROVAL = 'approvals/fixtures/'
+JSON_PATH_ROLES = 'users/fixtures/'
 
 def load_from_json(file_name):
     with open(file_name, mode='r', encoding='utf-8') as infile:

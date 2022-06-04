@@ -42,8 +42,7 @@ class WorkerProfile(models.Model):
 
 class EmployerProfile(models.Model):
     """профиль для работодателя"""
-    user = models.ForeignKey(User, null=False, unique=True, db_index=True, \
-                                                                       on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=False, unique=True, db_index=True, on_delete=models.CASCADE)
     name = models.CharField('Название компании', max_length=80)
     image = models.ImageField(upload_to='company_images', blank=True)
     status = models.ForeignKey(ApprovalStatus, verbose_name='Статус', on_delete=models.CASCADE)

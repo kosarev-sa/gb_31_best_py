@@ -3,7 +3,7 @@
     "model": "users.employerprofile",
     "pk": 1,
     "fields": {
-      "user": 5,
+      "user": 1,
       "name": "Новые метры",
       "image": "company_images/Логотип_НМ_Белый_фон_Oypv5Dq.jpg",
       "status": 1,
@@ -17,7 +17,7 @@
     "model": "users.employerprofile",
     "pk": 2,
     "fields": {
-      "user": 6,
+      "user": 2,
       "name": "СмениКвартиру",
       "image": "company_images/401296.png",
       "status": 3,
