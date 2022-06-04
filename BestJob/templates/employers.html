@@ -18,12 +18,11 @@
 
 {% block content %}
 
-    <form method="post" action="">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <br>
-        <input type="submit" value="сохранить">
-    </form>
+    {% for employer in employers %}
+        {% if employer.is_active %}
+            <a href="{% url 'users:employers_detail' employer.id %}">{{ employer }}</a>
+            <br>
+        {% endif %}
+    {% endfor %}
 
 {% endblock %}
-

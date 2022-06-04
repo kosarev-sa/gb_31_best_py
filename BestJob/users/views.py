@@ -1,16 +1,20 @@
+# Create your views here.
+from BestJob.mixin import BaseClassContextMixin, UserDispatchMixin
+
 from django.contrib import auth
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView, \
     PasswordResetConfirmView, PasswordResetCompleteView
 from django.core.mail import send_mail
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from django.urls import reverse_lazy, reverse
-from django.views.generic import UpdateView, FormView, TemplateView
+from django.views.generic import UpdateView, FormView, TemplateView, ListView, DetailView
 
 from BestJob import settings
 from users.forms import WorkerProfileForm, EmployerProfileForm, ModeratorProfileForm, UserLoginForm, UserRegisterForm, \
     PassResetForm, PassResetConfirmForm
+
 from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User
 
 
@@ -27,17 +31,37 @@ class WorkerProfileView(UpdateView):
         return context
 
 
-class EmployerProfileView(UpdateView):
-    """view для профиля работодателя"""
-
+class EmployerProfileView(ListView, BaseClassContextMixin):
+    """view для просмотра работодателей"""
     model = EmployerProfile
-    template_name = 'employer_profile.html'
-    form_class = EmployerProfileForm
-    success_url = reverse_lazy('users:employer_profile')
+    template_name = 'employers.html'
+    # paginate_by = 3
+    title = 'BestJob | Работодатели'
 
-    def get_context_data(self, *, object_list=None, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super(EmployerProfileView, self).get_context_data(**kwargs)
+        context.update({
+            'employers': EmployerProfile.objects.all(),
+        })
         return context
+
+class EmployerDetailView(DetailView, BaseClassContextMixin):
+    """view для просмотра выбранного работодателя"""
+    model = EmployerProfile
+    template_name = 'employers_detail.html'
+    title = 'BestJob | Работодатель'
+
+
+class EmployerProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
+    """view для профиля работодателя"""
+    model = EmployerProfile
+    form_class = EmployerProfileForm
+    template_name = 'employer_profile.html'
+    success_url = reverse_lazy('users:employer_profile')
+    title = 'BestJob | Профайл работодателя'
+
+    # def get_object(self, queryset=None):
+    #     return get_object_or_404(User, pk=self.request.employer_profile.pk)
 
 
 class ModeratorProfileView(UpdateView):

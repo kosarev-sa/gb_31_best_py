@@ -25,11 +25,13 @@ class EmployerProfileForm(forms.ModelForm):
 
     class Meta:
         model = EmployerProfile
-        fields = '__all__'
+        exclude = ('user', 'date_create', 'is_active', 'status', )
 
     def __init__(self, *args, **kwargs):
         super(EmployerProfileForm, self).__init__(*args, **kwargs)
-        self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
+        self.fields['name'].widget.attrs['placeholder'] = 'Введите название компании'
+        self.fields['city'].widget.attrs['placeholder'] = 'Введите город местонахождения'
+        self.fields['data'].widget.attrs['placeholder'] = 'Введите описание компании'
 
 
 class ModeratorProfileForm(forms.ModelForm):
