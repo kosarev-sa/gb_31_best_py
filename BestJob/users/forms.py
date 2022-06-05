@@ -46,10 +46,6 @@ class UserLoginForm(AuthenticationForm):
         model = User
         fields = ('username', 'password')
 
-    def __init__(self, *args, **kwargs):
-        super(UserLoginForm, self).__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs['placeholder'] = 'Введите имя пользователя'
-        self.fields['password'].widget.attrs['placeholder'] = 'Введите пароль'
 
 
 class UserRegisterForm(UserCreationForm):
@@ -59,7 +55,7 @@ class UserRegisterForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super(UserRegisterForm, self).__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs['placeholder'] = 'Введите имя пользователя'
-        self.fields['email'].widget.attrs['placeholder'] = 'Введите адрес эл.почты'
-        self.fields['password1'].widget.attrs['placeholder'] = 'Введите пароль'
-        self.fields['password2'].widget.attrs['placeholder'] = 'Подтвердите пароль'
+        self.fields['username'].widget.attrs.update({"class": "form-control", "placeholder": "Введите имя пользователя"})
+        self.fields['email'].widget.attrs.update({"class": "form-control", "placeholder": "Введите адрес эл.почты"})
+        self.fields['password1'].widget.attrs.update({"class": "form-control", "placeholder": "Введите пароль"})
+        self.fields['password2'].widget.attrs.update({"class": "form-control", "placeholder": "Подтвердите пароль"})
