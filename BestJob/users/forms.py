@@ -53,6 +53,11 @@ class UserLoginForm(AuthenticationForm):
         model = User
         fields = ('username', 'password')
 
+    def __init__(self, *args, **kwargs):
+        super(UserLoginForm, self).__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs['placeholder'] = 'Введите имя пользователя'
+        self.fields['password'].widget.attrs['placeholder'] = 'Введите пароль'
+
 
 
 class UserRegisterForm(UserCreationForm):
@@ -67,7 +72,7 @@ class UserRegisterForm(UserCreationForm):
         
         # исключаем модератора быть выбранным при регистрации
         self.fields['role'].queryset = Role.objects.exclude(role_name='Модератор')
-        self.fields['role'].widget.attrs.update({"class": "form-control", "placeholder": "Выберете роль"})
+        self.fields['role'].widget.attrs.update({"class": "form-control"})
         self.fields['username'].widget.attrs.update({"class": "form-control", "placeholder": "Введите имя пользователя"})
         self.fields['email'].widget.attrs.update({"class": "form-control", "placeholder": "Введите адрес эл.почты"})
         self.fields['password1'].widget.attrs.update({"class": "form-control", "placeholder": "Введите пароль"})
