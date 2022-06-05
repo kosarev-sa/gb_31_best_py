@@ -15,7 +15,7 @@ EXPERIENCE = (
 class Vacancy(models.Model):
     """Вакансии"""
     employer_profile = models.ForeignKey(EmployerProfile, db_constraint=False, on_delete=models.CASCADE)
-    status = models.ForeignKey(ApprovalStatus, db_constraint=False, on_delete=models.CASCADE)
+    status = models.ForeignKey(ApprovalStatus, default=1, db_constraint=False, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True, db_index=True)
     name = models.CharField(max_length=256, blank=True, verbose_name='Название вакансии')
     experience = models.CharField(max_length=3, choices=EXPERIENCE, blank=True, verbose_name='Опыт')
