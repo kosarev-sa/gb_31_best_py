@@ -1,0 +1,22 @@
+[
+  {
+    "code": "FULL",
+    "employment": "Полная занятость"
+  },
+  {
+    "code": "PART",
+    "employment": "Частичная занятость"
+  },
+  {
+    "code": "PROJ",
+    "employment": "Проектная работа"
+  },
+   {
+    "code": "VOLUN",
+    "employment": "Волонтерство"
+  },
+  {
+    "code": "INTERN",
+    "employment": "Стажировка"
+  }
+]

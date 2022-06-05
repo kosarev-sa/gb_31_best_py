@@ -18,12 +18,12 @@
 
 {% block content %}
 
-    <form method="post" action="">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <br>
-        <input type="submit" value="сохранить">
-    </form>
+    <h1>{{ object }}</h1>
+
+    <h5>
+        <li>На BestJob с {{ object.date_create }}</li>
+        <li>{{ object.image }}</li>
+        <li>{{ object.data }}</li>
+    </h5>
 
 {% endblock %}
-
