@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from approvals.models import ApprovalStatus
 from users.models import EmployerProfile
-from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills, Moving, EducationLevel, Category
+from search.models import Employments, WorkSchedules, MainSkills, Category
 
 EXPERIENCE = (
         ('NO', 'От 1 года до 3 лет'),
@@ -18,9 +18,9 @@ class Vacancy(models.Model):
     status = models.ForeignKey(ApprovalStatus, default=1, db_constraint=False, on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True, db_index=True)
     name = models.CharField(max_length=256, blank=True, verbose_name='Название вакансии')
-    specialization = models.ForeignKey(Category, db_constraint=False, on_delete=models.CASCADE, verbose_name='Специализация')
     experience = models.CharField(max_length=3, choices=EXPERIENCE, blank=True, verbose_name='Опыт')
     city = models.CharField(max_length=20, blank=True, verbose_name='Вакансия в городе')
+    description = models.CharField(max_length=256, blank=True, verbose_name='Описание вакансии')
 
 
 class Salary(models.Model):
@@ -55,3 +55,9 @@ class WorkingHours(models.Model):
     """Режим работы"""
     vacancy = models.ForeignKey(Vacancy, db_constraint=False, on_delete=models.CASCADE)
     schedule = models.ForeignKey(WorkSchedules, db_constraint=False, on_delete=models.CASCADE)
+
+
+class Specialisation(models.Model):
+    """Специализация"""
+    vacancy = models.ForeignKey(Vacancy, db_constraint=False, on_delete=models.CASCADE)
+    specialization = models.ForeignKey(Category, db_constraint=False, on_delete=models.CASCADE)
