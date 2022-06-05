@@ -9,12 +9,15 @@ from news.models import News
 
 from users.models import Role, User, EmployerProfile
 from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills, Category
+from vacancies.models import Vacancy, Salary
 
 JSON_PATH_NEWS = 'news/fixtures/'
 JSON_PATH_SEARCH = 'search/fixtures/'
 JSON_PATH_USERS = 'users/fixtures/'
 JSON_PATH_APPROVAL = 'approvals/fixtures/'
 JSON_PATH_ROLES = 'users/fixtures/'
+JSON_PATH_VACANCIES = 'vacancies/fixtures/'
+
 
 def load_from_json(file_name):
     with open(file_name, mode='r', encoding='utf-8') as infile:
@@ -151,3 +154,32 @@ class Command(BaseCommand):
             new_employer = EmployerProfile(**emp)
             new_employer.save()
 
+        vacancies = load_from_json(JSON_PATH_VACANCIES + 'vacancies.json')
+        Vacancy.objects.all().delete()
+
+        for vacancy in vacancies:
+            vac = vacancy.get('fields')
+
+            employer_profile = vac.get('employer_profile')
+            _employer_profile = EmployerProfile.objects.get(id=employer_profile)
+            vac['employer_profile'] = _employer_profile
+
+            status = vac.get('status')
+            _status = ApprovalStatus.objects.get(id=status)
+            vac['status'] = _status
+
+            new_vacancy = Vacancy(**vac)
+            new_vacancy.save()
+
+        salaries = load_from_json(JSON_PATH_VACANCIES + 'salaries.json')
+        Salary.objects.all().delete()
+
+        for salary in salaries:
+            sal = salary.get('fields')
+
+            vacancy = sal.get('vacancy')
+            _vacancy = Vacancy.objects.get(id=vacancy)
+            sal['vacancy'] = _vacancy
+
+            new_salary = Salary(**sal)
+            new_salary.save()

@@ -1,0 +1,28 @@
+[
+  {
+    "model": "vacancies.vacancy",
+    "pk": 1,
+    "fields": {
+      "employer_profile": 1,
+      "status": 1,
+      "is_active": true,
+      "name": "Разработчик всех разработок",
+      "experience": "NO",
+      "city": "Москва",
+      "description": "Обязанности: тестировать.\nТребования: официальное оформление.\nУсловия: нормальные."
+    }
+  },
+  {
+    "model": "vacancies.vacancy",
+    "pk": 2,
+    "fields": {
+      "employer_profile": 2,
+      "status": 2,
+      "is_active": true,
+      "name": "Требуется разработчик",
+      "experience": "BIG",
+      "city": "Санкт-Петербург",
+      "description": "Обязанности: кодить.\nТребования: ходить на работу.\nУсловия: хорошие."
+    }
+  }
+]
