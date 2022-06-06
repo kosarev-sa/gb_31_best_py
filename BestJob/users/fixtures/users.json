@@ -13,10 +13,17 @@
     "password": "1",
     "role_id": 2
   },
-    {
+  {
     "pk": 3,
     "username": "worker1",
     "email": "worker1@worker1.ru",
+    "password": "1",
+    "role_id": 3
+  },
+  {
+    "pk": 4,
+    "username": "worker2",
+    "email": "worker2@worker2.ru",
     "password": "1",
     "role_id": 3
   }

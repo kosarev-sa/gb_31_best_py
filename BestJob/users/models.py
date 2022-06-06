@@ -37,7 +37,12 @@ class User(AbstractUser):
 class WorkerProfile(models.Model):
     """профиль для соискателя"""
     user = models.ForeignKey(User, null=False, db_index=True, on_delete=models.CASCADE)
-    data = models.TextField()
+    name = models.CharField('ФИО', max_length=80, blank=True)
+    image = models.ImageField(upload_to='worker_photo', blank=True)
+    city = models.CharField('Город проживания', max_length=80, blank=True)
+    phone_number = models.TextField('Телефон для связи', blank=True)
+    ready_to_relocate = models.BooleanField('Готовность к переезду', default=False)
+    data = models.TextField('О себе', blank=True)
 
 
 class EmployerProfile(models.Model):

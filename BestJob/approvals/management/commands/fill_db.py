@@ -7,7 +7,7 @@ import json
 from approvals.models import ApprovalStatus
 from news.models import News
 
-from users.models import Role, User, EmployerProfile
+from users.models import Role, User, EmployerProfile, WorkerProfile
 from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills, Category
 from vacancies.models import Vacancy, Salary
 
@@ -153,6 +153,20 @@ class Command(BaseCommand):
 
             new_employer = EmployerProfile(**emp)
             new_employer.save()
+
+        # Соискатель
+        workers = load_from_json(JSON_PATH_USERS + 'workers.json')
+        WorkerProfile.objects.all().delete()
+
+        for worker in workers:
+            work = worker.get('fields')
+
+            user = work.get('user')
+            _user = User.objects.get(id=user)
+            work['user'] = _user  # Заменяем юзера объектом
+
+            new_worker = WorkerProfile(**work)
+            new_worker.save()
 
         vacancies = load_from_json(JSON_PATH_VACANCIES + 'vacancies.json')
         Vacancy.objects.all().delete()
