@@ -39,7 +39,6 @@ class Command(BaseCommand):
 
         # Добавление пользователей
         users = load_from_json(JSON_PATH_ROLES + 'users.json')
-        News.objects.all().delete()
         User.objects.all().delete()
 
         for user in users:
