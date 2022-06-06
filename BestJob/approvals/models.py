@@ -5,4 +5,20 @@ from django.db import models
 
 class ApprovalStatus(models.Model):
     """model of status approval"""
-    status = models.CharField(max_length=100, unique=True)
+    CHECKING = 'CHG'
+    FOR_CORRECTION = 'COR'
+    CANCELED = 'CNC'
+    CHECKED = 'CHD'
+
+    APPROVAL_STATUS_CHOISES = (
+        (CHECKING, 'на проверке'),
+        (FOR_CORRECTION, 'необходимо исправить'),
+        (CANCELED, 'отклонение'),
+        (CHECKED, 'проверено')
+    )
+
+    status = models.CharField(verbose_name='Статус', max_length=3, choices=APPROVAL_STATUS_CHOISES,
+                              default=CHECKING, unique=True)
+
+    def __str__(self):
+        return self.status

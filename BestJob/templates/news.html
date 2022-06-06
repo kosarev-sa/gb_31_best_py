@@ -8,13 +8,13 @@
             <a href="{% url 'users:login' %}">войти</a>
         </li>
         <li>
-            <a href="{% url 'users:registration'%}">регистрация</a>
+            <a href="{% url 'users:registration' %}">регистрация</a>
         </li>
         <li>
             <a href="{% url 'users:logout' %}">выйти</a>
         </li>
         <li>
-            <a href="{% url 'users:employee_profile' '1' %}">профиль соискателя</a>
+            <a href="{% url 'users:worker_profile' '1' %}">профиль соискателя</a>
         </li>
         <li>
             <a href="{% url 'users:employer_profile' '1' %}">профиль работодателя</a>
@@ -31,18 +31,26 @@
 
 {% block content %}
     <table width="100%">
-        <tr>
-            <td>
-                новость 1
-            </td>
-
-        </tr>
+        {% for item in news_list %}
             <tr>
-            <td>
-                новость 2
-            </td>
+                <td>{{ item.created|date:"Y-m-d H:i:s" }}</td>
+                <td>{{ item.title }}</td>
+                <td>{{ item.body }}</td>
+            </tr>
+        {% empty %}
+{#            Убрать потом!!!!!!#}
+            <tr>
+                <td>
+                    новость 1
+                </td>
 
-        </tr>
+            </tr>
+            <tr>
+                <td>
+                    новость 2
+                </td>
+            </tr>
+        {% endfor %}
     </table>
 {% endblock %}
 

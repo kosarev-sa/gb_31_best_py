@@ -13,17 +13,35 @@
 
 {% block content %}
     <table width="100%">
-        <tr>
-            <td width="60%">
-                новость
-            </td>
-            <td>
-                <a href="{% url 'news:update_news' '1'%}">редактировать</a>
-            </td>
-            <td>
-                <a href="{% url 'news:delete_news' '1' %}">удалить</a>
-            </td>
-        </tr>
+        {% for item in news_list %}
+            <tr>
+                <td>{{ item.created|date:"Y-m-d H:i:s" }}</td>
+                <td>{{ item.title }}</td>
+                <td>{{ item.body }}</td>
+                <td>{{ item.is_active }}</td>
+                <td>{{ item.author.first_name }}</td>
+                <td>
+                    <a href="{% url 'news:update_news' item.pk %}">изменить</a>
+                </td>
+                <td>
+                    <a href="{% url 'news:delete_news' item.pk %}">удалить</a>
+                </td>
+            </tr>
+
+        {% empty %}
+{#            Убрать потом!!!!!!#}
+            <tr>
+                <td>
+                    новость 1
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    новость 2
+                </td>
+            </tr>
+        {% endfor %}
     </table>
 {% endblock %}
 

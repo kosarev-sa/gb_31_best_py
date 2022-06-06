@@ -4,14 +4,12 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 
-from cvs.forms import CVCreateForm, CVUpdateForm, CVDeleteForm, CVDistributeForm
-from cvs.models import CV
 from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDeleteForm, VacancyDistributeForm
 from vacancies.models import Vacancy
 
 
 class VacancyList(TemplateView):
-    """view главной страницы с новостями"""
+    """view список вакансий"""
     template_name = 'vacancy_list.html'
     list_of_news = Vacancy.objects.all()
 
@@ -22,7 +20,7 @@ class VacancyList(TemplateView):
 
 
 class VacancyCreate(CreateView):
-    """view для создания новостей"""
+    """view создания вакансий"""
     model = Vacancy
     template_name = 'vacancy_create.html'
     form_class = VacancyCreateForm
@@ -34,8 +32,8 @@ class VacancyCreate(CreateView):
 
 
 class VacancyUpdate(UpdateView):
-    """view для обновления новостей"""
-    model = CV
+    """view изменения вакансий"""
+    model = Vacancy
     template_name = 'vacancy_update.html'
     form_class = VacancyUpdateForm
     success_url = reverse_lazy('vacancy:vacancy_list')
@@ -46,8 +44,8 @@ class VacancyUpdate(UpdateView):
 
 
 class VacancyDelete(DeleteView):
-    """view для обновления новостей"""
-    model = CV
+    """view удаления вакансий"""
+    model = Vacancy
     template_name = 'vacancy_delete.html'
     form_class = VacancyDeleteForm
     success_url = reverse_lazy('vacancy:vacancy_list')
@@ -58,8 +56,8 @@ class VacancyDelete(DeleteView):
 
 
 class VacancyDistribute(UpdateView):
-    """view для обновления новостей"""
-    model = CV
+    """view для обновления вакансий"""
+    model = Vacancy
     template_name = 'vacancy_distribute.html'
     form_class = VacancyDistributeForm
     success_url = reverse_lazy('vacancy:vacancy_list')

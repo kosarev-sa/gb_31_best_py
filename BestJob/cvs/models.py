@@ -2,11 +2,80 @@ from django.db import models
 
 # Create your models here.
 from approvals.models import ApprovalStatus
-from users.models import EmployeeProfile
+from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills, Moving, EducationLevel
+from users.models import WorkerProfile
 
 
 class CV(models.Model):
-    """резюме"""
-    employee_profile = models.ForeignKey(EmployeeProfile, db_constraint=False, on_delete=models.CASCADE)
+    """Резюме"""
+    worker_profile = models.ForeignKey(WorkerProfile, db_constraint=False, on_delete=models.CASCADE)
     status = models.ForeignKey(ApprovalStatus, db_constraint=False, on_delete=models.CASCADE)
-    data = models.TextField()
+    date_create = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField(default=True, db_index=True)
+    # category =
+    post = models.CharField(max_length=256, blank=True)
+    salary = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    education_level = models.PositiveSmallIntegerField(choices=EducationLevel.choices, default=EducationLevel.HIGHER)
+    moving = models.PositiveSmallIntegerField(choices=Moving.choices, default=Moving.UNREAL, null=True)
+
+
+class CVSkills(models.Model):
+    """Ключевые навыки"""
+    cv = models.ForeignKey(CV, db_constraint=False, on_delete=models.CASCADE)
+    skill = models.ForeignKey(MainSkills, db_constraint=False, on_delete=models.CASCADE)
+
+
+class Education(models.Model):
+    """Образование"""
+    cv = models.ForeignKey(CV, db_constraint=False, on_delete=models.CASCADE)
+    date_end = models.IntegerField()
+    name = models.CharField(max_length=256)
+    department = models.CharField(max_length=256)
+    specialty = models.CharField(max_length=256)
+
+
+class Experience(models.Model):
+    """Опыт работы"""
+
+    class Month(models.IntegerChoices):
+        JAN = 1, "Январь"
+        FEB = 2, "Февраль"
+        MAR = 3, "Март"
+        APR = 4, "Апрель"
+        MAY = 5, "Май"
+        JUN = 6, "Июнь"
+        JUL = 7, "Июль"
+        AUG = 8, "Август"
+        SEP = 9, "Сентябрь"
+        OCT = 10, "Октябрь"
+        NOV = 11, "Ноябрь"
+        DEC = 12, "Декабрь"
+
+    cv = models.ForeignKey(CV, db_constraint=False, on_delete=models.CASCADE)
+    month_begin = models.PositiveSmallIntegerField(choices=Month.choices, default=Month.JAN)
+    year_begin = models.IntegerField()
+    month_end = models.PositiveSmallIntegerField(choices=Month.choices, default=Month.JAN)
+    year_end = models.IntegerField()
+    name = models.CharField(max_length=256)
+    post = models.CharField(max_length=128)
+    stack = models.CharField(max_length=256)
+    responsibilities = models.TextField(max_length=2000)
+
+
+class LanguagesSpoken(models.Model):
+    """Владение языками в резюме (возможно несколько значений)"""
+    cv = models.ForeignKey(CV, db_constraint=False, on_delete=models.CASCADE)
+    language = models.ForeignKey(Languages, db_constraint=False, on_delete=models.CASCADE)
+    level = models.ForeignKey(LanguageLevels, db_constraint=False, on_delete=models.CASCADE)
+
+
+class CVEmployment(models.Model):
+    """Занятость в резюме (возможно несколько значений)"""
+    cv = models.ForeignKey(CV, db_constraint=False, on_delete=models.CASCADE)
+    employment = models.ForeignKey(Employments, db_constraint=False, on_delete=models.CASCADE)
+
+
+class CVWorkSchedule(models.Model):
+    """График работы в резюме (возможно несколько значений)"""
+    cv = models.ForeignKey(CV, db_constraint=False, on_delete=models.CASCADE)
+    schedule = models.ForeignKey(WorkSchedules, db_constraint=False, on_delete=models.CASCADE)
