@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    <ul>
+        <li>
+            <a href="{% url 'vacancies:vacancy_list' %}">мои вакансии</a>
+        </li>
+        <li>
+            <a href="{% url 'news:moderate_news' %}">отклики по моим вакансиям</a>
+        </li>
+        <li>
+            <a href="{% url 'news:moderate_news' %}">поиск кандидатов</a>
+        </li>
+    </ul>
+
+{% endblock %}
+
+{% block content %}
+
+    <h1>{{ object }}</h1>
+
+    <h5>
+        <li>На BestJob с {{ object.date_create }}</li>
+        <li>{{ object.image }}</li>
+        <li>{{ object.data }}</li>
+    </h5>
+
+{% endblock %}

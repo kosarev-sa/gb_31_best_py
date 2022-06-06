@@ -6,28 +6,31 @@ from news.models import News
 class NewsCreateForm(forms.ModelForm):
     class Meta:
         model = News
-        fields = '__all__'
+        exclude = ['author']
 
     def __init__(self, *args, **kwargs):
         super(NewsCreateForm, self).__init__(*args, **kwargs)
-        self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
+        self.fields['title'].widget.attrs['placeholder'] = 'Введите заголовок'
+        self.fields['body'].widget.attrs['placeholder'] = 'Введите содержимое'
 
 
 class NewsUpdateForm(forms.ModelForm):
     class Meta:
         model = News
-        fields = '__all__'
+        fields = ['title', 'body', 'is_active']
 
     def __init__(self, *args, **kwargs):
         super(NewsUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
+        self.fields['title'].widget.attrs['placeholder'] = 'Введите заголовок'
+        self.fields['body'].widget.attrs['placeholder'] = 'Введите содержимое'
 
 
-class NewsDeleteForm(forms.ModelForm):
-    class Meta:
-        model = News
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super(NewsDeleteForm, self).__init__(*args, **kwargs)
-        self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
+# class NewsDeleteForm(forms.ModelForm):
+#     class Meta:
+#         model = News
+#         fields = '__all__'
+#
+#     def __init__(self, *args, **kwargs):
+#         super(NewsDeleteForm, self).__init__(*args, **kwargs)
+#         self.fields['title'].widget.attrs['placeholder'] = 'Введите заголовок'
+#         self.fields['body'].widget.attrs['placeholder'] = 'Введите содержимое'

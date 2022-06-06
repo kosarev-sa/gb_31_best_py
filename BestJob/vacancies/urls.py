@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.urls import path
 
-from cvs.views import CVList, CVCreate, CVUpdate, CVDelete, CVDistribute
 from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
 from vacancies.views import VacancyList, VacancyCreate, VacancyUpdate, VacancyDelete, VacancyDistribute
 

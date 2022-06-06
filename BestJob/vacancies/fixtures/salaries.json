@@ -1,0 +1,24 @@
+[
+  {
+    "model": "vacancies.salary",
+    "pk": 1,
+    "fields": {
+      "vacancy": 1,
+      "salary_from": 100000.0,
+      "salary_to": 150000.0,
+      "currency": 1,
+      "is_on_hand": true
+    }
+  },
+  {
+    "model": "vacancies.salary",
+    "pk": 2,
+    "fields": {
+      "vacancy": 2,
+      "salary_from": 2000,
+      "salary_to": 2500,
+      "currency": 2,
+      "is_on_hand": false
+    }
+  }
+]

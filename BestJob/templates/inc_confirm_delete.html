@@ -1,0 +1,13 @@
+<div id="content-container" class="container p-none">
+    <div class="side-p">
+        <h3>Объект будет удалён</h3>
+        <p>Вы подтверждаете удаление {{ object }}?</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            <input class="btn btn-link"
+                   type="button" value="Отмена"
+                   onclick="window.history.go(-1);"/>
+            <input class="btn btn-danger" type="submit" value="Удалить"/>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+[
+  {
+    "model": "approvals.approvalstatus",
+    "pk": 1,
+    "fields": {
+      "status": "CHG"
+    }
+  },
+  {
+    "model": "approvals.approvalstatus",
+    "pk": 2,
+    "fields": {
+      "status": "COR"
+    }
+  },
+  {
+    "model": "approvals.approvalstatus",
+    "pk": 3,
+    "fields": {
+      "status": "CNC"
+    }
+  },
+  {
+    "model": "approvals.approvalstatus",
+    "pk": 4,
+    "fields": {
+      "status": "CHD"
+    }
+  }
+]

@@ -1,6 +1,5 @@
 from django import forms
 
-from cvs.models import CV
 from vacancies.models import Vacancy
 
 

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    <ul>
+        <li>
+            <a href="{% url 'index' %}">вернуться на главную</a>
+        </li>
+    </ul>
+
+{% endblock %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+                <h3>Email подтвержден.</h3>
+                <br>
+                <h4>Пользователь {{ user.username }} активирован.</h4>
+            {% else %}
+                <h3>Неверная ссылка. </h3> <br> <h4>Пользователь не активирован.</h4>
+            {% endif %}
+
+{% endblock %}
+
