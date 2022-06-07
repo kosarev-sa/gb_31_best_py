@@ -7,7 +7,8 @@ from approvals.models import ApprovalStatus
 from news.models import News
 
 from users.models import User, EmployerProfile, WorkerProfile
-from vacancies.models import Vacancy, Salary
+from vacancies.models import Vacancy
+from search.models import Category
 
 
 JSON_PATH_NEWS = 'news/fixtures/'
@@ -84,18 +85,9 @@ class Command(BaseCommand):
             _status = ApprovalStatus.objects.get(id=status)
             vac['status'] = _status
 
+            specialization = vac.get('specialization')
+            _specialization = Category.objects.get(id=specialization)
+            vac['specialization'] = _specialization
+
             new_vacancy = Vacancy(**vac)
             new_vacancy.save()
-
-        salaries = load_from_json(JSON_PATH_VACANCIES + 'salaries.json')
-        Salary.objects.all().delete()
-
-        for salary in salaries:
-            sal = salary.get('fields')
-            sal['id'] = salary.get('pk')
-            vacancy = sal.get('vacancy')
-            _vacancy = Vacancy.objects.get(id=vacancy)
-            sal['vacancy'] = _vacancy
-
-            new_salary = Salary(**sal)
-            new_salary.save()
