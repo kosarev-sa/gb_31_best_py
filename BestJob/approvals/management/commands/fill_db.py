@@ -19,7 +19,7 @@ def load_from_json(file_name):
 class Command(BaseCommand):
     def handle(self, *args, **options):
 
-        # Раскомитить на проде.
+        # Роли раскомитить на проде. На dev роли создаются в fill_test_user.
         # roles = load_from_json(JSON_PATH_ROLES + 'roles.json')
         # Role.objects.all().delete()
         #
