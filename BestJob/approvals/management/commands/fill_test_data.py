@@ -6,6 +6,7 @@ import json
 from approvals.models import ApprovalStatus
 from news.models import News
 from users.models import User, EmployerProfile, WorkerProfile
+
 from vacancies.models import Vacancy, Salary
 from cvs.models import CV, CVSkills, CVEmployment, CVWorkSchedule, Education, Experience, LanguagesSpoken
 from search.models import Category, MainSkills, Languages, LanguageLevels, Employments, WorkSchedules
@@ -84,6 +85,10 @@ class Command(BaseCommand):
             status = vac.get('status')
             _status = ApprovalStatus.objects.get(id=status)
             vac['status'] = _status
+
+            specialization = vac.get('specialization')
+            _specialization = Category.objects.get(id=specialization)
+            vac['specialization'] = _specialization
 
             new_vacancy = Vacancy(**vac)
             new_vacancy.save()

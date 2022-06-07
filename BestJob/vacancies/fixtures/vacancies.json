@@ -5,11 +5,16 @@
     "fields": {
       "employer_profile": 1,
       "status": 1,
+      "specialization": 1,
       "is_active": true,
       "name": "Разработчик всех разработок",
       "experience": "NO",
       "city": "Москва",
-      "description": "Обязанности: тестировать.\nТребования: официальное оформление.\nУсловия: нормальные."
+      "description": "Обязанности: тестировать.\nТребования: официальное оформление.\nУсловия: нормальные.",
+      "salary_from": 100000.0,
+      "salary_to": 150000.0,
+      "currency": 1,
+      "salary_on_hand": true
     }
   },
   {
@@ -18,11 +23,16 @@
     "fields": {
       "employer_profile": 2,
       "status": 2,
+      "specialization": 2,
       "is_active": true,
       "name": "Требуется разработчик",
       "experience": "BIG",
       "city": "Санкт-Петербург",
-      "description": "Обязанности: кодить.\nТребования: ходить на работу.\nУсловия: хорошие."
+      "description": "Обязанности: кодить.\nТребования: ходить на работу.\nУсловия: хорошие.",
+      "salary_from": 2000,
+      "salary_to": 2500,
+      "currency": 2,
+      "salary_on_hand": false
     }
   }
 ]
