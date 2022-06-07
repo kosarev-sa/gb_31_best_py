@@ -41,7 +41,8 @@ class WorkerProfile(models.Model):
     image = models.ImageField(upload_to='worker_photo', blank=True)
     city = models.CharField('Город проживания', max_length=80, blank=True)
     phone_number = models.TextField('Телефон для связи', blank=True)
-    ready_to_relocate = models.BooleanField('Готовность к переезду', default=False)
+    gender = models.TextField('Пол', max_length=1, blank=True)
+    birth_date = models.DateTimeField('Дата рождения', blank=True)
     data = models.TextField('О себе', blank=True)
 
 
