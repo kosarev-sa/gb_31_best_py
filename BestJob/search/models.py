@@ -56,8 +56,8 @@ class Category(models.Model):
     code = models.CharField(max_length=10, unique=True)
     name = models.CharField(max_length=100, unique=True)
 
-
 class Currency(models.IntegerChoices):
+    """Валюта (выбор одного значения)"""
     RUB = 1, 'Рубли'
     USD = 2, 'Доллары, США'
     EUR = 3, 'Евро'

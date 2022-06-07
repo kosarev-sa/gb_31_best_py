@@ -1,0 +1,22 @@
+[
+  {
+    "cv": 1,
+    "employment": "FULL"
+  },
+  {
+    "cv": 1,
+    "employment": "PART"
+  },
+  {
+    "cv": 2,
+    "employment": "PART"
+  },
+  {
+    "cv": 2,
+    "employment": "FULL"
+  },
+  {
+    "cv": 2,
+    "employment": "INTERN"
+  }
+]
