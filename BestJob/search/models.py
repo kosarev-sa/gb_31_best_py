@@ -55,3 +55,9 @@ class Category(models.Model):
     """Специализации. code: PROG, name: Программист"""
     code = models.CharField(max_length=10, unique=True)
     name = models.CharField(max_length=100, unique=True)
+
+class Currency(models.IntegerChoices):
+    RUB = 1, 'Рубли'
+    USD = 2, 'Доллары, США'
+    EUR = 3, 'Евро'
+    KZT = 4, 'Тенге, Казахстан'
