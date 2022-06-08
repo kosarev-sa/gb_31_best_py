@@ -37,3 +37,8 @@
 .global-font-family {
     font-family: Helvetica Neue !important;
 }
+
+
+.grey-bg-color {
+    background-color: rgb(220, 220, 220);
+}
