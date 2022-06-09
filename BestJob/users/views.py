@@ -45,6 +45,7 @@ class EmployerProfileView(ListView, BaseClassContextMixin):
         })
         return context
 
+
 class EmployerDetailView(DetailView, BaseClassContextMixin):
     """view для просмотра выбранного работодателя"""
     model = EmployerProfile
@@ -80,7 +81,7 @@ class ModeratorProfileView(UpdateView):
 class UserLoginView(LoginView):
     """view для логина"""
     template_name = 'user_login.html'
-    from_class = UserLoginForm
+    form_class = UserLoginForm
     success_url = reverse_lazy('index')
 
     def get_context_data(self, **kwargs):
