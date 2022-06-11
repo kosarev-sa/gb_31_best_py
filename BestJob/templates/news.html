@@ -2,37 +2,8 @@
 {% load static %}
 
 {% block menu %}
-<!--    {{ user.username }}-->
-<!--    <ul>-->
-<!--        <li>-->
-<!--            <a href="{% url 'users:login' %}">войти</a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--            <a href="{% url 'users:registration' %}">регистрация</a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--            <a href="{% url 'users:logout' %}">выйти</a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--            <a href="{% url 'users:worker_profile' '1' %}">профиль соискателя</a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--            <a href="{% url 'users:employer_profile' '1' %}">профиль работодателя</a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--            <a href="{% url 'users:moderator_profile' '1' %}">профиль модератора</a>-->
-<!--        </li>-->
-<!--        <li>-->
-<!--            <a href="URL">поиск</a>-->
-<!--        </li>-->
-<!--    </ul>-->
-{% if user.role|lower == "соискатель" %}
-    {% include "worker_menu.html" %}
-{% elif user.role|lower == "работодатель" %}
-    {% include "employer_menu.html" %}
-{% elif user.role|lower == "модератор" %}
-    {% include "moderator_menu.html" %}
-{% endif %}
+
+{% include "multimenu.html" %}
 
 {% endblock %}
 
