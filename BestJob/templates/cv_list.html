@@ -7,34 +7,35 @@
         <li>
             <a href="{% url 'cv:create_cv' %}">создать резюме</a>
         </li>
-
         <li>
-            <a href="{% url 'users:employee_profile' '1' %}">вернуться в профиль</a>
+            <a href="{% url 'users:worker_profile' worker.id %}">вернуться в профиль</a>
         </li>
     </ul>
 
 {% endblock %}
 
 {% block content %}
+    {% for cv in cvs %}
     <table width="100%">
         <tr>
             <td width="60%">
-                резюме
+                {{ cv.post }}
             </td>
             <td>
-                статус
+                {{ cv.date_create}}
             </td>
             <td>
-                <a href="{% url 'cv:update_cv' '1' %}">редактировать</a>
+                <a href="{% url 'cv:update_cv' cv.id %}">редактировать</a>
             </td>
             <td>
-                <a href="{% url 'cv:delete_cv' '1' %}">удалить</a>
+                <a href="{% url 'cv:delete_cv' cv.id %}">удалить</a>
             </td>
             <td>
-                <a href="{% url 'cv:distribute_cv' '1' %}">разместить</a>
+                <a href="{% url 'cv:distribute_cv' cv.id %}">разместить</a>
             </td>
 
         </tr>
     </table>
+    {% endfor %}
 {% endblock %}
 

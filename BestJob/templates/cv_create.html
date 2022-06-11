@@ -12,12 +12,107 @@
 
 {% block content %}
 
-    <form method="post" action="">
-        {% csrf_token %}
-        {{ form.data }}
-        <br>
-        <input type="submit" value="создать">
-    </form>
+<!--    <form method="post" action="">-->
+<!--        {% csrf_token %}-->
+<!--        {{ form.data }}-->
+<!--        <br>-->
+<!--        -->
+<!--        -->
+        <main>
+            <div>
+                <h2>Ваше резюме</h2>
+<!--                Эти данные не заполняем - тянем из профайла соискателя-->
+                <h3>{{ worker.name }}</h3>
+                <p><img class="card-img-top" src="{{ worker.image.url }}" alt=""></p>
+                <form action="{% url 'cvs:create_cv' %}" method="post">
+                    {% csrf_token %}
+                    <div>
+                        <label>Контактные данные:</label>
+                        <div>
+                            <label>Мобильный телефон</label>
+                            <p>{{ worker.phone_number }}</p>
+                        </div>
+                        <div>
+                            <label>Email</label>
+                            <p>{{ worker.user.email }}</p>
+                        </div>
+                        <div>
+                            <label>Город проживания</label>
+                            <p>{{ worker.city }}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Основная информация:</label>
+                        <div>
+                            <label>Дата рождения</label>
+                            <p>{{ worker.birth_date }}</p>
+                        </div>
+                        <div>
+                            <label>Пол</label>
+                            <p>{{ worker.gender }}</p>
+                        </div>
+                    </div>
+<!--                    Данные заполняемые, которые будем сохранять в CV-->
+                    <div>
+                        <label>Специализация</label>
+                        <select name="speciality">
+                        {% for sp in speciality %}
+                            <option value="{{sp.id}}">{{ sp.name }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label>Желаемая должность</label>
+                        {{ form.post }}
+                    </div>
+                    <div>
+                        <label>Зарплата</label>
+                        {{ form.salary }}
+                        {{ form.currency }}
+                    </div>
+                    <div>
+                         <h4>Опыт работы</h4>
+                        <label>Добавить место работы</label>
+
+                    </div>
+
+                    <div>
+                        <h4>Образование: </h4>
+                        <label>Уровень образования</label>
+                        {{ form.education_level }}
+                        <label>Указать место обучения</label>
+                    </div>
+
+                    <div>
+                        <h4>Владение языками </h4>
+                        <label>Указать еще один язык</label>
+                    </div>
+
+
+                    <div>
+                         <label>Возможность переезда: </label>
+                        {{ form.moving }}
+                    </div>
+
+                <div>
+                    <label>Занятость: </label><br>
+                    {% for empl in employments %}
+                    <input type="checkbox"><label>{{ empl }}</label><br>
+                    {% endfor %}
+                </div>
+                <div>
+                    <label>График работы: </label><br>
+                    {% for sch in schedules %}
+                    <input type="checkbox"><label>{{ sch }}</label><br>
+                    {% endfor %}
+                </div>
+                    <input type="submit" value="создать">
+                </form>
+
+            </div>
+        </main>
+
+<!--    </form>-->
 
 {% endblock %}
 
