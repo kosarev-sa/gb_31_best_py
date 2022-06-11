@@ -19,6 +19,9 @@ class CV(models.Model):
     salary = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, verbose_name='Зарплата')
     currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB, null=True)
 
+    def __unicode__(self):
+        return self.post
+
 
 class CVSkills(models.Model):
     """Ключевые навыки"""
