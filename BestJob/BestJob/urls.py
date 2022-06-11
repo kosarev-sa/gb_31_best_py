@@ -27,6 +27,7 @@ urlpatterns = [
     path('users/', include('users.urls', namespace='users')),
     path('cvs/', include('cvs.urls', namespace='cvs')),
     path('vacancies/', include('vacancies.urls', namespace='vacancies')),
+    path('search/', include('haystack.urls')),
 ]
 
 if settings.DEBUG:

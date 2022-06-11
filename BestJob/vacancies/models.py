@@ -27,6 +27,9 @@ class Vacancy(models.Model):
     currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB)
     salary_on_hand = models.BooleanField(default=True, blank=True, verbose_name='Зарплата на руки')
 
+    def __unicode__(self):
+        return self.name
+
 
 class Skills(models.Model):
     """Ключевые навыки"""
