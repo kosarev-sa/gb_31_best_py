@@ -7,8 +7,8 @@ from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 
 from cvs.forms import CVCreateForm, CVUpdateForm, CVDeleteForm, CVDistributeForm
-from cvs.models import CV
-from search.models import Category, Currency, Employments, WorkSchedules
+from cvs.models import CV, Experience, CVWorkSchedule, CVEmployment, Education, LanguagesSpoken
+from search.models import Category, Currency, Employments, WorkSchedules, Languages, LanguageLevels
 from users.models import WorkerProfile
 
 
@@ -48,7 +48,35 @@ class CVCreate(CreateView):
         context['speciality'] = Category.objects.all().order_by('name')
         context['employments'] = Employments.objects.all()
         context['schedules'] = WorkSchedules.objects.all()
+        context['languages'] = Languages.objects.all()
+        context['levels'] = LanguageLevels.objects.all()
+        context['months'] = Experience.Month
         return self.render_to_response(context)
+
+    def save_experience(self, data, cv):
+        experience = Experience(cv=cv)
+        experience.name = data.get('name_exp')
+        experience.month_begin = data.get('month_begin', 1)
+        experience.year_begin = data.get('year_begin')
+        experience.month_end = data.get('month_end', 1)
+        experience.year_end = data.get('year_end')
+        experience.post = data.get('post_exp')
+        experience.responsibilities = data.get('responsibilities')
+        experience.save()
+
+    def save_education(self, data, cv):
+        education = Education(cv=cv)
+        education.date_end = data.get('educ_end')
+        education.name = data.get('educ_name')
+        education.department = data.get('department')
+        education.specialty = data.get('educ_specialty')
+        education.save()
+
+    def save_languages(self, data, cv):
+        level = LanguageLevels.objects.get(code=data.get('level'))
+        language = Languages.objects.get(code=data.get('lang'))
+        language_level = LanguagesSpoken(cv=cv, language=language, level=level)
+        language_level.save()
 
     def post(self, request, *args, **kwargs):
         worker = WorkerProfile.objects.get(user=request.user.pk)
@@ -58,15 +86,25 @@ class CVCreate(CreateView):
             cv = form.save(commit=False)
             cv.worker_profile = worker
             cv.save()
-            # отправляем email с подтверждением почты
-            # self.send_verify_link(cv)
-            # создаем профиль в зависимости от роли
-            # if user.role_id == 2:
-            #     employer_profile = EmployerProfile(user_id=user.pk)
-            #     employer_profile.save()
-            # elif user.role_id == 3:
-            #     worker_profile = WorkerProfile(user_id=user.pk)
-            #     worker_profile.save()
+            # сохраняем опыт работы
+            if form.data.get('name_exp', None):
+                self.save_experience(form.data, cv)
+            # сохраняем образование
+            if form.data.get('educ_name', None):
+                self.save_education(form.data, cv)
+            # язык
+            if form.data.get('lang', None):
+                self.save_languages(form.data, cv)
+
+            for key, value in form.data.items():
+                if key.startswith('schedule_'):
+                    schedule = WorkSchedules.objects.get(code=value)
+                    cv_schedule = CVWorkSchedule(cv=cv, schedule=schedule)
+                    cv_schedule.save()
+                elif key.startswith('empl_'):
+                    employment = Employments.objects.get(code=value)
+                    cv_employment = CVEmployment(cv=cv, employment=employment)
+                    cv_employment.save()
 
             return redirect(self.success_url)
         else:
@@ -86,6 +124,14 @@ class CVUpdate(UpdateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVUpdate, self).get_context_data(**kwargs)
         return context
+
+    # def get(self, request, *args, **kwargs):
+    #     worker = WorkerProfile.objects.get(user=request.user.pk)
+    #
+    #
+    # def post(self, request, *args, **kwargs):
+    #     worker = WorkerProfile.objects.get(user=request.user.pk)
+    #     return redirect(self.success_url)
 
 
 class CVDelete(DeleteView):

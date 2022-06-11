@@ -27,7 +27,7 @@ class CVUpdateForm(forms.ModelForm):
 
     class Meta:
         model = CV
-        fields = '__all__'
+        fields = ('post', 'speciality', 'salary', 'currency', 'education_level', 'moving')
 
     def __init__(self, *args, **kwargs):
         super(CVUpdateForm, self).__init__(*args, **kwargs)

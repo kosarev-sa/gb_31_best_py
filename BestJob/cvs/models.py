@@ -39,7 +39,7 @@ class Experience(models.Model):
     """Опыт работы"""
 
     class Month(models.IntegerChoices):
-        JAN = 1, "Январь"
+        JAN = 1,"Январь"
         FEB = 2, "Февраль"
         MAR = 3, "Март"
         APR = 4, "Апрель"
@@ -61,6 +61,9 @@ class Experience(models.Model):
     post = models.CharField(max_length=128)
     stack = models.CharField(max_length=256)
     responsibilities = models.TextField(max_length=2000)
+
+    def month_verbose(self):
+        return dict(Experience.Month)[self.month_begin]
 
 
 class LanguagesSpoken(models.Model):

@@ -12,10 +12,37 @@
 
 {% block content %}
 
-    <form method="post" action="">
+    <form method="post" action="{% url 'cvs:update_cv' %}">
         {% csrf_token %}
-<!--        {{ form.data }}-->
-        <br>
+        <h3>{{ worker.name }}</h3>
+        <p><img class="card-img-top" src="{{ worker.image.url }}" alt=""></p>
+        <div>
+            <h4>Контактные данные:</h4>
+            <div>
+                <label for="phone_number">Мобильный телефон</label>
+                <p id="phone_number">{{ worker.phone_number }}</p>
+            </div>
+            <div>
+                <label for="email">Email</label>
+                <p id="email">{{ worker.user.email }}</p>
+            </div>
+            <div>
+                <label for="{{ worker.city }}">Город проживания</label>
+                <p id="{{ worker.city }}">{{ worker.city }}</p>
+            </div>
+        </div>
+        <div>
+            <h4>Основная информация:</h4>
+            <div>
+                <label>Дата рождения</label>
+                <p>{{ worker.birth_date }}</p>
+            </div>
+            <div>
+                <label>Пол</label>
+                <p>{{ worker.gender }}</p>
+            </div>
+        </div>
+
         <input type="submit" value="сохранить">
     </form>
 

@@ -44,17 +44,11 @@ class Employments(models.Model):
     code = models.CharField(max_length=10, unique=True)
     employment = models.CharField(max_length=100, unique=True)
 
-    def __str__(self):
-        return self.employment
-
 
 class WorkSchedules(models.Model):
     """График работы. code: FULL, schedule: Полный день"""
     code = models.CharField(max_length=10, unique=True)
     schedule = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.schedule
 
 
 class Category(models.Model):
