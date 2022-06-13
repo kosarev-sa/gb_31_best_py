@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 
+from approvals.models import ApprovalStatus
 from cvs.forms import CVCreateForm, CVUpdateForm, CVDeleteForm, CVDistributeForm
 from cvs.models import CV, Experience, CVWorkSchedule, CVEmployment, Education, LanguagesSpoken
 from search.models import Category, Currency, Employments, WorkSchedules, Languages, LanguageLevels
@@ -85,11 +86,13 @@ class CVCreate(CreateView):
 
     def post(self, request, *args, **kwargs):
         worker = WorkerProfile.objects.get(user=request.user.pk)
+        start_status = ApprovalStatus.objects.get(status='CHG')
         form = self.form_class(data=request.POST)
         if form.is_valid():
             # сохраняем новое резюме
             cv = form.save(commit=False)
             cv.worker_profile = worker
+            cv.status = start_status
             cv.save()
             # сохраняем опыт работы
             if form.data.get('name_exp', None):
