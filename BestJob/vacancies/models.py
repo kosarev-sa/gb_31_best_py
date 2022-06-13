@@ -22,10 +22,13 @@ class Vacancy(models.Model):
     experience = models.CharField(max_length=3, choices=EXPERIENCE, blank=True, verbose_name='Опыт')
     city = models.CharField(max_length=20, blank=True, verbose_name='Вакансия в городе')
     description = models.CharField(max_length=256, blank=True, verbose_name='Описание вакансии')
-    salary_from = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, verbose_name='доход от')
-    salary_to = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, verbose_name='доход до')
+    salary_from = models.DecimalField(max_digits=8, decimal_places=1, blank=True, null=True, verbose_name='доход от')
+    salary_to = models.DecimalField(max_digits=8, decimal_places=1, blank=True, null=True, verbose_name='доход до')
     currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB)
     salary_on_hand = models.BooleanField(default=True, blank=True, verbose_name='Зарплата на руки')
+
+    def __str__(self):
+        return self.name
 
     def __unicode__(self):
         return self.name
@@ -53,4 +56,3 @@ class SelectedVacancies(models.Model):
     """Избранные вакансии"""
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
     worker_profile = models.ForeignKey(WorkerProfile, on_delete=models.CASCADE)
-

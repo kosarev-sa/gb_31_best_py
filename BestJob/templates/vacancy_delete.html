@@ -12,12 +12,7 @@
 
 {% block content %}
 
-    <form method="post" action="">
-        {% csrf_token %}
-        {{ form.data }}
-        <br>
-        <input type="submit" value="удалить">
-    </form>
+    {% include "inc_confirm_delete.html" %}
 
 {% endblock %}
 
