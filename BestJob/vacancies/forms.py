@@ -8,7 +8,8 @@ class VacancyCreateForm(forms.ModelForm):
 
     class Meta:
         model = Vacancy
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ('employer_profile',)
 
     def __init__(self, *args, **kwargs):
         super(VacancyCreateForm, self).__init__(*args, **kwargs)
