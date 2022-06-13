@@ -9,7 +9,7 @@
         </li>
 
         <li>
-            <a href="{% url 'users:employer_profile' '1' %}">вернуться в профиль</a>
+            <a href="{% url 'users:employer_profile' pk=1 %}">вернуться в профиль</a>
         </li>
     </ul>
 
@@ -19,22 +19,15 @@
     <table width="100%">
         <tr>
             <td width="60%">
-                резюме
+                <ul>
+                    {% for vacancy in  vacancies_list %}
+                        <li>"{{ vacancy.name }}". Статус - {{ vacancy.status }}</li>
+                        <a href="{% url 'vacancies:update_vacancy' pk=vacancy.id %}">редактировать</a>
+                        <a href="{% url 'vacancies:delete_vacancy' pk=vacancy.id %}">удалить</a>
+                        <a href="{% url 'vacancies:distribute_vacancy' pk=vacancy.id %}">разместить</a>
+                    {% endfor %}
+                </ul>
             </td>
-            <td>
-                статус
-            </td>
-            <td>
-                <a href="{% url 'vacancies:update_vacancy' '1' %}">редактировать</a>
-            </td>
-            <td>
-                <a href="{% url 'vacancies:delete_vacancy' '1' %}">удалить</a>
-            </td>
-            <td>
-                <a href="{% url 'vacancies:distribute_vacancy' '1' %}">разместить</a>
-            </td>
-
         </tr>
     </table>
 {% endblock %}
-

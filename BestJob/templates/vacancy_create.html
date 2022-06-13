@@ -14,10 +14,9 @@
 
     <form method="post" action="">
         {% csrf_token %}
-        {{ form.data }}
+        {{ form.as_p }}
         <br>
         <input type="submit" value="создать">
     </form>
 
 {% endblock %}
-
