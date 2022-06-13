@@ -9,7 +9,7 @@ from users.models import WorkerProfile, EmployerProfile
 class CV(models.Model):
     """Резюме"""
     worker_profile = models.ForeignKey(WorkerProfile, on_delete=models.CASCADE)
-    status = models.ForeignKey(ApprovalStatus, on_delete=models.CASCADE, default=ApprovalStatus.objects.get(status='CHG'))
+    status = models.ForeignKey(ApprovalStatus, on_delete=models.CASCADE)
     date_create = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True, db_index=True)
     speciality = models.ForeignKey(Category, on_delete=models.CASCADE)
