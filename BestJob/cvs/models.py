@@ -9,7 +9,7 @@ from users.models import WorkerProfile, EmployerProfile
 class CV(models.Model):
     """Резюме"""
     worker_profile = models.ForeignKey(WorkerProfile, on_delete=models.CASCADE)
-    status = models.ForeignKey(ApprovalStatus, on_delete=models.CASCADE)
+    status = models.ForeignKey(ApprovalStatus, on_delete=models.CASCADE, default=ApprovalStatus.objects.get(status='CHG'))
     date_create = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True, db_index=True)
     speciality = models.ForeignKey(Category, on_delete=models.CASCADE)
@@ -42,7 +42,7 @@ class Experience(models.Model):
     """Опыт работы"""
 
     class Month(models.IntegerChoices):
-        JAN = 1, "Январь"
+        JAN = 1,"Январь"
         FEB = 2, "Февраль"
         MAR = 3, "Март"
         APR = 4, "Апрель"
@@ -65,12 +65,21 @@ class Experience(models.Model):
     stack = models.CharField(max_length=256)
     responsibilities = models.TextField(max_length=2000)
 
+    def month_verbose(self):
+        return dict(Experience.Month)[self.month_begin]
+
 
 class LanguagesSpoken(models.Model):
     """Владение языками в резюме (возможно несколько значений)"""
     cv = models.ForeignKey(CV, on_delete=models.CASCADE)
     language = models.ForeignKey(Languages, on_delete=models.CASCADE)
     level = models.ForeignKey(LanguageLevels, on_delete=models.CASCADE)
+
+    def save_languages(self, data, cv):
+        level = LanguageLevels.objects.get(code=data.get('level'))
+        language = Languages.objects.get(code=data.get('lang'))
+        language_level = LanguagesSpoken(cv=cv, language=language, level=level)
+        language_level.save()
 
 
 class CVEmployment(models.Model):

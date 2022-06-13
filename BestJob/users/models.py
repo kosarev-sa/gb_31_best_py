@@ -42,8 +42,7 @@ class WorkerProfile(models.Model):
     city = models.CharField('Город проживания', max_length=80, blank=True)
     phone_number = models.TextField('Телефон для связи', blank=True)
     gender = models.TextField('Пол', max_length=1, blank=True)
-    # добавил null=True, без него при регистрации не создается провиль рабочего
-    birth_date = models.DateField('Дата рождения', blank=True, null=True)
+    birth_date = models.DateTimeField('Дата рождения', blank=True)
     data = models.TextField('О себе', blank=True)
 
 
