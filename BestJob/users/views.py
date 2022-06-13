@@ -24,8 +24,6 @@ class WorkerProfileView(UpdateView):
     template_name = 'employee_profile.html'
     form_class = WorkerProfileForm
 
-    # success_url = reverse_lazy()
-
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(WorkerProfileView, self).get_context_data(**kwargs)
         return context

@@ -75,6 +75,12 @@ class LanguagesSpoken(models.Model):
     language = models.ForeignKey(Languages, on_delete=models.CASCADE)
     level = models.ForeignKey(LanguageLevels, on_delete=models.CASCADE)
 
+    def save_languages(self, data, cv):
+        level = LanguageLevels.objects.get(code=data.get('level'))
+        language = Languages.objects.get(code=data.get('lang'))
+        language_level = LanguagesSpoken(cv=cv, language=language, level=level)
+        language_level.save()
+
 
 class CVEmployment(models.Model):
     """Занятость в резюме (возможно несколько значений)"""
