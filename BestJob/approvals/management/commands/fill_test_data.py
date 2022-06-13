@@ -7,7 +7,7 @@ from approvals.models import ApprovalStatus
 from news.models import News
 from users.models import User, EmployerProfile, WorkerProfile
 
-from vacancies.models import Vacancy, Salary
+from vacancies.models import Vacancy
 from cvs.models import CV, CVSkills, CVEmployment, CVWorkSchedule, Education, Experience, LanguagesSpoken
 from search.models import Category, MainSkills, Languages, LanguageLevels, Employments, WorkSchedules
 
@@ -69,6 +69,10 @@ class Command(BaseCommand):
             _user = User.objects.get(id=user)
             work['user'] = _user  # Заменяем юзера объектом
 
+            birth_date = datetime.datetime.strptime(work.get('birth_date'), '%Y-%m-%d')
+            birth_date = birth_date.replace(tzinfo=datetime.timezone.utc)
+            work['birth_date'] = birth_date
+
             new_worker = WorkerProfile(**work)
             new_worker.save()
 
@@ -87,24 +91,11 @@ class Command(BaseCommand):
             vac['status'] = _status
 
             specialization = vac.get('specialization')
-            _specialization = Category.objects.get(id=specialization)
+            _specialization = Category.objects.get(code=specialization)
             vac['specialization'] = _specialization
 
             new_vacancy = Vacancy(**vac)
             new_vacancy.save()
-
-        salaries = load_from_json(JSON_PATH_VACANCIES + 'salaries.json')
-        Salary.objects.all().delete()
-
-        for salary in salaries:
-            sal = salary.get('fields')
-            sal['id'] = salary.get('pk')
-            vacancy = sal.get('vacancy')
-            _vacancy = Vacancy.objects.get(id=vacancy)
-            sal['vacancy'] = _vacancy
-
-            new_salary = Salary(**sal)
-            new_salary.save()
 
         cvs = load_from_json(JSON_PATH_CV + 'cv.json')
         CV.objects.all().delete()

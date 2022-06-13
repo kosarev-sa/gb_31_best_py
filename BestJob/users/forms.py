@@ -59,7 +59,6 @@ class UserLoginForm(AuthenticationForm):
         self.fields['password'].widget.attrs['placeholder'] = 'Введите пароль'
 
 
-
 class UserRegisterForm(UserCreationForm):
     """форма для регистрации"""
 

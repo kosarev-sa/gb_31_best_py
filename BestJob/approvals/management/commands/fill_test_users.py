@@ -16,7 +16,7 @@ class Command(BaseCommand):
         superuser = User.objects.create_superuser('sirius', 'sirius@mail.ru', '1', pk=1)
         superuser.save()
 
-        # Добавление ролей пользователей (Модерато, Работодатель, соискатель)
+        # Добавление ролей пользователей (Модератор, Работодатель, соискатель)
         roles = load_from_json(JSON_PATH_ROLES + 'roles.json')
 
         for role in roles:

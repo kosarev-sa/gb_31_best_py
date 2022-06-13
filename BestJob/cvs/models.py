@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 from approvals.models import ApprovalStatus
 from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills, Moving, EducationLevel, Category, Currency
-from users.models import WorkerProfile
+from users.models import WorkerProfile, EmployerProfile
 
 
 class CV(models.Model):
@@ -18,6 +18,9 @@ class CV(models.Model):
     moving = models.PositiveSmallIntegerField(choices=Moving.choices, default=Moving.UNREAL, null=True)
     salary = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, verbose_name='Зарплата')
     currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB, null=True)
+
+    def __unicode__(self):
+        return self.post
 
 
 class CVSkills(models.Model):
@@ -83,3 +86,9 @@ class CVWorkSchedule(models.Model):
     """График работы в резюме (возможно несколько значений)"""
     cv = models.ForeignKey(CV, on_delete=models.CASCADE)
     schedule = models.ForeignKey(WorkSchedules, on_delete=models.CASCADE)
+
+
+class SelectedCV(models.Model):
+    """Избранные резюме"""
+    cv = models.ForeignKey(CV, on_delete=models.CASCADE)
+    employer_profile = models.ForeignKey(EmployerProfile, on_delete=models.CASCADE)

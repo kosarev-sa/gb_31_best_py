@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 from approvals.models import ApprovalStatus
-from users.models import EmployerProfile
+from users.models import EmployerProfile, WorkerProfile
 from search.models import Employments, WorkSchedules, MainSkills, Category, Currency
 
 EXPERIENCE = (
@@ -27,6 +27,9 @@ class Vacancy(models.Model):
     currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB)
     salary_on_hand = models.BooleanField(default=True, blank=True, verbose_name='Зарплата на руки')
 
+    def __unicode__(self):
+        return self.name
+
 
 class Skills(models.Model):
     """Ключевые навыки"""
@@ -44,3 +47,10 @@ class WorkingHours(models.Model):
     """Режим работы"""
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
     schedule = models.ForeignKey(WorkSchedules, on_delete=models.CASCADE)
+
+
+class SelectedVacancies(models.Model):
+    """Избранные вакансии"""
+    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
+    worker_profile = models.ForeignKey(WorkerProfile, on_delete=models.CASCADE)
+

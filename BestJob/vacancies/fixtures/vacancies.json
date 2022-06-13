@@ -5,7 +5,7 @@
     "fields": {
       "employer_profile": 1,
       "status": 1,
-      "specialization": 1,
+      "specialization": "SYSADM",
       "is_active": true,
       "name": "Разработчик всех разработок",
       "experience": "NO",
@@ -23,7 +23,7 @@
     "fields": {
       "employer_profile": 2,
       "status": 2,
-      "specialization": 2,
+      "specialization": "BACKD",
       "is_active": true,
       "name": "Требуется разработчик",
       "experience": "BIG",
