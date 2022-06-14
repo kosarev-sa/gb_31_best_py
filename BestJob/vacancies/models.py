@@ -14,10 +14,10 @@ EXPERIENCE = (
 
 class Vacancy(models.Model):
     """Вакансии"""
-    employer_profile = models.ForeignKey(EmployerProfile, on_delete=models.CASCADE)
-    status = models.ForeignKey(ApprovalStatus, default=1, on_delete=models.CASCADE)
-    specialization = models.ForeignKey(Category, default=1, on_delete=models.CASCADE)
-    is_active = models.BooleanField(default=True, db_index=True)
+    employer_profile = models.ForeignKey(EmployerProfile, on_delete=models.CASCADE, verbose_name='Компания | ИП')
+    status = models.ForeignKey(ApprovalStatus, default=1, on_delete=models.CASCADE, verbose_name='Статус модерации')
+    specialization = models.ForeignKey(Category, default=1, on_delete=models.CASCADE, verbose_name='Специализация')
+    is_active = models.BooleanField(default=True, db_index=True, verbose_name='Вакансия активна')
     name = models.CharField(max_length=256, blank=True, verbose_name='Название вакансии')
     experience = models.CharField(max_length=3, choices=EXPERIENCE, blank=True, verbose_name='Опыт')
     city = models.CharField(max_length=20, blank=True, verbose_name='Вакансия в городе')
