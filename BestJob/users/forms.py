@@ -13,11 +13,16 @@ class WorkerProfileForm(forms.ModelForm):
 
     class Meta:
         model = WorkerProfile
-        fields = '__all__'
+        fields = ['name', 'image', 'city', 'phone_number', 'gender', 'birth_date', 'data']
 
     def __init__(self, *args, **kwargs):
         super(WorkerProfileForm, self).__init__(*args, **kwargs)
-        self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
+        self.fields['name'].widget.attrs['placeholder'] = 'Введите ФИО'
+        self.fields['city'].widget.attrs['placeholder'] = 'Введите город проживания'
+        self.fields['phone_number'].widget.attrs['placeholder'] = 'Введите телефон для связи'
+        self.fields['gender'].widget.attrs['placeholder'] = 'Введите Ваш пол'
+        self.fields['birth_date'].widget.attrs['placeholder'] = 'Введите дату Вашего рождения'
+        self.fields['data'].widget.attrs['placeholder'] = 'Введите пару слов о себе'
 
 
 class EmployerProfileForm(forms.ModelForm):
@@ -57,7 +62,6 @@ class UserLoginForm(AuthenticationForm):
         super(UserLoginForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs['placeholder'] = 'Введите имя пользователя'
         self.fields['password'].widget.attrs['placeholder'] = 'Введите пароль'
-
 
 
 class UserRegisterForm(UserCreationForm):

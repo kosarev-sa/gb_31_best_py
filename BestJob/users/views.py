@@ -1,4 +1,6 @@
 # Create your views here.
+from django.http import HttpResponseRedirect
+
 from BestJob.mixin import BaseClassContextMixin, UserDispatchMixin
 
 from django.contrib import auth
@@ -18,13 +20,27 @@ from users.forms import WorkerProfileForm, EmployerProfileForm, ModeratorProfile
 from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User
 
 
-class WorkerProfileView(UpdateView):
+class WorkerProfileDetailView(DetailView):
     """view для профиля соискателя"""
     model = WorkerProfile
-    template_name = 'employee_profile.html'
-    form_class = WorkerProfileForm
+    template_name = 'worker_profile.html'
 
-    # success_url = reverse_lazy()
+    def get_object(self, queryset=None):
+        worker = get_object_or_404(WorkerProfile, user_id=self.kwargs['pk'])
+        return worker
+
+
+class WorkerProfileView(UpdateView):
+    """view для редактирования профиля соискателя"""
+    model = WorkerProfile
+    template_name = 'worker_profile_update.html'
+    form_class = WorkerProfileForm
+    # success_url = reverse_lazy('users:worker_profile')
+    success_url = reverse_lazy('index')
+
+    def get_object(self, queryset=None):
+        worker = get_object_or_404(WorkerProfile, user_id=self.kwargs['pk'])
+        return worker
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(WorkerProfileView, self).get_context_data(**kwargs)

@@ -12,12 +12,154 @@
 
 {% block content %}
 
-    <form method="post" action="">
-        {% csrf_token %}
-        {{ form.data }}
-        <br>
-        <input type="submit" value="создать">
-    </form>
+    <main>
+        <div>
+            <h2>Ваше резюме</h2>
+            <!--                Эти данные не заполняем - тянем из профайла соискателя-->
+            <h3>{{ worker.name }}</h3>
+            {% if worker.image %}
+                <p><img class="card-img-top" src="{{ worker.image.url }}" alt="Нет фото"></p>
+            {% else %}
+                <p>Нет фото</p>
+            {% endif %}
+            <form action="{% url 'cvs:create_cv' %}" method="post">
+                {% csrf_token %}
+                <div>
+                    <h4>Контактные данные:</h4>
+                    <div>
+                        <label for="phone_number">Мобильный телефон</label>
+                        <p id="phone_number">{{ worker.phone_number }}</p>
+                    </div>
+                    <div>
+                        <label for="email">Email</label>
+                        <p id="email">{{ worker.user.email }}</p>
+                    </div>
+                    <div>
+                        <label for="{{ worker.city }}">Город проживания</label>
+                        <p id="{{ worker.city }}">{{ worker.city }}</p>
+                    </div>
+                </div>
+                <div>
+                    <h4>Основная информация:</h4>
+                    <div>
+                        <label>Дата рождения</label>
+                        <p>{{ worker.birth_date }}</p>
+                    </div>
+                    <div>
+                        <label>Пол</label>
+                        <p>{{ worker.gender }}</p>
+                    </div>
+                </div>
+                <!--                    Данные заполняемые, которые будем сохранять в CV-->
+                <div>
+                    <label>Специализация</label>
+                    <select name="speciality">
+                        {% for sp in speciality %}
+                            <option value="{{ sp.id }}">{{ sp.name }}</option>
+                        {% endfor %}
+                    </select><br>
+                </div>
+                <div>
+                    <label>Основные навыки</label>
+
+                    <button> + </button>
+                </div>
+                <div>
+                    <label>Желаемая должность</label>
+                    {{ form.post }}
+                </div>
+                <br>
+                <div>
+                    <label>Зарплата</label>
+                    {{ form.salary }}
+                    {{ form.currency }}
+                </div>
+                <div>
+                    <h4>Опыт работы</h4>
+
+                    <label for="year_begin">Месяц и год начала</label>
+                    <select name="month_begin" id="month_begin">
+                        {% for month in months %}
+                            <option value="{{ month.value }}">{{ month.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="number" step="1" min="1900" max="2050" name="year_begin" id="year_begin"><br>
+                    <label for="year_end">Месяц и год окончания</label>
+                    <select name="month_end" id="month_end">
+                        {% for month in months %}
+                            <option value="{{ month.value }}">{{ month.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="number" step="1" min="1900" max="2050" name="year_end" id="year_end"><br>
+                    <label for="name_exp">Наименование организации</label>
+                    <input type="text" id="name_exp" name="name_exp"><br>
+                    <label for="post_exp">Должность</label>
+                    <input type="text" id="post_exp" name="post_exp"><br>
+                    <label for="responsibilities">Обязанности на рабочем месте</label>
+                    <textarea id="responsibilities" name="responsibilities"
+                              placeholder="Опишите Ваши обязанности, навыки и достижения на указанном месте работы"></textarea><br>
+                    <label>Добавить место работы</label><br>
+                </div>
+
+                <div>
+                    <h4>Образование: </h4>
+                    <label>Уровень образования</label>
+                    {{ form.education_level }}<br>
+
+                    <label for="educ_end">Год окончания</label>
+                    <input type="number" step="1" min="1900" max="2050" name="educ_end" id="educ_end">
+                    <label for="educ_name">Наименование учебного заведения</label>
+                    <input type="text" maxlength="256" name="educ_name" id="educ_name"><br>
+                    <label for="department">Факультет</label>
+                    <input type="text" maxlength="256" name="department" id="department">
+                    <label for="educ_specialty">Специализация</label>
+                    <input type="text" maxlength="256" name="educ_specialty" id="educ_specialty"><br>
+                    <label>Добавить место обучения</label><br>
+                </div>
+
+                <div>
+                    <h4>Владение языками </h4>
+                    <select name="lang" id="lang">
+                        {% for language in languages %}
+                            <option value="{{ language.code }}">{{ language.language }}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="level" id="level">
+                        {% for level in levels %}
+                            <option value="{{ level.code }}">{{ level.level }}</option>
+                        {% endfor %}
+                    </select><br>
+                    <label>Указать еще один язык</label><br>
+                </div>
+
+                <div>
+                    <h4>Возможность переезда: </h4>
+                    {{ form.moving }}
+                </div>
+                <br>
+
+                <div name="employment">
+                    <h4>Занятость: </h4>
+                    {% for empl in employments %}
+                        <input type="checkbox" name="empl_{{ empl.code }}" value="{{ empl.code }}">
+                        <label>{{ empl.employment }}</label><br>
+                    {% endfor %}
+                </div>
+                <br>
+                <div name="schedule">
+                    <h4>График работы: </h4>
+                    {% for sch in schedules %}
+                        <input type="checkbox" name="schedule_{{ sch.code }}" value="{{ sch.code }}">
+                        <label>{{ sch.schedule }}</label><br>
+                    {% endfor %}
+                </div>
+                <input type="submit" value="создать">
+            </form>
+
+        </div>
+    </main>
+
+    <!--    </form>-->
 
 {% endblock %}
 

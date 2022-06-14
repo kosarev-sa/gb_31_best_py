@@ -140,11 +140,10 @@ class Command(BaseCommand):
 
         for educ in cv_educations:
             ed_row = {}
-
+            ed_row = educ
             cv_id = educ.get('cv')
             _cv = CV.objects.get(id=cv_id)
             ed_row['cv'] = _cv
-
             new_education = Education(**ed_row)
             new_education.save()
 
@@ -153,7 +152,7 @@ class Command(BaseCommand):
 
         for exp in experiences:
             exp_row = {}
-
+            exp_row = exp
             cv_id = exp.get('cv')
             _cv = CV.objects.get(id=cv_id)
             exp_row['cv'] = _cv

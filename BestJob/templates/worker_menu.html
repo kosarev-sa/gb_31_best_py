@@ -3,10 +3,10 @@
 <div class="row pt-3 pb-3 border-bottom border-dark border-3 grey-bg-color">
     <div class="col d-flex flex-nowrap align-items-center justify-content-around">
         <div class="border-top border-bottom border-dark border-1 rounded p-1">
-            <a class="nolink big-font " href="{% url 'users:worker_profile' '1' %}">Профиль соискателя</a>
+            <a class="nolink big-font " href="{% url 'users:worker_profile' user.id %}">Профиль соискателя</a>
         </div>
         <div class="border-top border-bottom border-dark border-1 rounded p-1">
-            <a class="nolink big-font " href="#">Ваши резюме</a>
+            <a class="nolink big-font " href="{% url 'cvs:cv_list' %}">Ваши резюме</a>
         </div>
         <div class="border-top border-bottom border-dark border-1 rounded p-1">
             <a class="nolink big-font " href="#">Отклики</a>
@@ -16,3 +16,4 @@
         </div>
     </div>
 </div>
+

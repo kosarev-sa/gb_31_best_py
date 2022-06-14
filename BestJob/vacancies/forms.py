@@ -8,11 +8,14 @@ class VacancyCreateForm(forms.ModelForm):
 
     class Meta:
         model = Vacancy
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ('employer_profile', 'status')
 
     def __init__(self, *args, **kwargs):
         super(VacancyCreateForm, self).__init__(*args, **kwargs)
-        self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
+        self.fields['name'].widget.attrs['placeholder'] = 'Backend разработчик'
+        self.fields['city'].widget.attrs['placeholder'] = 'Москва'
+        self.fields['description'].widget.attrs['placeholder'] = 'Описание вакансии'
 
 
 class VacancyUpdateForm(forms.ModelForm):
@@ -20,11 +23,13 @@ class VacancyUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Vacancy
-        fields = '__all__'
+        exclude = ('employer_profile', 'status')
 
     def __init__(self, *args, **kwargs):
         super(VacancyUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
+        self.fields['name'].widget.attrs['placeholder'] = 'Backend разработчик'
+        self.fields['city'].widget.attrs['placeholder'] = 'Москва'
+        self.fields['description'].widget.attrs['placeholder'] = 'Описание вакансии'
 
 
 class VacancyDeleteForm(forms.ModelForm):
@@ -34,13 +39,9 @@ class VacancyDeleteForm(forms.ModelForm):
         model = Vacancy
         fields = '__all__'
 
-    def __init__(self, *args, **kwargs):
-        super(VacancyDeleteForm, self).__init__(*args, **kwargs)
-        self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
-
 
 class VacancyDistributeForm(forms.ModelForm):
-    """форма удаления вакансии"""
+    """форма размещения вакансии"""
 
     class Meta:
         model = Vacancy
@@ -48,4 +49,6 @@ class VacancyDistributeForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(VacancyDistributeForm, self).__init__(*args, **kwargs)
-        self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
+        self.fields['name'].widget.attrs['placeholder'] = 'Backend разработчик'
+        self.fields['city'].widget.attrs['placeholder'] = 'Москва'
+        self.fields['description'].widget.attrs['placeholder'] = 'Описание вакансии'

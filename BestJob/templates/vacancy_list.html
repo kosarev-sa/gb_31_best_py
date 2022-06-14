@@ -9,32 +9,32 @@
         </li>
 
         <li>
-            <a href="{% url 'users:employer_profile' '1' %}">вернуться в профиль</a>
+            <a href="{% url 'users:employer_profile' employer.id %}">вернуться в профиль</a>
         </li>
     </ul>
 
 {% endblock %}
 
 {% block content %}
+    {% for vacancy in  vacancies %}
     <table width="100%">
         <tr>
             <td width="60%">
-                резюме
+            "{{ vacancy.name }}"
+            </td>
+            <td width="60%">
+            Статус: {{ status }}
             </td>
             <td>
-                статус
+                <a href="{% url 'vacancies:update_vacancy' vacancy.id %}">редактировать</a>
             </td>
             <td>
-                <a href="{% url 'vacancies:update_vacancy' '1' %}">редактировать</a>
+                <a href="{% url 'vacancies:delete_vacancy' vacancy.id %}">удалить</a>
             </td>
             <td>
-                <a href="{% url 'vacancies:delete_vacancy' '1' %}">удалить</a>
+                <a href="{% url 'vacancies:distribute_vacancy' vacancy.id %}">разместить</a>
             </td>
-            <td>
-                <a href="{% url 'vacancies:distribute_vacancy' '1' %}">разместить</a>
-            </td>
-
         </tr>
     </table>
+    {% endfor %}
 {% endblock %}
-
