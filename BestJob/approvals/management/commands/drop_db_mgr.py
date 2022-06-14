@@ -5,7 +5,7 @@ from django.core.management import BaseCommand
 
 from BestJob.settings import BASE_DIR
 
-VENV_EXCLUDE_PATH = 'Lib\\site-packages\\django\\'
+VENV_EXCLUDE_PATH = os.environ['VIRTUAL_ENV']
 MIGRATION_PART_FILE_NAME = '_initial.py'
 DB_PATH = Path(os.path.join(BASE_DIR, 'db.sqlite3'))
 
