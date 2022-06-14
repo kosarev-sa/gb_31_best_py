@@ -2,13 +2,14 @@
 {% load static %}
 
 {% block menu %}
+{% include "worker_menu.html" %}
     <ul>
 
         <li>
             <a href="{% url 'cv:create_cv' %}">создать резюме</a>
         </li>
         <li>
-            <a href="{% url 'users:worker_profile' worker.id %}">вернуться в профиль</a>
+            <a href="{% url 'users:worker_profile' user.id %}">вернуться в профиль</a>
         </li>
     </ul>
 
