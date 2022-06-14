@@ -1,0 +1,7 @@
+.dock-side-prebrowse {
+    position: fixed;
+    top: 0px;
+    left: 5px;
+    margin-top: 95px !important;
+    max-width: 273px;
+}

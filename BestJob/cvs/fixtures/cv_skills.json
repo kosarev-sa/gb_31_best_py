@@ -1,0 +1,46 @@
+[
+  {
+    "cv": "1",
+    "skill": "DJANGO"
+  },
+  {
+    "cv": "1",
+    "skill": "DRF"
+  },
+  {
+    "cv": "1",
+    "skill": "PYTHON"
+  },
+  {
+    "cv": "1",
+    "skill": "PYQT"
+  },
+  {
+    "cv": "1",
+    "skill": "ALCHEMY"
+  },
+  {
+    "cv": "1",
+    "skill": "GIT"
+  },
+  {
+    "cv": "2",
+    "skill": "GIT"
+  },
+  {
+    "cv": "2",
+    "skill": "JAVA"
+  },
+  {
+    "cv": "2",
+    "skill": "JS"
+  },
+   {
+    "cv": "2",
+    "skill": "HTML"
+  },
+  {
+    "cv": "2",
+    "skill": "REACT"
+  }
+]

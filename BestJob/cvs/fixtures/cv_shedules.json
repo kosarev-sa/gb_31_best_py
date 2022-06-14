@@ -1,0 +1,26 @@
+[
+  {
+    "cv": 1,
+    "schedule": "FULL"
+  },
+  {
+    "cv": 1,
+    "schedule": "CHANGE"
+  },
+  {
+    "cv": 1,
+    "schedule": "FLEX"
+  },
+  {
+    "cv": 1,
+    "schedule": "TELEWORK"
+  },
+  {
+    "cv": 2,
+    "schedule": "FULL"
+  },
+  {
+    "cv": 2,
+    "schedule": "TELEWORK"
+  }
+]
