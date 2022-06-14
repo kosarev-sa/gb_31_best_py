@@ -9,7 +9,7 @@ class VacancyCreateForm(forms.ModelForm):
     class Meta:
         model = Vacancy
         # fields = '__all__'
-        exclude = ('employer_profile',)
+        exclude = ('employer_profile', 'status')
 
     def __init__(self, *args, **kwargs):
         super(VacancyCreateForm, self).__init__(*args, **kwargs)
@@ -23,7 +23,7 @@ class VacancyUpdateForm(forms.ModelForm):
 
     class Meta:
         model = Vacancy
-        fields = '__all__'
+        exclude = ('employer_profile', 'status')
 
     def __init__(self, *args, **kwargs):
         super(VacancyUpdateForm, self).__init__(*args, **kwargs)

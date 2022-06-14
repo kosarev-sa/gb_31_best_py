@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse_lazy
@@ -7,7 +7,7 @@ from django.views.generic import TemplateView, CreateView, UpdateView, ListView,
 from search.models import Category, Employments, WorkSchedules, Languages, \
     LanguageLevels
 from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDistributeForm
-from vacancies.models import Vacancy
+from vacancies.models import Vacancy, WorkingHours
 from users.models import EmployerProfile
 from approvals.models import ApprovalStatus
 
@@ -51,12 +51,21 @@ class VacancyCreate(CreateView):
         context['levels'] = LanguageLevels.objects.all()
         return self.render_to_response(context)
 
+    def post(self, request, *args, **kwargs):
+        employer = EmployerProfile.objects.get(user=request.user.pk)
+        start_status = ApprovalStatus.objects.get(status='CHG')
+        form = self.form_class(data=request.POST)
+        if form.is_valid():
+            # сохраняем новую вакансию
+            vacancy = form.save(commit=False)
+            vacancy.employer_profile = employer
+            vacancy.status = start_status
+            vacancy.save()
 
-
-
-
-
-
+            return redirect(self.success_url)
+        else:
+            print(form.errors)
+        return self.form_invalid(form)
 
 
 class VacancyUpdate(UpdateView):
@@ -65,6 +74,37 @@ class VacancyUpdate(UpdateView):
     template_name = 'vacancy_update.html'
     form_class = VacancyUpdateForm
     success_url = reverse_lazy('vacancy:vacancy_list')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(VacancyUpdate, self).get_context_data(**kwargs)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        super(VacancyUpdate, self).get(request, *args, **kwargs)
+        context = self.get_context_data()
+        vacancy_id = kwargs.get('pk')
+        vacancy = Vacancy.objects.get(id=vacancy_id)
+        employer = EmployerProfile.objects.get(user=request.user.pk)
+        context['employer'] = employer
+        context['employments'] = Employments.objects.all()
+        vacancy_schedules = [vacancy_sch.schedule_id for vacancy_sch in WorkingHours.objects.filter(vacancy=vacancy)]
+        context['vacancy_schedules'] = vacancy_schedules
+        context['languages'] = Languages.objects.all()
+        context['levels'] = LanguageLevels.objects.all()
+        context['schedules'] = WorkSchedules.objects.all()
+        return self.render_to_response(context)
+
+    # def post(self, request, *args, **kwargs):
+    #     self.object = self.get_object()
+    #     form = self.form_class(request.POST, instance=self.object)
+    #
+    #     if form.is_valid():
+    #         self.object.save()
+    #
+    #         return redirect(self.success_url)
+    #     else:
+    #         print(form.errors)
+    #     return self.form_invalid(form)
 
 
 class VacancyDelete(DeleteView):
