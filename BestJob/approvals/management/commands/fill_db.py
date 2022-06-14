@@ -1,22 +1,14 @@
-import datetime
-
-from django.contrib.auth.hashers import make_password
-from django.core.management import BaseCommand
 import json
 
+from django.core.management import BaseCommand
+
 from approvals.models import ApprovalStatus
-from news.models import News
+from search.models import Languages, LanguageLevels, MainSkills, Category, WorkSchedules, Employments
+from users.models import Role
 
-from users.models import Role, User, EmployerProfile, WorkerProfile
-from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills, Category
-from vacancies.models import Vacancy, Salary
-
-JSON_PATH_NEWS = 'news/fixtures/'
 JSON_PATH_SEARCH = 'search/fixtures/'
-JSON_PATH_USERS = 'users/fixtures/'
 JSON_PATH_APPROVAL = 'approvals/fixtures/'
 JSON_PATH_ROLES = 'users/fixtures/'
-JSON_PATH_VACANCIES = 'vacancies/fixtures/'
 
 
 def load_from_json(file_name):
@@ -27,46 +19,14 @@ def load_from_json(file_name):
 class Command(BaseCommand):
     def handle(self, *args, **options):
 
-        # Добавление ролей пользователей (Модерато, Работодатель, соискатель)
-        roles = load_from_json(JSON_PATH_ROLES + 'roles.json')
-        Role.objects.all().delete()
-
-        for role in roles:
-            new_role = Role(pk=role['pk'],
-                            role_name=role['role_name'])
-            new_role.save()
-            print(f'роль "{new_role}" была добавлена')
-
-        # Добавление пользователей
-        users = load_from_json(JSON_PATH_ROLES + 'users.json')
-        User.objects.all().delete()
-
-        for user in users:
-            new_user = User(pk=user['pk'],
-                            username=user['username'],
-                            email=user['email'],
-                            role_id=user['role_id'],
-                            password=make_password(user['password']),
-                            is_active=1)
-            new_user.save()
-            print(f'юзер {new_user.username} с паролем "1" был добавлен')
-
-
-        # Запуск после создания пользователя.
-        news = load_from_json(JSON_PATH_NEWS + 'news.json')
-        News.objects.all().delete()
-        today = datetime.datetime.now(tz=datetime.timezone.utc)
-
-        for n in news:
-            j_news = n.get('fields')
-            j_news['id'] = n.get('pk')
-            author_id = j_news.get('author')
-            author = User.objects.get(id=int(author_id))
-            j_news['author'] = author
-            j_news['created'] = today
-            j_news['updated'] = today
-            new_news = News(**j_news)
-            new_news.save()
+        # Роли раскомитить на проде. На dev роли создаются в fill_test_user.
+        # roles = load_from_json(JSON_PATH_ROLES + 'roles.json')
+        # Role.objects.all().delete()
+        #
+        # for role in roles:
+        #     new_role = Role(pk=role['pk'],
+        #                     role_name=role['role_name'])
+        #     new_role.save()
 
         languages = load_from_json(JSON_PATH_SEARCH + 'languages.json')
         Languages.objects.all().delete()
@@ -133,66 +93,6 @@ class Command(BaseCommand):
 
         for approval in approvals:
             appr = approval.get('fields')
+            appr['id'] = approval.get('pk')
             new_appr = ApprovalStatus(**appr)
             new_appr.save()
-
-        employers = load_from_json(JSON_PATH_USERS + 'employers.json')
-        EmployerProfile.objects.all().delete()
-
-        for employer in employers:
-            emp = employer.get('fields')
-
-            user = emp.get('user')
-            _user = User.objects.get(id=user)
-            emp['user'] = _user  # Заменяем юзера объектом
-
-            status = emp.get('status')
-            _status = ApprovalStatus.objects.get(id=status)
-            emp['status'] = _status  # Заменяем юзера объектом
-
-            new_employer = EmployerProfile(**emp)
-            new_employer.save()
-
-        # Соискатель
-        workers = load_from_json(JSON_PATH_USERS + 'workers.json')
-        WorkerProfile.objects.all().delete()
-
-        for worker in workers:
-            work = worker.get('fields')
-
-            user = work.get('user')
-            _user = User.objects.get(id=user)
-            work['user'] = _user  # Заменяем юзера объектом
-
-            new_worker = WorkerProfile(**work)
-            new_worker.save()
-
-        vacancies = load_from_json(JSON_PATH_VACANCIES + 'vacancies.json')
-        Vacancy.objects.all().delete()
-
-        for vacancy in vacancies:
-            vac = vacancy.get('fields')
-
-            employer_profile = vac.get('employer_profile')
-            _employer_profile = EmployerProfile.objects.get(id=employer_profile)
-            vac['employer_profile'] = _employer_profile
-
-            status = vac.get('status')
-            _status = ApprovalStatus.objects.get(id=status)
-            vac['status'] = _status
-
-            new_vacancy = Vacancy(**vac)
-            new_vacancy.save()
-
-        salaries = load_from_json(JSON_PATH_VACANCIES + 'salaries.json')
-        Salary.objects.all().delete()
-
-        for salary in salaries:
-            sal = salary.get('fields')
-
-            vacancy = sal.get('vacancy')
-            _vacancy = Vacancy.objects.get(id=vacancy)
-            sal['vacancy'] = _vacancy
-
-            new_salary = Salary(**sal)
-            new_salary.save()

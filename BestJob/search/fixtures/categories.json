@@ -4,47 +4,47 @@
     "name": "Системный администратор"
   },
   {
-    "code":"BACKD",
+    "code": "BACKD",
     "name": "Бэкэнд-разработчик"
   },
-    {
-    "code":"FRONTD",
+  {
+    "code": "FRONTD",
     "name": "Фронтенд-разработчик"
   },
-    {
-    "code":"FULLD",
+  {
+    "code": "FULLD",
     "name": "Фулстак-разработчик"
   },
   {
-    "code":"WEBDEV",
+    "code": "WEBDEV",
     "name": "Веб-разработчик"
   },
   {
-    "code":"DES",
+    "code": "DES",
     "name": "Дизайнер"
   },
   {
-    "code":"TEST",
+    "code": "TEST",
     "name": "Тестировщик"
   },
   {
-    "code":"BUSIAN",
+    "code": "BUSIAN",
     "name": "Бизнес-аналитик"
   },
-    {
-    "code":"PROGAN",
+  {
+    "code": "PROGAN",
     "name": "Программист-аналитик"
   },
-    {
-    "code":"LAYDES",
+  {
+    "code": "LAYDES",
     "name": "Верстальщик"
   },
-    {
-    "code":"PM",
+  {
+    "code": "PM",
     "name": "Проектный менеджер"
   },
-    {
-    "code":"TML",
+  {
+    "code": "TML",
     "name": "Тимлид"
   }
 ]

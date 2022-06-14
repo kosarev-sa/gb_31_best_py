@@ -18,13 +18,15 @@ from django.urls import path
 from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
 
 from users.views import WorkerProfileView, EmployerProfileView, ModeratorProfileView, UserLoginView, UserRegisterView, \
-    UserLogoutView, EmployerProfileFormView, EmployerDetailView, UserEmailVarifyView, UserVarifyStatusView, PassResetView, \
-    PassResetDoneView, PassResetConfirmView, PassResetCompletedView
+    UserLogoutView, EmployerProfileFormView, EmployerDetailView, UserEmailVarifyView, UserVarifyStatusView, \
+    PassResetView, \
+    PassResetDoneView, PassResetConfirmView, PassResetCompletedView, WorkerProfileDetailView
 
 app_name = 'users'
 
 urlpatterns = [
-    path('worker_profile/<int:pk>/', WorkerProfileView.as_view(), name='worker_profile'),
+    path('worker_profile/<int:pk>/', WorkerProfileDetailView.as_view(), name='worker_profile'),
+    path('worker_profile_update/<int:pk>/', WorkerProfileView.as_view(), name='worker_profile_update'),
     path('employers/', EmployerProfileView.as_view(), name='employers'),
     path('employer/<int:pk>', EmployerDetailView.as_view(), name='employers_detail'),
     path('employer_profile/<int:pk>/', EmployerProfileFormView.as_view(), name='employer_profile'),

@@ -8,7 +8,8 @@
       "image": "worker_photo/1.jpg",
       "city": "Нижний Новгород",
       "phone_number": "+79000001111",
-      "ready_to_relocate": true,
+      "gender": "F",
+      "birth_date": "1998-10-12",
       "data": "Краткое описание 1 соискателя"
     }
   },
@@ -21,7 +22,8 @@
       "image": "worker_photo/2.jpg",
       "city": "Курган",
       "phone_number": "+79000002222",
-      "ready_to_relocate": false,
+      "gender": "M",
+      "birth_date": "1986-06-18",
       "data": "Краткое описание 2 соискателя"
     }
   }

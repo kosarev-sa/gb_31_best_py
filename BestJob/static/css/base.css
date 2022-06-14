@@ -37,3 +37,14 @@
 .global-font-family {
     font-family: Helvetica Neue !important;
 }
+
+/* цвета */
+.grey-bg-color {
+    background-color: rgb(220, 220, 220);
+}
+
+/* указатели */
+
+.cursor-pointer {
+    cursor: pointer;
+}
