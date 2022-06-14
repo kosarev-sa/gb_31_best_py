@@ -44,11 +44,7 @@ class ModeratorProfileForm(forms.ModelForm):
 
     class Meta:
         model = ModeratorProfile
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super(ModeratorProfileForm, self).__init__(*args, **kwargs)
-        self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
+        fields = ('user', 'image')
 
 
 class UserLoginForm(AuthenticationForm):

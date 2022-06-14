@@ -89,9 +89,8 @@ class ModeratorProfileView(UpdateView):
     form_class = ModeratorProfileForm
     success_url = reverse_lazy('users:moderator_profile')
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(ModeratorProfileView, self).get_context_data(**kwargs)
-        return context
+    def get_object(self, queryset=None):
+        return get_object_or_404(ModeratorProfile, user_id=self.kwargs['pk'])
 
 
 class UserLoginView(LoginView):
