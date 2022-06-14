@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+{% include "worker_menu.html" %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="card shadow-lg border-0 rounded-lg mt-5 mb-5">
+                <div class="card-header"><h3 class="text-center font-weight-light my-4">Профиль соискателя</h3>
+                </div>
+                <div class="card-body">
+
+                    {% if object.image %}
+                        <p><img class="card-img-top" src="{{ object.image.url }}" alt=""></p>
+                    {% else %}
+                        <p class="small mb-1 ">Нет фото</p>
+                    {% endif %}
+
+                    <div class="form-group m-3">
+                        <p class="small mb-1 ">ФИО соискателя:</p>
+                        <p>{{ object.name }}</p>
+                    </div>
+
+                    <div class="form-group m-3">
+                        <label class="small mb-1">Город проживания:</label>
+                        <p>{{ object.city }}</p>
+                    </div>
+
+                    <div class="form-group m-3">
+                        <label class="small mb-1">Телефон для связи:</label>
+                        <p>{{ object.phone_number }}</p>
+                    </div>
+
+                    <div class="form-group m-3">
+                        <p class="small mb-1">Пол:</p>
+                        <p>{{ object.gender }}</p>
+                    </div>
+
+                    <div class="form-group m-3">
+                        <p class="small mb-1">Дата рождения:</p>
+                        <p>{{ object.birth_date }}</p>
+                    </div>
+
+                    <div class="form-group m-3">
+                        <p class="small mb-1">О себе:</p>
+                        <p>{{ object.data }}</p>
+                    </div>
+
+                    <div class="form-group d-flex align-items-center justify-content-center mt-4 mb-0">
+                        <a class="btn btn-primary" href="{% url 'users:worker_profile_update' object.user_id %}">Редактировать</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
