@@ -3,28 +3,35 @@
     "model": "approvals.approvalstatus",
     "pk": 1,
     "fields": {
-      "status": "CHG"
+      "status": "NPB"
     }
   },
   {
     "model": "approvals.approvalstatus",
     "pk": 2,
     "fields": {
-      "status": "COR"
+      "status": "PUB"
     }
   },
   {
     "model": "approvals.approvalstatus",
     "pk": 3,
     "fields": {
-      "status": "CNC"
+      "status": "FRV"
     }
   },
   {
     "model": "approvals.approvalstatus",
     "pk": 4,
     "fields": {
-      "status": "CHD"
+      "status": "RJC"
+    }
+  },
+  {
+    "model": "approvals.approvalstatus",
+    "pk": 5,
+    "fields": {
+      "status": "APV"
     }
   }
 ]
