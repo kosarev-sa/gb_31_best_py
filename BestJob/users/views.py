@@ -83,14 +83,30 @@ class EmployerProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMix
 
 class ModeratorProfileView(UpdateView):
     """view для профиля модератора"""
-
     model = ModeratorProfile
     template_name = 'moderator_profile.html'
     form_class = ModeratorProfileForm
     success_url = reverse_lazy('users:moderator_profile')
+    title = 'BestJob | Профайл модератора'
 
     def get_object(self, queryset=None):
         return get_object_or_404(ModeratorProfile, user_id=self.kwargs['pk'])
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(data=request.POST, files=request.FILES)
+        user_id = self.kwargs['pk']
+        moderatorProfile = ModeratorProfile.objects.get(user_id=user_id)
+        image = form.instance.image
+        form.instance = moderatorProfile
+        form.instance.image = image
+        form.save(commit=False)
+
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("users:moderator_profile", args=(user_id,)))
+
+        return self.form_invalid(form)
 
 
 class UserLoginView(LoginView):

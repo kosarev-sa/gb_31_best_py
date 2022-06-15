@@ -44,7 +44,7 @@ class ModeratorProfileForm(forms.ModelForm):
 
     class Meta:
         model = ModeratorProfile
-        fields = ('user', 'image')
+        fields = ['image',]
 
 
 class UserLoginForm(AuthenticationForm):
