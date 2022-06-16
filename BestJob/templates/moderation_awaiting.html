@@ -1,10 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+{% include "moderator_menu.html" %}
+{% include "moderator_awaiting_menu.html" %}
+{% endblock %}
+
+{% block content %}
+
+{% endblock %}

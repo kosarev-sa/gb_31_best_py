@@ -20,7 +20,7 @@ from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
 from users.views import WorkerProfileView, EmployerProfileView, ModeratorProfileView, UserLoginView, UserRegisterView, \
     UserLogoutView, EmployersProfileView, EmployerDetailView, UserEmailVarifyView, UserVarifyStatusView, \
     PassResetView, \
-    PassResetDoneView, PassResetConfirmView, PassResetCompletedView
+    PassResetDoneView, PassResetConfirmView, PassResetCompletedView, ModerationAwaiting
 
 app_name = 'users'
 
@@ -42,5 +42,7 @@ urlpatterns = [
          name='password_reset_confirm'),
     path('password-reset/complete/', PassResetCompletedView.as_view(),
          name='password_reset_complete'),
+
+    path('moderation_awaiting/', ModerationAwaiting.as_view(), name='moderation_awaiting'),
 
 ]

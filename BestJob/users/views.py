@@ -244,3 +244,10 @@ class PassResetConfirmView(PasswordResetConfirmView):
 class PassResetCompletedView(PasswordResetCompleteView):
     """view что новый пароль сохранен"""
     template_name = 'password_reset_completed.html'
+
+
+class ModerationAwaiting(TemplateView):
+    """view ожидают модерации"""
+    template_name = 'moderation_awaiting.html'
+    success_url = reverse_lazy("users:moderation_awaiting")
+    title = 'BestJob | Модерация'
