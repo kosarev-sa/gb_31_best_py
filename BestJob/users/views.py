@@ -20,34 +20,35 @@ from users.forms import WorkerProfileForm, EmployerProfileForm, ModeratorProfile
 from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User
 
 
-class WorkerProfileDetailView(DetailView):
+class WorkerProfileView(UpdateView):
     """view для профиля соискателя"""
     model = WorkerProfile
     template_name = 'worker_profile.html'
-
-    def get_object(self, queryset=None):
-        worker = get_object_or_404(WorkerProfile, user_id=self.kwargs['pk'])
-        return worker
-
-
-class WorkerProfileView(UpdateView):
-    """view для редактирования профиля соискателя"""
-    model = WorkerProfile
-    template_name = 'worker_profile_update.html'
     form_class = WorkerProfileForm
-    # success_url = reverse_lazy('users:worker_profile')
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('users:worker_profile')
+    title = 'BestJob | Профайл соискателя'
 
     def get_object(self, queryset=None):
-        worker = get_object_or_404(WorkerProfile, user_id=self.kwargs['pk'])
-        return worker
+        return get_object_or_404(WorkerProfile, user_id=self.kwargs['pk'])
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(WorkerProfileView, self).get_context_data(**kwargs)
-        return context
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(data=request.POST, files=request.FILES)
+        user_id = self.kwargs['pk']
+        workerProfile = WorkerProfile.objects.get(user_id=user_id)
+        image = form.instance.image
+        form.instance = workerProfile
+        form.instance.image = image
+        form.save(commit=False)
+
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("users:worker_profile", args=(user_id,)))
+
+        return self.form_invalid(form)
 
 
-class EmployerProfileView(ListView, BaseClassContextMixin):
+class EmployersProfileView(ListView, BaseClassContextMixin):
     """view для просмотра работодателей"""
     model = EmployerProfile
     template_name = 'employers.html'
@@ -68,17 +69,45 @@ class EmployerDetailView(DetailView, BaseClassContextMixin):
     template_name = 'employers_detail.html'
     title = 'BestJob | Работодатель'
 
+#
+# class EmployerProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
+#     """view для профиля работодателя"""
+#     model = EmployerProfile
+#     form_class = EmployerProfileForm
+#     template_name = 'employer_profile.html'
+#     success_url = reverse_lazy('users:employer_profile')
+#     title = 'BestJob | Профайл работодателя'
+#
+#     # def get_object(self, queryset=None):
+#     #     return get_object_or_404(User, pk=self.request.employer_profile.pk)
 
-class EmployerProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
+
+class EmployerProfileView(UpdateView):
     """view для профиля работодателя"""
     model = EmployerProfile
-    form_class = EmployerProfileForm
     template_name = 'employer_profile.html'
+    form_class = EmployerProfileForm
     success_url = reverse_lazy('users:employer_profile')
     title = 'BestJob | Профайл работодателя'
 
-    # def get_object(self, queryset=None):
-    #     return get_object_or_404(User, pk=self.request.employer_profile.pk)
+    def get_object(self, queryset=None):
+        return get_object_or_404(EmployerProfile, user_id=self.kwargs['pk'])
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(data=request.POST, files=request.FILES)
+        user_id = self.kwargs['pk']
+        emploerProfile = EmployerProfile.objects.get(user_id=user_id)
+        image = form.instance.image
+        form.instance = emploerProfile
+        form.instance.image = image
+        form.save(commit=False)
+
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("users:employer_profile", args=(user_id,)))
+
+        return self.form_invalid(form)
 
 
 class ModeratorProfileView(UpdateView):
