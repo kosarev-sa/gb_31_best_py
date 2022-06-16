@@ -70,5 +70,5 @@ class EmployerProfile(models.Model):
 class ModeratorProfile(models.Model):
     """профиль для модератора"""
     user = models.ForeignKey(User, null=False, db_index=True, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='worker_photo', blank=True)
+    image = models.ImageField(upload_to='moderator_photo', blank=True)
     date_create = models.DateTimeField(auto_now_add=True)
