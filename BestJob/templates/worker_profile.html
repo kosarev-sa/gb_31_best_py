@@ -6,7 +6,6 @@
 {% endblock %}
 
 {% block content %}
-
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-5">
@@ -39,13 +38,13 @@
                         </div>
 
                         <div class="form-group m-3">
-                            <label class="small mb-1" for="city">Город проживания</label>
-                            <p class="card shadow-lg border-1 rounded-lg" id="city">{{ form.city }}</p>
+                            <label class="small mb-1" for="{{ form.city.id_for_label }}">Город проживания</label>
+                            <p class="card shadow-lg border-1 rounded-lg">{{ form.city }}</p>
                         </div>
 
                         <div class="form-group m-3">
-                            <label class="small mb-1" for="phone_number">Телефон для связи</label>
-                            <p class="card shadow-lg border-1 rounded-lg" id="phone_number">{{ form.phone_number }}</p>
+                            <label class="small mb-1" for="{{ form.phone_number.id_for_label }}">Телефон для связи</label>
+                            <p class="card shadow-lg border-1 rounded-lg">{{ form.phone_number }}</p>
                         </div>
 
                         <div class="form-group m-3">
@@ -57,13 +56,13 @@
                         </div>
 
                         <div class="form-group m-3">
-                            <label class="small mb-1" for="birth_date">Дата рождения</label>
-                            <p class="card shadow-lg border-1 rounded-lg" id="birth_date">{{ form.birth_date }}</p>
+                            <label class="small mb-1" for="{{ form.birth_date.id_for_label }}">Дата рождения</label>
+                            <p >{{ form.birth_date }}</p>
                         </div>
 
                         <div class="form-group m-3">
-                            <label class="small mb-1" for="data">О себе:</label>
-                            <p class="card shadow-lg border-1 rounded-lg" id="data">{{ form.data }}</p>
+                            <label class="small mb-1" for="{{ form.data.id_for_label }}">О себе:</label>
+                            <p class="card shadow-lg border-1 rounded-lg" >{{ form.data }}</p>
                         </div>
 
                         <div class="form-group d-flex align-items-center justify-content-around mt-4 mb-0">
@@ -76,6 +75,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
-

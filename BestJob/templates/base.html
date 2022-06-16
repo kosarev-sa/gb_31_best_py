@@ -7,6 +7,8 @@
     <title>Best job</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap-datetimepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap_datepicker_plus/css/datepicker-widget.css' %}">
     {% block additional_styles %}
     {% endblock %}
 </head>
@@ -69,6 +71,9 @@
 <!-- Bootstrap core JavaScript -->
 <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
 <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'vendor/moment/js/moment-with-locales.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="{% static 'bootstrap_datepicker_plus/js/datepicker-widget.js' %}"></script>
 {% block additional_script %}
 {% endblock %}
 
