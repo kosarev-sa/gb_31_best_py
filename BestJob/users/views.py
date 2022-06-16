@@ -36,16 +36,15 @@ class WorkerProfileView(UpdateView):
         form = self.form_class(data=request.POST, files=request.FILES)
         user_id = self.kwargs['pk']
         workerProfile = WorkerProfile.objects.get(user_id=user_id)
-        image = form.instance.image
-        form.instance = workerProfile
-        form.instance.image = image
-        form.save(commit=False)
+        form.instance.pk = workerProfile.id
+        form.instance.user_id = workerProfile.user.id
+        form.instance.user = workerProfile.user
 
-        if form.is_valid():
-            form.save()
-            return redirect(reverse("users:worker_profile", args=(user_id,)))
+        if form.instance.image.closed:
+            form.instance.image = workerProfile.image
 
-        return self.form_invalid(form)
+        form.save()
+        return redirect(reverse("users:worker_profile", args=(user_id,)))
 
 
 class EmployersProfileView(ListView, BaseClassContextMixin):
@@ -97,17 +96,19 @@ class EmployerProfileView(UpdateView):
         self.object = self.get_object()
         form = self.form_class(data=request.POST, files=request.FILES)
         user_id = self.kwargs['pk']
+
         emploerProfile = EmployerProfile.objects.get(user_id=user_id)
-        image = form.instance.image
-        form.instance = emploerProfile
-        form.instance.image = image
-        form.save(commit=False)
 
-        if form.is_valid():
-            form.save()
-            return redirect(reverse("users:employer_profile", args=(user_id,)))
+        form.instance.pk = emploerProfile.id
+        form.instance.user_id = emploerProfile.user.id
+        form.instance.user = emploerProfile.user
+        form.instance.date_create = emploerProfile.date_create
 
-        return self.form_invalid(form)
+        if form.instance.image.closed:
+            form.instance.image = emploerProfile.image
+
+        form.save()
+        return redirect(reverse("users:employer_profile", args=(user_id,)))
 
 
 class ModeratorProfileView(UpdateView):
@@ -123,19 +124,20 @@ class ModeratorProfileView(UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
+
         form = self.form_class(data=request.POST, files=request.FILES)
         user_id = self.kwargs['pk']
         moderatorProfile = ModeratorProfile.objects.get(user_id=user_id)
-        image = form.instance.image
-        form.instance = moderatorProfile
-        form.instance.image = image
-        form.save(commit=False)
+        form.instance.pk = moderatorProfile.id
+        form.instance.user_id = moderatorProfile.user.id
+        form.instance.user = moderatorProfile.user
+        form.instance.date_create = moderatorProfile.date_create
 
-        if form.is_valid():
-            form.save()
-            return redirect(reverse("users:moderator_profile", args=(user_id,)))
+        if form.instance.image.closed:
+            form.instance.image = moderatorProfile.image
 
-        return self.form_invalid(form)
+        form.save()
+        return redirect(reverse("users:moderator_profile", args=(user_id,)))
 
 
 class UserLoginView(LoginView):

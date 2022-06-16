@@ -50,8 +50,8 @@
                         <div class="form-group m-3">
                             <label class="small mb-1">Пол</label>
                             <p><select name="gender">
-                                <option>М</option>
-                                <option>Ж</option>
+                                <option {% if object.gender == "М" %} selected {% endif %}>М</option>
+                                <option {% if object.gender == "Ж" %} selected {% endif %}>Ж</option>
                             </select></p>
                         </div>
 
@@ -76,3 +76,6 @@
     </div>
 </div>
 {% endblock %}
+{#{% block additional_script %}#}
+{#<script src="{% static 'js/file_select_field.js' %}"></script>#}
+{#{% endblock %}#}
