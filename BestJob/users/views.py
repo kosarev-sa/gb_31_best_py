@@ -77,8 +77,9 @@ class EmployerProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMix
     success_url = reverse_lazy('users:employer_profile')
     title = 'BestJob | Профайл работодателя'
 
-    # def get_object(self, queryset=None):
-    #     return get_object_or_404(User, pk=self.request.employer_profile.pk)
+    def get_object(self, queryset=None):
+        employer = get_object_or_404(EmployerProfile, user_id=self.kwargs['pk'])
+        return employer
 
 
 class ModeratorProfileView(UpdateView):
