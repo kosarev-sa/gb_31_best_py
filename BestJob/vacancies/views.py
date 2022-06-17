@@ -6,7 +6,7 @@ from django.views.generic import TemplateView, CreateView, UpdateView, ListView,
 
 from search.models import Category, Employments, WorkSchedules, Languages, \
     LanguageLevels
-from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDistributeForm
+from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDistributeForm, ModeratorVacancyUpdateForm
 from vacancies.models import Vacancy, WorkingHours
 from users.models import EmployerProfile
 from approvals.models import ApprovalStatus
@@ -26,6 +26,45 @@ class VacancyList(TemplateView):
             'status': ApprovalStatus.objects.get(status='APV')
         }
         return self.render_to_response(context)
+
+
+class ModeratorVacancyList(TemplateView):
+    """view просмотра вакансий модератором"""
+    template_name = 'moderator_vacancy_list.html'
+
+    def get(self, request, *args, **kwargs):
+        super(ModeratorVacancyList, self).get(request, *args, **kwargs)
+        # user_id = request.user.pk
+        # employer_id = EmployerProfile.objects.get(user=user_id)
+        context = self.get_context_data()
+        context['vacancies_list'] = Vacancy.objects.all()
+        return self.render_to_response(context)
+
+class ModeratorVacancyUpdate(UpdateView):
+    """view изменения вакансий"""
+    model = Vacancy
+    template_name = 'moderator_vacancy_approve.html'
+    form_class = ModeratorVacancyUpdateForm
+    success_url = reverse_lazy('vacancy:moderator_vacancy_list')
+
+    def get(self, request, *args, **kwargs):
+        super(ModeratorVacancyUpdate, self).get(request, *args, **kwargs)
+        context = self.get_context_data()
+        vac_id = self.kwargs['pk']
+        vac = Vacancy.objects.get(pk=vac_id)
+        vac_user_id = vac.employer_profile.user_id
+        employer = EmployerProfile.objects.filter(user_id=vac_user_id)
+        if employer:
+            context['employer'] = employer.first()
+
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(data=request.POST)
+        vac_id = self.kwargs['pk']
+        if form.is_valid():
+            Vacancy.objects.filter(pk=vac_id).update(status=form.instance.status)
+        return redirect(self.success_url)
 
 
 class VacancyCreate(CreateView):

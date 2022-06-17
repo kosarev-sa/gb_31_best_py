@@ -8,9 +8,11 @@ from django.urls import reverse_lazy, reverse, resolve
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 
 from approvals.models import ApprovalStatus
+
 from cvs.forms import CVCreateForm, CVUpdateForm, CVDeleteForm, CVDistributeForm, ExperienceCreateForm, \
-    EducationCreateForm, LanguagesCreateForm
+    EducationCreateForm, LanguagesCreateForm, ModeratorCVUpdateForm
 from cvs.models import CV, Experience, CVWorkSchedule, CVEmployment, Education, LanguagesSpoken, CVMonths
+
 from search.models import Category, Currency, Employments, WorkSchedules, Languages, LanguageLevels
 from users.models import WorkerProfile
 
@@ -29,6 +31,44 @@ class CVList(TemplateView):
             'worker': worker_id
         }
         return self.render_to_response(context)
+
+
+class ModeratorCVList(TemplateView):
+    """view просмотра вакансий модератором"""
+    template_name = 'moderator_cvs_list.html'
+
+    def get(self, request, *args, **kwargs):
+        super(ModeratorCVList, self).get(request, *args, **kwargs)
+        context = self.get_context_data()
+        context['cvs_list'] = CV.objects.all()
+        return self.render_to_response(context)
+
+
+class ModeratorCVUpdate(UpdateView):
+    """view изменения вакансий"""
+    model = CV
+    template_name = 'moderator_cvs_approve.html'
+    form_class = ModeratorCVUpdateForm
+    success_url = reverse_lazy('vacancy:moderator_vacancy_list')
+
+    def get(self, request, *args, **kwargs):
+        super(ModeratorCVUpdate, self).get(request, *args, **kwargs)
+        context = self.get_context_data()
+        cv_id = self.kwargs['pk']
+        cv = CV.objects.get(pk=cv_id)
+        cv_user_id = cv.employer_profile.user_id
+        worker = WorkerProfile.objects.filter(user_id=cv_user_id)
+        if worker:
+            context['worker'] = worker.first()
+
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(data=request.POST)
+        cv_id = self.kwargs['pk']
+        if form.is_valid():
+            CV.objects.filter(pk=cv_id).update(status=form.instance.status)
+        return redirect(self.success_url)
 
 
 class CVCreate(CreateView):

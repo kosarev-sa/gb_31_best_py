@@ -37,7 +37,22 @@ class CVUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(CVUpdateForm, self).__init__(*args, **kwargs)
-        # self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
+
+
+class ModeratorCVUpdateForm(CVUpdateForm):
+    """форма просмотра\редактирования резюме"""
+    disabled_fields = ('specialization', 'is_active', 'name', 'experience',
+                       'description', 'city', 'description', 'salary_from',
+                       'salary_to', 'currency', 'salary_on_hand',)
+
+    class Meta:
+        model = CV
+        exclude = ('employer_profile',)
+
+    def __init__(self, *args, **kwargs):
+        super(ModeratorCVUpdateForm, self).__init__(*args, **kwargs)
+        for field in self.disabled_fields:
+            self.fields[field].disabled = True
 
 
 class CVDeleteForm(forms.ModelForm):
