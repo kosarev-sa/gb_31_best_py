@@ -41,7 +41,7 @@ class EmployerProfileForm(forms.ModelForm):
 
     class Meta:
         model = EmployerProfile
-        exclude = ('user', 'date_create', 'is_active', 'status', )
+        exclude = ['user']
 
     def __init__(self, *args, **kwargs):
         super(EmployerProfileForm, self).__init__(*args, **kwargs)
