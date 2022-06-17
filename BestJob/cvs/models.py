@@ -4,6 +4,7 @@ from django.db import models
 from approvals.models import ApprovalStatus
 from search.models import Languages, LanguageLevels, Employments, WorkSchedules, MainSkills, Moving, EducationLevel, Category, Currency
 from users.models import WorkerProfile, EmployerProfile
+from vacancies.models import Vacancy
 
 
 class CV(models.Model):
@@ -86,3 +87,11 @@ class SelectedCV(models.Model):
     """Избранные резюме"""
     cv = models.ForeignKey(CV, on_delete=models.CASCADE)
     employer_profile = models.ForeignKey(EmployerProfile, on_delete=models.CASCADE)
+
+
+class ConnectVacancyCv(models.Model):
+    """Связь отклика, вакансии и резюме"""
+    cv = models.ForeignKey(CV, on_delete=models.CASCADE)
+    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
+    status_worker = models.BooleanField(default=None)
+    status_employer = models.BooleanField(default=None)
