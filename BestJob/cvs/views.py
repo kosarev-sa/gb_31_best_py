@@ -1,45 +1,20 @@
+from django.contrib import messages
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from django.template.loader import render_to_string
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse, resolve
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 
 from approvals.models import ApprovalStatus
-from cvs.forms import CVCreateForm, CVUpdateForm, CVDeleteForm, CVDistributeForm, ModeratorCVUpdateForm
-from cvs.models import CV, Experience, CVWorkSchedule, CVEmployment, Education, LanguagesSpoken
+
+from cvs.forms import CVCreateForm, CVUpdateForm, CVDeleteForm, CVDistributeForm, ExperienceCreateForm, \
+    EducationCreateForm, LanguagesCreateForm, ModeratorCVUpdateForm
+from cvs.models import CV, Experience, CVWorkSchedule, CVEmployment, Education, LanguagesSpoken, CVMonths
+
 from search.models import Category, Currency, Employments, WorkSchedules, Languages, LanguageLevels
 from users.models import WorkerProfile
-
-
-
-def save_experience (data, cv):
-    experience = Experience(cv=cv)
-    experience.name = data.get('name_exp')
-    experience.month_begin = data.get('month_begin', 1)
-    experience.year_begin = data.get('year_begin')
-    experience.month_end = data.get('month_end', 1)
-    experience.year_end = data.get('year_end')
-    experience.post = data.get('post_exp')
-    experience.responsibilities = data.get('responsibilities')
-    experience.save()
-
-
-def save_education(data, cv):
-    education = Education(cv=cv)
-    education.date_end = data.get('educ_end')
-    education.name = data.get('educ_name')
-    education.department = data.get('department')
-    education.specialty = data.get('educ_specialty')
-    education.save()
-
-
-def save_languages( data, cv):
-    level = LanguageLevels.objects.get(code=data.get('level'))
-    language = Languages.objects.get(code=data.get('lang'))
-    language_level = LanguagesSpoken(cv=cv, language=language, level=level)
-    language_level.save()
 
 
 class CVList(TemplateView):
@@ -113,14 +88,9 @@ class CVCreate(CreateView):
         worker = WorkerProfile.objects.get(user=request.user.pk)
         context = self.get_context_data()
         context['worker'] = worker
-        context['speciality'] = Category.objects.all().order_by('name')
         context['employments'] = Employments.objects.all()
         context['schedules'] = WorkSchedules.objects.all()
-        context['languages'] = Languages.objects.all()
-        context['levels'] = LanguageLevels.objects.all()
-        context['months'] = Experience.Month
         return self.render_to_response(context)
-
 
     def post(self, request, *args, **kwargs):
         worker = WorkerProfile.objects.get(user=request.user.pk)
@@ -132,25 +102,27 @@ class CVCreate(CreateView):
             cv.worker_profile = worker
             cv.status = start_status
             cv.save()
-            # сохраняем опыт работы
-            if form.data.get('name_exp', None):
-                save_experience(form.data, cv)
-            # сохраняем образование
-            if form.data.get('educ_name', None):
-                save_education(form.data, cv)
-            # язык
-            if form.data.get('lang', None):
-                save_languages(form.data, cv)
 
             for key, value in form.data.items():
                 if key.startswith('schedule_'):
                     schedule = WorkSchedules.objects.get(code=value)
                     cv_schedule = CVWorkSchedule(cv=cv, schedule=schedule)
                     cv_schedule.save()
+                    print(cv_schedule.schedule)
                 elif key.startswith('empl_'):
                     employment = Employments.objects.get(code=value)
                     cv_employment = CVEmployment(cv=cv, employment=employment)
                     cv_employment.save()
+
+            #   Нажата кнопка Добавить опыт работы
+            if request.POST.get('experience', None):
+                return redirect('cv:create_experience', pk=cv.id)
+            #   Нажата кнопка Добавить место обучения
+            if request.POST.get('education', None):
+                return redirect('cv:create_education', cv_id=cv.id)
+
+            if request.POST.get('language', None):
+                return redirect('cv:create_language', cv_id=cv.id)
 
             return redirect(self.success_url)
         else:
@@ -175,13 +147,14 @@ class CVUpdate(UpdateView):
         cv_id = kwargs.get('pk')
         cv = CV.objects.get(id=cv_id)
         worker = WorkerProfile.objects.get(user=request.user.pk)
+        context['cv_id'] = cv.id
         context['worker'] = worker
         context['speciality'] = Category.objects.all().order_by('name')
         context['experience'] = Experience.objects.filter(cv=cv)
         context['educations'] = Education.objects.filter(cv=cv)
         context['langlevels'] = LanguagesSpoken.objects.filter(cv=cv)
-        context['languages'] = Languages.objects.all()
-        context['levels'] = LanguageLevels.objects.all()
+        # context['languages'] = Languages.objects.all()
+        # context['levels'] = LanguageLevels.objects.all()
         cv_employments = [cv_empl.employment_id for cv_empl in CVEmployment.objects.filter(cv=cv)]
         context['cv_employments'] = cv_employments
         context['employments'] = Employments.objects.all()
@@ -196,21 +169,8 @@ class CVUpdate(UpdateView):
         form = self.form_class(request.POST, instance=self.object)
 
         if form.is_valid():
+
             self.object.save()
-            if form.data.get('name_exp', None):
-                exp = Experience.objects.filter(cv=self.object)
-                exp.delete()
-                save_experience(form.data, self.object)
-                # сохраняем образование
-            if form.data.get('educ_name', None):
-                educ = Education.objects.filter(cv=self.object)
-                educ.delete()
-                save_education(form.data, self.object)
-                # язык
-            if form.data.get('lang', None):
-                lang = LanguagesSpoken.objects.filter(cv=self.object)
-                lang.delete()
-                save_languages(form.data, self.object)
 
             cv_schedules = CVWorkSchedule.objects.filter(cv=self.object)
             cv_schedules.delete()
@@ -229,7 +189,6 @@ class CVUpdate(UpdateView):
         else:
             print(form.errors)
         return self.form_invalid(form)
-
 
 
 class CVDelete(DeleteView):
@@ -263,3 +222,213 @@ class CVDistribute(UpdateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVDistribute, self).get_context_data(**kwargs)
         return context
+
+
+class CVExperienceCreate(CreateView):
+    """Создание опыта работы"""
+    model = Experience
+    template_name = 'cv_experience.html'
+    form_class = ExperienceCreateForm
+
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Место работы'
+        context['months'] = CVMonths
+        context['cv_id'] = self.kwargs['pk']
+        return context
+
+    def get(self, request, *args, **kwargs):
+        super(CVExperienceCreate, self).get(request, *args, **kwargs)
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        cv = CV.objects.get(id=self.kwargs.get('pk'))
+        form = self.form_class(data=request.POST)
+        if form.is_valid():
+            # сохраняем новый так сказать опыт)
+            experience = form.save(commit=False)
+            experience.cv = cv
+            experience.save()
+            return redirect('cv:update_cv', pk=cv.id)
+        else:
+            messages.error(request, form.errors)
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class CVExperienceUpdate(UpdateView):
+    """Изменение опыта работы"""
+    model = Experience
+    template_name = 'cv_experience.html'
+    form_class = ExperienceCreateForm
+    success_url = reverse_lazy('cv:cv_list' )
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Место работы'
+        context['months'] = CVMonths
+        exp = Experience.objects.get(id=self.kwargs.get('pk'))
+        context['cv_id'] = exp.cv.id
+        return context
+
+    def get(self, request, *args, **kwargs):
+        super(CVExperienceUpdate, self).get(request, *args, **kwargs)
+        context = self.get_context_data()
+        # exp = Experience.objects.get(id=self.kwargs.get('pk'))
+        # context['cv_id'] = exp.cv.id
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        super(CVExperienceUpdate, self).post(request, *args, **kwargs)
+        self.object = self.get_object()
+        form = self.form_class(data=request.POST)
+        if form.is_valid():
+            return redirect('cv:update_cv', pk=self.object.cv.id)
+        else:
+            messages.error(request, form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class CVExperienceDelete(DeleteView):
+    """Удаление опыта работы без поднятия формы"""
+    model = Experience
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class CVEducationCreate(CreateView):
+    """Создание места обучения"""
+    model = Education
+    template_name = 'cv_education.html'
+    form_class = EducationCreateForm
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Место работы'
+        context['cv_id'] = self.kwargs['cv_id']
+        return context
+
+    def post(self, request, *args, **kwargs):
+        cv = CV.objects.get(id=self.kwargs.get('cv_id'))
+        form = self.form_class(data=request.POST)
+        if form.is_valid():
+            # сохраняем новое место обучения
+            education = form.save(commit=False)
+            education.cv = cv
+            education.save()
+            return redirect('cv:update_cv', pk=cv.id)
+        else:
+            messages.error(request, form.errors)
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class CVEducationUpdate(UpdateView):
+    """Редактирование места обучения"""
+    model = Education
+    template_name = 'cv_education.html'
+    form_class = EducationCreateForm
+    success_url = reverse_lazy('cv:cv_list')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Место обучения'
+        educ = Education.objects.get(id=self.kwargs.get('pk'))
+        context['cv_id'] = educ.cv.id
+        return context
+
+    def post(self, request, *args, **kwargs):
+        super(CVEducationUpdate, self).post(request, *args, **kwargs)
+        self.object = self.get_object()
+        form = self.form_class(data=request.POST)
+        if form.is_valid():
+            return redirect('cv:update_cv', pk=self.object.cv.id)
+        else:
+            messages.error(request, form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class CVEducationDelete(DeleteView):
+    """Удаление места обучения без поднятия формы"""
+    model = Education
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class CVLanguageCreate(CreateView):
+    """Создание вледения языком"""
+    model = LanguagesSpoken
+    template_name = 'cv_languages.html'
+    form_class = LanguagesCreateForm
+    success_url = reverse_lazy('cv:cv_list')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Владение языком'
+        context['cv_id'] = self.kwargs['cv_id']
+        return context
+
+    def post(self, request, *args, **kwargs):
+        cv = CV.objects.get(id=self.kwargs.get('cv_id'))
+        form = self.form_class(data=request.POST)
+        if form.is_valid():
+            # сохраняем новый язык
+            language = form.save(commit=False)
+            language.cv = cv
+            language.save()
+            return redirect('cv:update_cv', pk=cv.id)
+        else:
+            messages.error(request, form.errors)
+            print(form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+class CVLanguageUpdate(UpdateView):
+    """Изменение вледения языком"""
+    model = LanguagesSpoken
+    template_name = 'cv_languages.html'
+    form_class = LanguagesCreateForm
+    success_url = reverse_lazy('cv:cv_list')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Владение языком'
+        lang = LanguagesSpoken.objects.get(id=self.kwargs.get('pk'))
+        context['cv_id'] = lang.cv.id
+        return context
+
+    def post(self, request, *args, **kwargs):
+        super(CVLanguageUpdate, self).post(request, *args, **kwargs)
+        self.object = self.get_object()
+        form = self.form_class(data=request.POST)
+        if form.is_valid():
+            return redirect('cv:update_cv', pk=self.object.cv.id)
+        else:
+            messages.error(request, form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+class CVLanguageDelete(DeleteView):
+    """Удаление вледения языком без формы"""
+    model = LanguagesSpoken
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
