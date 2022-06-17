@@ -18,18 +18,17 @@ from django.urls import path
 from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
 
 from users.views import WorkerProfileView, EmployerProfileView, ModeratorProfileView, UserLoginView, UserRegisterView, \
-    UserLogoutView, EmployerProfileFormView, EmployerDetailView, UserEmailVarifyView, UserVarifyStatusView, \
+    UserLogoutView, EmployersProfileView, EmployerDetailView, UserEmailVarifyView, UserVarifyStatusView, \
     PassResetView, \
-    PassResetDoneView, PassResetConfirmView, PassResetCompletedView, WorkerProfileDetailView
+    PassResetDoneView, PassResetConfirmView, PassResetCompletedView, ModerationAwaiting
 
 app_name = 'users'
 
 urlpatterns = [
-    path('worker_profile/<int:pk>/', WorkerProfileDetailView.as_view(), name='worker_profile'),
-    path('worker_profile_update/<int:pk>/', WorkerProfileView.as_view(), name='worker_profile_update'),
-    path('employers/', EmployerProfileView.as_view(), name='employers'),
+    path('worker_profile/<int:pk>/', WorkerProfileView.as_view(), name='worker_profile'),
+    path('employers/', EmployersProfileView.as_view(), name='employers'),
     path('employer/<int:pk>', EmployerDetailView.as_view(), name='employers_detail'),
-    path('employer_profile/<int:pk>/', EmployerProfileFormView.as_view(), name='employer_profile'),
+    path('employer_profile/<int:pk>/', EmployerProfileView.as_view(), name='employer_profile'),
     path('moderator_profile/<int:pk>/', ModeratorProfileView.as_view(), name='moderator_profile'),
     path('login/', UserLoginView.as_view(), name='login'),
     path('registration/', UserRegisterView.as_view(), name='registration'),
@@ -43,5 +42,7 @@ urlpatterns = [
          name='password_reset_confirm'),
     path('password-reset/complete/', PassResetCompletedView.as_view(),
          name='password_reset_complete'),
+
+    path('moderation_awaiting/', ModerationAwaiting.as_view(), name='moderation_awaiting'),
 
 ]

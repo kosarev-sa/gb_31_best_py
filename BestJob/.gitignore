@@ -8,3 +8,5 @@ venv/
 !**/migrations
 !**/migrations/__init__.py
 whoosh_index/
+for_test_trash.py
+
