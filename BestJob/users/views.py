@@ -91,6 +91,7 @@ class EmployerProfileView(UpdateView):
 
     def get_object(self, queryset=None):
         return get_object_or_404(EmployerProfile, user_id=self.kwargs['pk'])
+        
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
