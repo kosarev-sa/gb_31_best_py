@@ -1,10 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include "moderator_menu.html" %}
+    {% include "moderator_awaiting_menu.html" %}
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-wrap align-items-center justify-content-center ps-5 pe-5">
+        <div class="card-text">
+            <form method="post" action="">
+                {% csrf_token %}
+                {% if employer %}
+                    <div class="form-group m-3">
+                        <label class="small mb-1" for="{{ employer.name.id_for_label }}">Компания:</label>
+                        <p class="card shadow-lg border-1 rounded-lg">{{ employer.name }}</p>
+                    </div>
+
+                    <div class="form-group m-3">
+                    <img width="300" height="300"
+                                     src="{% if employer.image %} {{ employer.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                                     class="img-thumbnail">
+                    </div>
+
+                    <h3>Контактная информация: </h3>
+
+                    <div class="form-group m-3">
+                        <label class="small mb-1" for="{{ employer.city.id_for_label }}">Место нахождения:</label>
+                        <p class="card shadow-lg border-1 rounded-lg">{{ employer.city }}</p>
+                    </div>
+
+                    <div class="form-group m-3">
+                        <label class="small mb-1" for="{{ employer.data.id_for_label }}">Род деятельности:</label>
+                        <p class="card shadow-lg border-1 rounded-lg">{{ employer.data }}</p>
+                    </div>
+
+                    <div class="form-group m-3">
+                        <label class="small mb-1" for="{{ employer.user.email.id_for_label }}">Электронная почта:</label>
+                        <p class="card shadow-lg border-1 rounded-lg">{{ employer.user.email }}</p>
+                    </div>
+                    <br>
+                {% endif %}
+                <h3>Основная информация:</h3>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.name.id_for_label }}">Название вакансии:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.name }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.specialization.id_for_label }}">Специализация:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.specialization }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <p class="small mb-1 ">Вакансия активна:</p>
+                    <p>{{ form.is_active }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.experience.id_for_label }}">Опыт:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.experience }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.city.id_for_label }}">Вакансия в городе:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.city }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.description.id_for_label }}">Описание вакансии:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.description }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.salary_from.id_for_label }}">доход от:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.salary_from }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.salary_to.id_for_label }}">доход до:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.salary_to }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.currency.id_for_label }}">Валюта:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.currency }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <p class="small mb-1 ">Зарплата на руки:</p>
+                    <p>{{ form.salary_on_hand }}</p>
+                </div>
+
+                <h3>Установить статус модерации:</h3>
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.status.id_for_label }}"><b>Статус модерации:</b></label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.status }}</p>
+                </div>
+
+                <div class="form-group d-flex align-items-center justify-content-around mt-4 mb-3">
+                    <input class="btn btn-primary" type="submit" value="Изменить">
+                </div>
+
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.urls import path
 
-from cvs.views import CVList, CVCreate, CVUpdate, CVDelete, CVDistribute
+from cvs.views import CVList, CVCreate, CVUpdate, CVDelete, CVDistribute, ModeratorCVList, ModeratorCVUpdate
 from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
 
 app_name = 'cv'
@@ -26,5 +26,8 @@ urlpatterns = [
     path('update/<int:pk>/', CVUpdate.as_view(), name='update_cv'),
     path('delete/<int:pk>/', CVDelete.as_view(), name='delete_cv'),
     path('distribute/<int:pk>/', CVDistribute.as_view(), name='distribute_cv'),
+
+    path('moderator_cvs/', ModeratorCVList.as_view(), name='moderator_cvs_list'),
+    path('moderator_vacancy_approve/<int:pk>/', ModeratorCVUpdate.as_view(), name='moderator_cvs_approve'),
 
 ]
