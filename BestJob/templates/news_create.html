@@ -6,23 +6,27 @@
 {% endblock %}
 
 {% block content %}
-<div class="giant-font text-center border-bottom border-secondary border-1">Создание новости</div>
-<form action="{% url 'news:create_news' %}" method="POST" class="d-flex flex-column align-items-center justify-content-center align-items-stretch">
-    {% csrf_token %}
-    <div class="form-group m-3">
-        <label class="medium-font mb-1" for="{{ form.title.id_for_label }}">Заголовок</label>
-        <input class="form-control" type="text" name="title" id="{{ form.title.id }}">
+<div class="d-flex flex-wrap align-items-center justify-content-center ps-5 pe-5">
+<div class="card-text">
+    <div class="giant-font text-center border-bottom border-secondary border-1">Создание новости</div>
+        <form action="{% url 'news:create_news' %}" method="POST" class="d-flex flex-column align-items-center justify-content-center align-items-stretch">
+            {% csrf_token %}
+            <div class="form-group m-3">
+                <label class="medium-font mb-1" for="{{ form.title.id_for_label }}">Заголовок</label>
+                <input class="form-control" type="text" name="title" id="{{ form.title.id }}">
+            </div>
+            <div class="form-group m-3">
+                <label class="medium-font mb-1" for="{{ form.body.id_for_label }}">Текст</label>
+                <textarea class="form-control" type="text" name="body" id="{{ form.body.id }}"></textarea>
+            </div>
+            <div class="form-group m-3 d-flex align-items-center justify-content-center">
+                <label class="form-check-label medium-font" for="{{ form.is_active.id_for_label }}">Активна</label>
+                <input class="form-check-input ms-1" type="checkbox" name="is_active" id="{{ form.is_active.id }}">
+            </div>
+            <div class="form-group d-flex align-items-center justify-content-center m-3">
+                <input class="btn btn-primary" type="submit" value="Создать новость">
+            </div>
+        </form>
     </div>
-    <div class="form-group m-3">
-        <label class="medium-font mb-1" for="{{ form.body.id_for_label }}">Текст</label>
-        <textarea class="form-control" type="text" name="body" id="{{ form.body.id }}"></textarea>
-    </div>
-    <div class="form-group m-3 d-flex align-items-center justify-content-center">
-        <label class="form-check-label medium-font" for="{{ form.is_active.id_for_label }}">Активна</label>
-        <input class="form-check-input ms-1" type="checkbox" name="is_active" id="{{ form.is_active.id }}">
-    </div>
-    <div class="form-group d-flex align-items-center justify-content-center m-3">
-        <input class="btn btn-primary" type="submit" value="Создать новость">
-    </div>
-</form>
+</div>
 {% endblock %}

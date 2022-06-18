@@ -41,13 +41,11 @@ class CVUpdateForm(forms.ModelForm):
 
 class ModeratorCVUpdateForm(CVUpdateForm):
     """форма просмотра\редактирования резюме"""
-    disabled_fields = ('specialization', 'is_active', 'name', 'experience',
-                       'description', 'city', 'description', 'salary_from',
-                       'salary_to', 'currency', 'salary_on_hand',)
+    disabled_fields = ('is_active', 'post', 'skills', 'education_level', 'moving', 'salary', 'currency')
 
     class Meta:
         model = CV
-        exclude = ('employer_profile',)
+        exclude = ('worker_profile', 'speciality')
 
     def __init__(self, *args, **kwargs):
         super(ModeratorCVUpdateForm, self).__init__(*args, **kwargs)

@@ -49,17 +49,21 @@ class ModeratorCVUpdate(UpdateView):
     model = CV
     template_name = 'moderator_cvs_approve.html'
     form_class = ModeratorCVUpdateForm
-    success_url = reverse_lazy('vacancy:moderator_vacancy_list')
+    success_url = reverse_lazy('cvs:moderator_cvs_list')
 
     def get(self, request, *args, **kwargs):
         super(ModeratorCVUpdate, self).get(request, *args, **kwargs)
         context = self.get_context_data()
         cv_id = self.kwargs['pk']
         cv = CV.objects.get(pk=cv_id)
-        cv_user_id = cv.employer_profile.user_id
+        cv_user_id = cv.worker_profile.user_id
         worker = WorkerProfile.objects.filter(user_id=cv_user_id)
         if worker:
             context['worker'] = worker.first()
+
+        if cv.speciality_id:
+            speciality = Category.objects.get(pk=cv.speciality_id)
+            context['speciality'] = speciality
 
         return self.render_to_response(context)
 
@@ -68,6 +72,8 @@ class ModeratorCVUpdate(UpdateView):
         cv_id = self.kwargs['pk']
         if form.is_valid():
             CV.objects.filter(pk=cv_id).update(status=form.instance.status)
+        else:
+            print(form.errors)
         return redirect(self.success_url)
 
 

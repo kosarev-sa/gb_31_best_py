@@ -38,6 +38,6 @@ urlpatterns = [
     path('delete_language/<int:pk>/', CVLanguageDelete.as_view(), name='delete_language'),
 
     path('moderator_cvs/', ModeratorCVList.as_view(), name='moderator_cvs_list'),
-    path('moderator_vacancy_approve/<int:pk>/', ModeratorCVUpdate.as_view(), name='moderator_cvs_approve'),
+    path('moderator_cvs_approve/<int:pk>/', ModeratorCVUpdate.as_view(), name='moderator_cvs_approve'),
 
 ]
