@@ -15,10 +15,10 @@
         <thead>
             <tr>
                 <th>ИД</th>
-                <th>Специальность</th>
                 <th>ФИО</th>
+                <th>Заголовок</th>
+                <th>Специализация</th>
                 <th>Статус</th>
-                <th>Специлизация</th>
                 <th>Активна</th>
                 <th>Анализ</th>
             </tr>
@@ -27,13 +27,13 @@
             {% for item in cvs_list %}
                 <tr>
                     <td>{{ item.id }}</td>
-                    <td>{{ item.speciality }}</td>
                     <td>{{ item.worker_profile.name }}</td>
+                    <td>{{ item.post }}</td>
+                    <td>{{ item.speciality }}</td>
                     <td>{{ item.status }}</td>
-                    <td>{{ item.education_level }}</td>
                     <td>{% if item.is_active %} Да {% else %} Нет {% endif %} </td>
                     <td>
-                        <a href="{% url 'cv:moderator_cvs_approve' item.id %}">просмотр</a>
+                        <a class="btn btn-link m-0" href="{% url 'cv:moderator_cvs_approve' item.id %}">просмотр</a>
                     </td>
                 </tr>
             {% endfor %}

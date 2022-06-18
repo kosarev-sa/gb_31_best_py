@@ -13,7 +13,7 @@ from cvs.forms import CVCreateForm, CVUpdateForm, CVDeleteForm, CVDistributeForm
     EducationCreateForm, LanguagesCreateForm, ModeratorCVUpdateForm
 from cvs.models import CV, Experience, CVWorkSchedule, CVEmployment, Education, LanguagesSpoken, CVMonths
 
-from search.models import Category, Currency, Employments, WorkSchedules, Languages, LanguageLevels
+from search.models import Category, Currency, Employments, WorkSchedules, Languages, LanguageLevels, EducationLevel
 from users.models import WorkerProfile
 
 

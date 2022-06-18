@@ -15,8 +15,8 @@
         <thead>
             <tr>
                 <th>ИД</th>
-                <th>Наименование вакансии</th>
                 <th>Название компании</th>
+                <th>Наименование вакансии</th>
                 <th>Статус</th>
                 <th>Специлизация</th>
                 <th>Активность</th>
@@ -27,13 +27,13 @@
             {% for item in vacancies_list %}
                 <tr>
                     <td>{{ item.id }}</td>
-                    <td>{{ item.name }}</td>
                     <td>{{ item.employer_profile.name }}</td>
+                    <td>{{ item.name }}</td>
                     <td>{{ item.status }}</td>
                     <td>{{ item.specialization }}</td>
                     <td>{% if item.is_active %} Да {% else %} Нет {% endif %} </td>
                     <td>
-                        <a href="{% url 'vacancies:moderator_vacancy_approve' item.id %}">просмотр</a>
+                        <a class="btn btn-link m-0" href="{% url 'vacancies:moderator_vacancy_approve' item.id %}">просмотр</a>
                     </td>
                 </tr>
             {% endfor %}
