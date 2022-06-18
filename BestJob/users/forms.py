@@ -1,6 +1,7 @@
 import hashlib
 from random import random
 
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
 
@@ -13,11 +14,26 @@ class WorkerProfileForm(forms.ModelForm):
 
     class Meta:
         model = WorkerProfile
-        fields = '__all__'
+        fields = ['name', 'image', 'city', 'phone_number', 'gender', 'birth_date', 'data']
+        widgets = {
+            'birth_date': DatePickerInput(
+            options = {
+                "format": "DD.MM.YYYY",
+                "locale": "ru",
+                "showClose": False,
+                "showClear": True,
+                "showTodayButton": True,
+            }),
+        }
 
     def __init__(self, *args, **kwargs):
         super(WorkerProfileForm, self).__init__(*args, **kwargs)
-        self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
+        self.fields['name'].widget.attrs['placeholder'] = 'Введите ФИО'
+        self.fields['city'].widget.attrs['placeholder'] = 'Введите город проживания'
+        self.fields['phone_number'].widget.attrs['placeholder'] = 'Введите телефон для связи'
+        self.fields['gender'].widget.attrs['placeholder'] = 'Введите Ваш пол'
+        self.fields['birth_date'].widget.attrs['placeholder'] = 'Введите дату Вашего рождения'
+        self.fields['data'].widget.attrs['placeholder'] = 'Введите пару слов о себе'
 
 
 class EmployerProfileForm(forms.ModelForm):
@@ -25,7 +41,7 @@ class EmployerProfileForm(forms.ModelForm):
 
     class Meta:
         model = EmployerProfile
-        exclude = ('user', 'date_create', 'is_active', 'status', )
+        exclude = ['user']
 
     def __init__(self, *args, **kwargs):
         super(EmployerProfileForm, self).__init__(*args, **kwargs)
@@ -39,11 +55,7 @@ class ModeratorProfileForm(forms.ModelForm):
 
     class Meta:
         model = ModeratorProfile
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super(ModeratorProfileForm, self).__init__(*args, **kwargs)
-        self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
+        fields = ['image',]
 
 
 class UserLoginForm(AuthenticationForm):
@@ -57,7 +69,6 @@ class UserLoginForm(AuthenticationForm):
         super(UserLoginForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs['placeholder'] = 'Введите имя пользователя'
         self.fields['password'].widget.attrs['placeholder'] = 'Введите пароль'
-
 
 
 class UserRegisterForm(UserCreationForm):

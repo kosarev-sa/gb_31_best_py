@@ -7,6 +7,8 @@
     <title>Best job</title>
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'vendor/bootstrap/css/bootstrap-datetimepicker.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap_datepicker_plus/css/datepicker-widget.css' %}">
     {% block additional_styles %}
     {% endblock %}
 </head>
@@ -21,22 +23,26 @@
                 <div class="container">
                     <div class="row">
                         <div class="col d-flex align-items-center justify-content-center">
-                            <a class="big-font nolink" href="{% url 'index' %}">Главная</a>
+                            <a class="big-font nolink {% if request.resolver_match.url_name == 'index' %}text-primary{% endif %}" href="{% url 'index' %}">Главная</a>
                         </div>
                         <div class="col d-flex align-items-center justify-content-center">
                             <div class="big-font">Резюме</div>
                         </div>
                         <div class="col d-flex align-items-center justify-content-center">
-                            <div class="big-font">Вакансии</div>
+                            <a class="big-font nolink" href="{% url 'index' %}">Вакансии</a>
                         </div>
+                        <div class="col d-flex align-items-center justify-content-center">
+                            <a class="big-font nolink {% if request.resolver_match.url_name == 'haystack_search' %}text-primary{% endif %}" href="{% url 'haystack_search' %}">Поиск</a>
+                        </div>
+
                     </div>
                 </div>
             </div>
             <div class="col-3 d-flex align-items-center justify-content-center">
                 {% if user.is_authenticated %}
-                <a class="btn btn-dark m-1" href="{% url 'users:logout' %}">Выйти</a>
+                    <a class="btn btn-dark m-1" href="{% url 'users:logout' %}">Выйти</a>
                 {% else %}
-                <a class="btn btn-dark m-1" href="{% url 'users:login' %}">Войти</a>
+                    <a class="btn btn-dark m-1" href="{% url 'users:login' %}">Войти</a>
                 {% endif %}
 
                 <a class="btn btn-dark m-1" href="{% url 'users:registration' %}">Регистрация</a>
@@ -44,14 +50,14 @@
         </div>
         <div class="row">
             <div class="col">
-            {% block menu %}
-            {% endblock %}
+                {% block menu %}
+                {% endblock %}
             </div>
         </div>
         <div class="row">
             <div class="col">
-            {% block content %}
-            {% endblock %}
+                {% block content %}
+                {% endblock %}
             </div>
         </div>
         <div class="row border-top border-3 border-dark grey-bg-color">
@@ -65,6 +71,9 @@
 <!-- Bootstrap core JavaScript -->
 <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
 <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'vendor/moment/js/moment-with-locales.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap-datetimepicker.min.js' %}"></script>
+<script src="{% static 'bootstrap_datepicker_plus/js/datepicker-widget.js' %}"></script>
 {% block additional_script %}
 {% endblock %}
 

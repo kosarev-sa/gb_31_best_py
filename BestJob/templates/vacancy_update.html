@@ -11,12 +11,24 @@
 {% endblock %}
 
 {% block content %}
-
     <form method="post" action="">
         {% csrf_token %}
-        {{ form.data }}
+        <h2>Компания: {{ employer.name }}</h2>
+        {% if employer.image %}
+            <div style="width: 300px"><img class="card-img-top" src="{{ employer.image.url }}" alt="Нет фото"></div>
+        {% else %}
+            <p>Нет фото</p>
+        {% endif %}
+        <h3>Контактная информация: </h3><br>
+        <h5>Место нахождения: {{ employer.city }}</h5>
+        <h5>Род деятельности: {{ employer.data }}</h5>
+        <h5>Электронная почта: {{ employer.user.email }}</h5>
         <br>
-        <input type="submit" value="сохранить">
+        <h3>Основная информация:</h3><br>
+        {{ form.as_p }}
+
+        <br>
+        <input type="submit" value="изменить">
     </form>
 
 {% endblock %}

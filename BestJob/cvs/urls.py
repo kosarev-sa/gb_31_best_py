@@ -15,8 +15,9 @@ Including another URLconf
 """
 from django.urls import path
 
-from cvs.views import CVList, CVCreate, CVUpdate, CVDelete, CVDistribute
-from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
+from cvs.views import CVList, CVCreate, CVUpdate, CVDelete, CVDistribute, CVExperienceCreate, CVExperienceUpdate, \
+    CVExperienceDelete, CVEducationCreate, CVEducationUpdate, CVEducationDelete, CVLanguageCreate, CVLanguageUpdate, \
+    CVLanguageDelete, ModeratorCVList, ModeratorCVUpdate
 
 app_name = 'cv'
 
@@ -26,5 +27,17 @@ urlpatterns = [
     path('update/<int:pk>/', CVUpdate.as_view(), name='update_cv'),
     path('delete/<int:pk>/', CVDelete.as_view(), name='delete_cv'),
     path('distribute/<int:pk>/', CVDistribute.as_view(), name='distribute_cv'),
+    path('create_experience/<int:pk>', CVExperienceCreate.as_view(), name='create_experience'), # здесь pk - это cv.id
+    path('update_experience/<int:pk>/', CVExperienceUpdate.as_view(), name='update_experience'), # а здесь pk - это experience.id
+    path('delete_experience/<int:pk>/', CVExperienceDelete.as_view(), name='delete_experience'),
+    path('create_education/<int:cv_id>/', CVEducationCreate.as_view(), name='create_education'),
+    path('update_education/<int:pk>/', CVEducationUpdate.as_view(), name='update_education'),
+    path('delete_education/<int:pk>/', CVEducationDelete.as_view(), name='delete_education'),
+    path('create_language/<int:cv_id>/', CVLanguageCreate.as_view(), name='create_language'),
+    path('update_language/<int:pk>/', CVLanguageUpdate.as_view(), name='update_language'),
+    path('delete_language/<int:pk>/', CVLanguageDelete.as_view(), name='delete_language'),
+
+    path('moderator_cvs/', ModeratorCVList.as_view(), name='moderator_cvs_list'),
+    path('moderator_vacancy_approve/<int:pk>/', ModeratorCVUpdate.as_view(), name='moderator_cvs_approve'),
 
 ]

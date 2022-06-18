@@ -32,11 +32,16 @@ class Languages(models.Model):
     code = models.CharField(max_length=3, unique=True)
     language = models.CharField(max_length=100, unique=True)
 
+    def __str__(self):
+        return self.language
 
 class LanguageLevels(models.Model):
     """Уровень владения языком. code: A1, level: Начальный"""
     code = models.CharField(max_length=3, unique=True)
     level = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.level
 
 
 class Employments(models.Model):
@@ -55,6 +60,10 @@ class Category(models.Model):
     """Специализации. code: PROG, name: Программист"""
     code = models.CharField(max_length=10, unique=True)
     name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.name
+
 
 class Currency(models.IntegerChoices):
     """Валюта (выбор одного значения)"""
