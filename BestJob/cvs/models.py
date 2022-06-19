@@ -93,5 +93,5 @@ class ConnectVacancyCv(models.Model):
     """Связь отклика, вакансии и резюме"""
     cv = models.ForeignKey(CV, on_delete=models.CASCADE)
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
-    status_worker = models.BooleanField(default=None)
-    status_employer = models.BooleanField(default=None)
+    status_worker = models.BooleanField(null=True, default=None)
+    status_employer = models.BooleanField(null=True, default=None)
