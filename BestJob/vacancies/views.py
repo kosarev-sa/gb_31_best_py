@@ -10,6 +10,8 @@ from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDistrib
 from vacancies.models import Vacancy, WorkingHours
 from users.models import EmployerProfile
 from approvals.models import ApprovalStatus
+from cvs.models import ConnectVacancyCv
+
 
 class VacancyList(TemplateView):
     """view просмотра активных вакансий"""
@@ -39,6 +41,22 @@ class ModeratorVacancyList(TemplateView):
         context = self.get_context_data()
         context['vacancies_list'] = Vacancy.objects.all()
         return self.render_to_response(context)
+
+
+class ResponseVacancyList(TemplateView):
+    """view список откликов на вакансию работодателя"""
+    template_name = 'vacancy_response_list.html'
+
+    def get(self, request, *args, **kwargs):
+        super(ResponseVacancyList, self).get(request, *args, **kwargs)
+        employer_id = EmployerProfile.objects.get(user=request.user.pk)
+        vacancy_employer_ids = [vacancy.id for vacancy in Vacancy.objects.filter(employer_profile=employer_id,
+                                                                                 is_active=True)]
+        context = {
+            'responses': ConnectVacancyCv.objects.filter(vacancy_id__in=vacancy_employer_ids),
+        }
+        return self.render_to_response(context)
+
 
 class ModeratorVacancyUpdate(UpdateView):
     """view изменения вакансий"""
@@ -123,8 +141,12 @@ class VacancyUpdate(UpdateView):
         context = self.get_context_data()
         vacancy_id = kwargs.get('pk')
         vacancy = Vacancy.objects.get(id=vacancy_id)
-        employer = EmployerProfile.objects.get(user=request.user.pk)
-        context['employer'] = employer
+        # Временное решение до реализации get view для вакансии
+        try:
+            employer = EmployerProfile.objects.get(user=request.user.pk)
+            context['employer'] = employer
+        except Exception:
+            print(f'Employer {request.user.pk} not exists')
         context['employments'] = Employments.objects.all()
         vacancy_schedules = [vacancy_sch.schedule_id for vacancy_sch in WorkingHours.objects.filter(vacancy=vacancy)]
         context['vacancy_schedules'] = vacancy_schedules

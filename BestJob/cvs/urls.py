@@ -17,7 +17,7 @@ from django.urls import path
 
 from cvs.views import CVList, CVCreate, CVUpdate, CVDelete, CVDistribute, CVExperienceCreate, CVExperienceUpdate, \
     CVExperienceDelete, CVEducationCreate, CVEducationUpdate, CVEducationDelete, CVLanguageCreate, CVLanguageUpdate, \
-    CVLanguageDelete, ModeratorCVList, ModeratorCVUpdate
+    CVLanguageDelete, ModeratorCVList, ModeratorCVUpdate, ResponseCVList
 
 app_name = 'cv'
 
@@ -36,7 +36,7 @@ urlpatterns = [
     path('create_language/<int:cv_id>/', CVLanguageCreate.as_view(), name='create_language'),
     path('update_language/<int:pk>/', CVLanguageUpdate.as_view(), name='update_language'),
     path('delete_language/<int:pk>/', CVLanguageDelete.as_view(), name='delete_language'),
-
+    path('responses/', ResponseCVList.as_view(), name='cv_responses'),
     path('moderator_cvs/', ModeratorCVList.as_view(), name='moderator_cvs_list'),
     path('moderator_cvs_approve/<int:pk>/', ModeratorCVUpdate.as_view(), name='moderator_cvs_approve'),
 
