@@ -16,7 +16,7 @@ Including another URLconf
 from django.urls import path
 
 from vacancies.views import VacancyList, VacancyCreate, VacancyUpdate, VacancyDelete, VacancyDistribute, \
-    ModeratorVacancyList, ModeratorVacancyUpdate, ResponseVacancyList
+    ModeratorVacancyList, ModeratorVacancyUpdate, ResponseVacancyList, VacancyBaseList, VacancyDetail
 
 app_name = 'vacancy'
 
@@ -29,4 +29,6 @@ urlpatterns = [
     path('moderator_vacancy/', ModeratorVacancyList.as_view(), name='moderator_vacancy_list'),
     path('moderator_vacancy_approve/<int:pk>/', ModeratorVacancyUpdate.as_view(), name='moderator_vacancy_approve'),
     path('responses/', ResponseVacancyList.as_view(), name='vacancy_responses'),
+    path('base/', VacancyBaseList.as_view(), name='vacancy_base'),
+    path('detail/<int:pk>/', VacancyDetail.as_view(), name='detail_vacancy'),
 ]
