@@ -4,12 +4,15 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DeleteView, DetailView
 
+from cvs.models import CV
 from search.models import Category, Employments, WorkSchedules, Languages, \
     LanguageLevels
 from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDistributeForm, ModeratorVacancyUpdateForm
 from vacancies.models import Vacancy, WorkingHours
 from users.models import EmployerProfile
 from approvals.models import ApprovalStatus
+
+from BestJob.mixin import BaseClassContextMixin, UserDispatchMixin
 from cvs.models import ConnectVacancyCv
 
 
@@ -187,6 +190,20 @@ class VacancyDistribute(UpdateView):
         return context
 
 
+class VacancyOpenList(TemplateView, BaseClassContextMixin):
+    """view просмотра активных вакансий любым пользователем"""
+    template_name = 'vacancy_list.html'
+    list_of_vacancies = Vacancy.objects.all()
+    title = 'BestJob | Вакансии'
+
+    def get(self, request, *args, **kwargs):
+        super(VacancyOpenList, self).get(request, *args, **kwargs)
+        context = {
+            'vacancies': Vacancy.objects.filter(is_active=True),
+        }
+        return self.render_to_response(context)
+
+      
 class VacancyBaseList(TemplateView):
     """Просмотра всех вакансий независимо от регистрации"""
     template_name = 'vacancy_base.html'
@@ -199,6 +216,22 @@ class VacancyBaseList(TemplateView):
         }
         return self.render_to_response(context)
 
+
+class RecommendedVacancyList(ListView, BaseClassContextMixin):
+    """view просмотра рекомендованных по резюме вакансий"""
+    template_name = 'vacancy_list.html'
+    model = Vacancy
+    title = 'BestJob | Рекомендованные вакансии'
+
+    def get(self, request, *args, **kwargs):
+        super(RecommendedVacancyList, self).get(request, *args, **kwargs)
+        cv = CV.objects.get(id=self.kwargs['pk'])
+        context = {
+            'vacancies': Vacancy.objects.filter(specialization=cv.speciality),
+        }
+        
+        return self.render_to_response(context)
+        
 
 class VacancyDetail(DetailView):
     """Просмотр одной вакансии независимо от регистрации"""

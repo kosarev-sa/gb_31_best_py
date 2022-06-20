@@ -2,19 +2,21 @@
 {% load static %}
 
 {% block menu %}
-{% include "employer_menu.html" %}
 
-    <ul>
+    {% if employer %}
+        {% include "employer_menu.html" %}
 
-        <li>
-            <a href="{% url 'vacancies:create_vacancy' %}">создать вакансию</a>
-        </li>
+        <ul>
 
-        <li>
-            <a href="{% url 'users:employer_profile' employer.id %}">вернуться в профиль</a>
-        </li>
-    </ul>
+            <li>
+                <a href="{% url 'vacancies:create_vacancy' %}">создать вакансию</a>
+            </li>
 
+            <li>
+                <a href="{% url 'users:employer_profile' employer.id %}">вернуться в профиль</a>
+            </li>
+        </ul>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -24,6 +26,7 @@
             <td width="60%">
             "{{ vacancy.name }}"
             </td>
+            {% if employer %}
             <td width="60%">
             Статус: {{ status }}
             </td>
@@ -36,6 +39,7 @@
             <td>
                 <a href="{% url 'vacancies:distribute_vacancy' vacancy.id %}">разместить</a>
             </td>
+            {% endif %}
         </tr>
     </table>
     {% endfor %}

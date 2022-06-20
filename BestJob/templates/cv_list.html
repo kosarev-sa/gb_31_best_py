@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block menu %}
-{% include "worker_menu.html" %}
+    {% include "worker_menu.html" %}
     <ul>
 
         <li>
@@ -17,26 +17,29 @@
 
 {% block content %}
     {% for cv in cvs %}
-    <table width="100%">
-        <tr>
-            <td width="60%">
-                {{ cv.post }}
-            </td>
-            <td>
-                {{ cv.date_create}}
-            </td>
-            <td>
-                <a href="{% url 'cv:update_cv' cv.id %}">редактировать</a>
-            </td>
-            <td>
-                <a href="{% url 'cv:delete_cv' cv.id %}">удалить</a>
-            </td>
-            <td>
-                <a href="{% url 'cv:distribute_cv' cv.id %}">разместить</a>
-            </td>
+        <table width="100%">
+            <tr>
+                <td width="60%">
+                    {{ cv.post }}
+                </td>
+                <td>
+                    {{ cv.date_create }}
+                </td>
+                <td>
+                    <a href="{% url 'cv:update_cv' cv.id %}">редактировать</a>
+                </td>
+                <td>
+                    <a href="{% url 'cv:delete_cv' cv.id %}">удалить</a>
+                </td>
+                <td>
+                    <a href="{% url 'cv:distribute_cv' cv.id %}">разместить</a>
+                </td>
 
-        </tr>
-    </table>
+            </tr>
+        </table>
+
+        <a href="{% url 'vacancy:vacancy_recommended' cv.id %}">вакансии для Вас</a>
+
     {% endfor %}
 {% endblock %}
 
