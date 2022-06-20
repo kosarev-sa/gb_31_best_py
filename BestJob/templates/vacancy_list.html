@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block menu %}
+    {% if employer %}
     <ul>
 
         <li>
@@ -12,7 +13,7 @@
             <a href="{% url 'users:employer_profile' employer.id %}">вернуться в профиль</a>
         </li>
     </ul>
-
+    {% endif %}
 {% endblock %}
 
 {% block content %}
@@ -22,6 +23,7 @@
             <td width="60%">
             "{{ vacancy.name }}"
             </td>
+            {% if employer %}
             <td width="60%">
             Статус: {{ status }}
             </td>
@@ -34,6 +36,7 @@
             <td>
                 <a href="{% url 'vacancies:distribute_vacancy' vacancy.id %}">разместить</a>
             </td>
+            {% endif %}
         </tr>
     </table>
     {% endfor %}
