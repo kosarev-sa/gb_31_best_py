@@ -26,7 +26,7 @@
                             <a class="big-font nolink {% if request.resolver_match.url_name == 'index' %}text-primary{% endif %}" href="{% url 'index' %}">Главная</a>
                         </div>
                         <div class="col d-flex align-items-center justify-content-center">
-                            <div class="big-font">Резюме</div>
+                            <a class="big-font nolink" href="{% url 'search_cv' %}">Резюме</a>
                         </div>
                         <div class="col d-flex align-items-center justify-content-center">
                             <a class="big-font nolink" href="{% url 'vacancy:vacancy_base' %}">Вакансии</a>

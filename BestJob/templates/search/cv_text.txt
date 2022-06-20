@@ -1,2 +1,6 @@
 {{ object.post}}
-{{ object.specialization}}
+{{ object.salary}}
+{{ object.speciality}}
+{{ object.education_level}}
+{{ object.moving}}
+
