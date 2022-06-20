@@ -113,7 +113,7 @@ class VacancyCreate(CreateView):
 
     def post(self, request, *args, **kwargs):
         employer = EmployerProfile.objects.get(user=request.user.pk)
-        start_status = ApprovalStatus.objects.get(status='CHG')
+        start_status = ApprovalStatus.objects.get(status='NPB')
         form = self.form_class(data=request.POST)
         if form.is_valid():
             # сохраняем новую вакансию
@@ -192,27 +192,13 @@ class VacancyDistribute(UpdateView):
 
 class VacancyOpenList(TemplateView, BaseClassContextMixin):
     """view просмотра активных вакансий любым пользователем"""
-    template_name = 'vacancy_list.html'
-    list_of_vacancies = Vacancy.objects.all()
+    template_name = 'vacancy_base.html'
     title = 'BestJob | Вакансии'
 
     def get(self, request, *args, **kwargs):
         super(VacancyOpenList, self).get(request, *args, **kwargs)
         context = {
             'vacancies': Vacancy.objects.filter(is_active=True),
-        }
-        return self.render_to_response(context)
-
-      
-class VacancyBaseList(TemplateView):
-    """Просмотра всех вакансий независимо от регистрации"""
-    template_name = 'vacancy_base.html'
-
-    def get(self, request, *args, **kwargs):
-        super(VacancyBaseList, self).get(request, *args, **kwargs)
-        context = {
-            'vacancies': Vacancy.objects.all(),
-            'status': ApprovalStatus.objects.get(status='APV')
         }
         return self.render_to_response(context)
 
@@ -237,11 +223,6 @@ class VacancyDetail(DetailView):
     """Просмотр одной вакансии независимо от регистрации"""
     model = Vacancy
     template_name = 'vacancy_detail.html'
-    success_url = reverse_lazy('vacancy:vacancy_list')
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(VacancyDetail, self).get_context_data(**kwargs)
-        return context
 
     def get(self, request, *args, **kwargs):
         super(VacancyDetail, self).get(request, *args, **kwargs)
