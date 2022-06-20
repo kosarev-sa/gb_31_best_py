@@ -29,19 +29,36 @@ class WorkerProfileView(UpdateView):
     title = 'BestJob | Профайл соискателя'
 
     def get_object(self, queryset=None):
-        return get_object_or_404(WorkerProfile, user_id=self.kwargs['pk'])
+        user_id = self.kwargs['pk']
+        worker_profile = WorkerProfile.objects.filter(user_id=user_id)
+
+        if worker_profile:
+            return worker_profile.first()
+        else:
+            worker_profile = WorkerProfile()
+            worker_profile.user = User.objects.get(pk=user_id)
+            return worker_profile
+
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         form = self.form_class(data=request.POST, files=request.FILES)
         user_id = self.kwargs['pk']
-        workerProfile = WorkerProfile.objects.get(user_id=user_id)
-        form.instance.pk = workerProfile.id
-        form.instance.user_id = workerProfile.user.id
-        form.instance.user = workerProfile.user
 
-        if form.instance.image.closed:
-            form.instance.image = workerProfile.image
+        workerProfile = WorkerProfile.objects.filter(user_id=user_id)
+
+        if workerProfile:
+            workerProfile = workerProfile.first()
+            form.instance.pk = workerProfile.id
+            form.instance.user_id = workerProfile.user.id
+            form.instance.user = workerProfile.user
+
+            if form.instance.image.closed:
+                form.instance.image = workerProfile.image
+
+        else:
+            form.instance.user_id = user_id
+            form.instance.user = User.objects.get(pk=user_id)
 
         form.save()
         return redirect(reverse("users:worker_profile", args=(user_id,)))
@@ -90,7 +107,15 @@ class EmployerProfileView(UpdateView):
     title = 'BestJob | Профайл работодателя'
 
     def get_object(self, queryset=None):
-        return get_object_or_404(EmployerProfile, user_id=self.kwargs['pk'])
+        user_id = self.kwargs['pk']
+        employer_profile = EmployerProfile.objects.filter(user_id=user_id)
+
+        if employer_profile:
+            return employer_profile.first()
+        else:
+            employer_profile = EmployerProfile()
+            employer_profile.user = User.objects.get(pk=user_id)
+            return employer_profile
         
 
     def post(self, request, *args, **kwargs):
@@ -98,15 +123,20 @@ class EmployerProfileView(UpdateView):
         form = self.form_class(data=request.POST, files=request.FILES)
         user_id = self.kwargs['pk']
 
-        emploerProfile = EmployerProfile.objects.get(user_id=user_id)
+        emploerProfile = EmployerProfile.objects.filter(user_id=user_id)
 
-        form.instance.pk = emploerProfile.id
-        form.instance.user_id = emploerProfile.user.id
-        form.instance.user = emploerProfile.user
-        form.instance.date_create = emploerProfile.date_create
+        if emploerProfile:
+            emploerProfile = emploerProfile.first()
+            form.instance.pk = emploerProfile.id
+            form.instance.user_id = emploerProfile.user.id
+            form.instance.user = emploerProfile.user
+            form.instance.date_create = emploerProfile.date_create
 
-        if form.instance.image.closed:
-            form.instance.image = emploerProfile.image
+            if form.instance.image.closed:
+                form.instance.image = emploerProfile.image
+        else:
+            form.instance.user_id = user_id
+            form.instance.user = User.objects.get(pk=user_id)
 
         form.save()
         return redirect(reverse("users:employer_profile", args=(user_id,)))
@@ -121,21 +151,36 @@ class ModeratorProfileView(UpdateView):
     title = 'BestJob | Профайл модератора'
 
     def get_object(self, queryset=None):
-        return get_object_or_404(ModeratorProfile, user_id=self.kwargs['pk'])
+        user_id = self.kwargs['pk']
+        moderator_profile = ModeratorProfile.objects.filter(user_id=user_id)
+
+        if moderator_profile:
+            return moderator_profile.first()
+        else:
+            moderator_profile = ModeratorProfile()
+            moderator_profile.user = User.objects.get(pk=user_id)
+            return moderator_profile
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
         form = self.form_class(data=request.POST, files=request.FILES)
         user_id = self.kwargs['pk']
-        moderatorProfile = ModeratorProfile.objects.get(user_id=user_id)
-        form.instance.pk = moderatorProfile.id
-        form.instance.user_id = moderatorProfile.user.id
-        form.instance.user = moderatorProfile.user
-        form.instance.date_create = moderatorProfile.date_create
+        moderatorProfile = ModeratorProfile.objects.filter(user_id=user_id)
 
-        if form.instance.image.closed:
-            form.instance.image = moderatorProfile.image
+        if moderatorProfile:
+            moderatorProfile = moderatorProfile.first()
+            form.instance.pk = moderatorProfile.id
+            form.instance.user_id = moderatorProfile.user.id
+            form.instance.user = moderatorProfile.user
+            form.instance.date_create = moderatorProfile.date_create
+
+            if form.instance.image.closed:
+                form.instance.image = moderatorProfile.image
+
+        else:
+            form.instance.user_id = user_id
+            form.instance.user = User.objects.get(pk=user_id)
 
         form.save()
         return redirect(reverse("users:moderator_profile", args=(user_id,)))

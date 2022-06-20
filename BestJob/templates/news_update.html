@@ -2,35 +2,10 @@
 {% load static %}
 
 {% block menu %}
-    <ul>
-        <li>
-            <a href="{% url 'news:moderate_news' %}">вернуться к списку</a>
-        </li>
-    </ul>
-
+{% include "moderator_menu.html" %}
 {% endblock %}
 
 {% block content %}
-
-    <form method="post" action="">
-        {% csrf_token %}
-        <div class="form-group">
-            <label class="small mb-1" for="id_title">Заголовок</label>
-            {{ form.title }}
-        </div>
-
-        <div class="form-group">
-            <label class="small mb-1" for="id_body">Тело</label>
-            {{ form.body }}
-        </div>
-
-        <div class="form-group">
-            <label class="small mb-1" for="id_is_active">Активна</label>
-            {{ form.is_active }}
-        </div>
-        <br>
-        <input type="submit" value="сохранить">
-    </form>
-
+{% include "inc_update_news.html" %}
 {% endblock %}
 

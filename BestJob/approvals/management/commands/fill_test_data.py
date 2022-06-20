@@ -8,7 +8,8 @@ from news.models import News
 from users.models import User, EmployerProfile, WorkerProfile, ModeratorProfile
 
 from vacancies.models import Vacancy
-from cvs.models import CV, CVSkills, CVEmployment, CVWorkSchedule, Education, Experience, LanguagesSpoken
+from cvs.models import CV, CVSkills, CVEmployment, CVWorkSchedule, Education, Experience, LanguagesSpoken, \
+    ConnectVacancyCv
 from search.models import Category, MainSkills, Languages, LanguageLevels, Employments, WorkSchedules
 
 JSON_PATH_NEWS = 'news/fixtures/'
@@ -231,3 +232,11 @@ class Command(BaseCommand):
 
             new_schedule = CVWorkSchedule(**sch_row)
             new_schedule.save()
+
+        cv_responses = load_from_json(JSON_PATH_CV + 'cv_responses.json')
+        ConnectVacancyCv.objects.all().delete()
+
+        for resp in cv_responses:
+            resp['cv'] = CV.objects.get(id=resp['cv'])
+            resp['vacancy'] = Vacancy.objects.get(id=resp['vacancy'])
+            ConnectVacancyCv(**resp).save()

@@ -13,15 +13,13 @@ class CV(models.Model):
     status = models.ForeignKey(ApprovalStatus, on_delete=models.CASCADE)
     date_create = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True, db_index=True)
-    speciality = models.ForeignKey(Category, on_delete=models.CASCADE)
-    post = models.CharField(max_length=256, blank=True)
+    speciality = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
+    post = models.CharField(max_length=256, blank=True, null=True)
+    skills = models.CharField(max_length=256, blank=True, null=True)
     education_level = models.PositiveSmallIntegerField(choices=EducationLevel.choices, default=EducationLevel.HIGHER)
     moving = models.PositiveSmallIntegerField(choices=Moving.choices, default=Moving.UNREAL, null=True)
     salary = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, verbose_name='Зарплата')
     currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB, null=True)
-
-    def __unicode__(self):
-        return self.post
 
 
 class CVSkills(models.Model):
@@ -39,35 +37,31 @@ class Education(models.Model):
     specialty = models.CharField(max_length=256)
 
 
-class Experience(models.Model):
-    """Опыт работы"""
+class CVMonths(models.IntegerChoices):
+    JAN = 1, "Январь"
+    FEB = 2, "Февраль"
+    MAR = 3, "Март"
+    APR = 4, "Апрель"
+    MAY = 5, "Май"
+    JUN = 6, "Июнь"
+    JUL = 7, "Июль"
+    AUG = 8, "Август"
+    SEP = 9, "Сентябрь"
+    OCT = 10, "Октябрь"
+    NOV = 11, "Ноябрь"
+    DEC = 12, "Декабрь"
 
-    class Month(models.IntegerChoices):
-        JAN = 1,"Январь"
-        FEB = 2, "Февраль"
-        MAR = 3, "Март"
-        APR = 4, "Апрель"
-        MAY = 5, "Май"
-        JUN = 6, "Июнь"
-        JUL = 7, "Июль"
-        AUG = 8, "Август"
-        SEP = 9, "Сентябрь"
-        OCT = 10, "Октябрь"
-        NOV = 11, "Ноябрь"
-        DEC = 12, "Декабрь"
+class Experience(models.Model):
 
     cv = models.ForeignKey(CV, on_delete=models.CASCADE)
-    month_begin = models.PositiveSmallIntegerField(choices=Month.choices, default=Month.JAN)
+    month_begin = models.PositiveSmallIntegerField(choices=CVMonths.choices, default=CVMonths.JAN)
     year_begin = models.IntegerField(null=True)
-    month_end = models.PositiveSmallIntegerField(choices=Month.choices, default=Month.JAN)
+    month_end = models.PositiveSmallIntegerField(choices=CVMonths.choices, default=CVMonths.JAN)
     year_end = models.IntegerField(null=True)
     name = models.CharField(max_length=256)
     post = models.CharField(max_length=128)
-    stack = models.CharField(max_length=256)
-    responsibilities = models.TextField(max_length=2000)
-
-    def month_verbose(self):
-        return dict(Experience.Month)[self.month_begin]
+    stack = models.CharField(max_length=256, null=True)
+    responsibilities = models.TextField(max_length=2000, null=True)
 
 
 class LanguagesSpoken(models.Model):
@@ -75,12 +69,6 @@ class LanguagesSpoken(models.Model):
     cv = models.ForeignKey(CV, on_delete=models.CASCADE)
     language = models.ForeignKey(Languages, on_delete=models.CASCADE)
     level = models.ForeignKey(LanguageLevels, on_delete=models.CASCADE)
-
-    def save_languages(self, data, cv):
-        level = LanguageLevels.objects.get(code=data.get('level'))
-        language = Languages.objects.get(code=data.get('lang'))
-        language_level = LanguagesSpoken(cv=cv, language=language, level=level)
-        language_level.save()
 
 
 class CVEmployment(models.Model):
@@ -105,5 +93,5 @@ class ConnectVacancyCv(models.Model):
     """Связь отклика, вакансии и резюме"""
     cv = models.ForeignKey(CV, on_delete=models.CASCADE)
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
-    status_worker = models.BooleanField(default=None)
-    status_employer = models.BooleanField(default=None)
+    status_worker = models.BooleanField(null=True, default=None)
+    status_employer = models.BooleanField(null=True, default=None)

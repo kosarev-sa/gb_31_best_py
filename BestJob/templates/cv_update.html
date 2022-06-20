@@ -50,16 +50,11 @@
         </div>
         <div>
             <label>Специализация</label>
-            <select name="speciality">
-                {% for sp in speciality %}
-                    <option value="{{ sp.id }}" {% if cv.speciality.id == sp.id %}
-                            selected {% endif %}>{{ sp.name }}</option>
-                {% endfor %}
-            </select><br>
+            {{ form.speciality }}
         </div>
         <div>
             <label>Основные навыки</label>
-            <button></button>
+            {{ form.skills }}
         </div>
         <div>
             <label>Желаемая должность</label>
@@ -71,67 +66,86 @@
             {{ form.salary }}
             {{ form.currency }}
         </div>
-        <h4>Опыт работы</h4>
-        {% for exp in experience %}
-            <label for="year_begin">Месяц и год начала</label>
-            <select name="month_begin" id="month_begin">
-                {% for month in months %}
-                    <option value="{{ month.value }}">{{ month.name }}</option>
-                {% endfor %}
-            </select>
-            <input type="number" step="1" min="1900" max="2050" name="year_begin" id="year_begin"
-                   value="{{ exp.year_begin }}"><br>
-            <label for="year_end">Месяц и год окончания</label>
-            <select name="month_end" id="month_end">
-                {% for month in months %}
-                    <option value="{{ month.value }}">{{ month.name }}</option>
-                {% endfor %}
-            </select>
-            <input type="number" step="1" min="1900" max="2050" name="year_end" id="year_end"
-                   value="{{ exp.year_end }}"><br>
-            <label for="name_exp">Наименование организации</label>
-            <input type="text" id="name_exp" name="name_exp" value="{{ exp.name }}"><br>
-            <label for="post_exp">Должность</label>
-            <input type="text" id="post_exp" name="post_exp" value="{{ exp.post }}"><br>
-            <label for="responsibilities">Обязанности на рабочем месте</label>
-            <textarea id="responsibilities" name="responsibilities"> {{ exp.responsibilities }}</textarea><br>
-        {% endfor %}
-        <label>Добавить место работы</label><br>
+        <h4>Опыт работы:</h4>
+        <table>
+            <tr>
+                <th>Начало работы</th>
+                <th>Окончание работы</th>
+                <th>Нименование организации</th>
+                <th>Должность</th>
+                <th>Навыки</th>
+                <th>Обязанности</th>
+                <th>Изменить</th>
+                <th>Удалить</th>
+            </tr>
+            {% for exp in experience %}
+                <tr>
+                    <td>{{ exp.get_month_begin_display }} {{ exp.year_begin }}</td>
+                    <td>{{ exp.get_month_end_display }} {{ exp.year_end }}</td>
+                    <td>{{ exp.name }}</td>
+                    <td>{{ exp.post }}</td>
+                    <td>{{ exp.stack }}</td>
+                    <td>{{ exp.responsibilities }}</td>
+                    <td><a class="btn btn-sm btn-danger" href="{% url 'cv:update_experience' exp.id %} ">Изменить</a>
+                    </td>
+                    <td><a class="btn btn-sm btn-danger" href="{% url 'cv:delete_experience' exp.id %}" type="submit">Удалить</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div>
+            <a class="btn btn-sm btn-success" href="{% url 'cv:create_experience' cv_id %}">Добавить опыт работы</a>
+        </div>
+
         <div>
             <h4>Образование: </h4>
             <label>Уровень образования</label>
             {{ form.education_level }}<br>
-            {% for education in educations %}
-                <label for="educ_end">Год окончания</label>
-                <input type="number" step="1" min="1900" max="2050" name="educ_end" id="educ_end"
-                       value="{{ education.date_end }}">
-                <label for="educ_name">Наименование учебного заведения</label>
-                <input type="text" maxlength="256" name="educ_name" id="educ_name" value="{{ education.name }}"><br>
-                <label for="department">Факультет</label>
-                <input type="text" maxlength="256" name="department" id="department" value="{{ education.department }}">
-                <label for="educ_specialty">Специализация</label>
-                <input type="text" maxlength="256" name="educ_specialty" id="educ_specialty"
-                       value="{{ education.specialty }}"><br>
-            {% endfor %}
-            <label>Добавить место обучения</label><br>
+            <table>
+                <tr>
+                    <th>Год окончания</th>
+                    <th>Учебное заведение</th>
+                    <th>Факультет</th>
+                    <th>Специализация</th>
+                    <th>Изменить</th>
+                    <th>Удалить</th>
+                </tr>
+                {% for education in educations %}
+                    <tr>
+                        <td>{{ education.date_end }}</td>
+                        <td>{{ education.name }}</td>
+                        <td>{{ education.department }}</td>
+                        <td>{{ education.specialty }}</td>
+                        <td><a class="btn btn-sm btn-danger" href="{% url 'cv:update_education' education.id %} ">Изменить</a>
+                        </td>
+                        <td><a class="btn btn-sm btn-danger" href="{% url 'cv:delete_education' education.id %}"
+                               type="submit">Удалить</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <div>
+                <a class="btn btn-sm btn-success" href="{% url 'cv:create_education' cv_id %}">Добавить место
+                    обучения</a>
+            </div>
         </div>
         <div>
-            <h4>Владение языками </h4>
-            {% for langl in langlevels %}
-                <select name="lang" id="lang">
-                    {% for language in languages %}
-                        <option value="{{ language.code }}" {% if language.id == langl.language_id %}
-                                selected {% endif %}>{{ language.language }}</option>
-                    {% endfor %}
-                </select>
-                <select name="level" id="level">
-                    {% for level in levels %}
-                        <option value="{{ level.code }}" {% if level.id == langl.level_id %}
-                                selected {% endif %}>{{ level.level }}</option>
-                    {% endfor %}
-                </select><br>
-            {% endfor %}
-            <label>Указать еще один язык</label><br>
+            <h4>Владение языками:</h4>
+
+            <table>
+                {% for langl in langlevels %}
+                    <tr>
+                        <td>{{ langl.language }}</td>
+                        <td>{{ langl.level }}</td>
+                        <td><a class="btn btn-sm btn-danger"
+                               href="{% url 'cv:update_language' langl.id %} ">Изменить</a></td>
+                        <td><a class="btn btn-sm btn-danger" href="{% url 'cv:delete_language' langl.id %}"
+                               type="submit">Удалить</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <div>
+                <a class="btn btn-sm btn-success" href="{% url 'cv:create_language' cv_id %}">Указать еще один язык</a>
+            </div>
         </div>
         <div>
             <h4>Возможность переезда: </h4>

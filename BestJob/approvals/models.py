@@ -23,5 +23,11 @@ class ApprovalStatus(models.Model):
     status = models.CharField(verbose_name='Статус', max_length=3, choices=APPROVAL_STATUS_CHOICES,
                               default=NOT_PUBLISHED, unique=True)
 
+    def get_status_name(self, key):
+        for status in self.APPROVAL_STATUS_CHOICES:
+            if status[0] == key:
+                return status[1]
+
+
     def __str__(self):
-        return self.status
+        return self.get_status_name(self.status)
