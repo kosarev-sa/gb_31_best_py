@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DeleteView
+from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DeleteView, DetailView
 
 from search.models import Category, Employments, WorkSchedules, Languages, \
     LanguageLevels
@@ -185,3 +185,42 @@ class VacancyDistribute(UpdateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyDistribute, self).get_context_data(**kwargs)
         return context
+
+
+class VacancyBaseList(TemplateView):
+    """Просмотра всех вакансий независимо от регистрации"""
+    template_name = 'vacancy_base.html'
+
+    def get(self, request, *args, **kwargs):
+        super(VacancyBaseList, self).get(request, *args, **kwargs)
+        context = {
+            'vacancies': Vacancy.objects.all(),
+            'status': ApprovalStatus.objects.get(status='APV')
+        }
+        return self.render_to_response(context)
+
+
+class VacancyDetail(DetailView):
+    """Просмотр одной вакансии независимо от регистрации"""
+    model = Vacancy
+    template_name = 'vacancy_detail.html'
+    success_url = reverse_lazy('vacancy:vacancy_list')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(VacancyDetail, self).get_context_data(**kwargs)
+        return context
+
+    def get(self, request, *args, **kwargs):
+        super(VacancyDetail, self).get(request, *args, **kwargs)
+        context = self.get_context_data()
+        vacancy_id = kwargs.get('pk')
+        vacancy = Vacancy.objects.get(id=vacancy_id)
+        try:
+            employer = EmployerProfile.objects.get(id=vacancy_id)
+            context['vacancy'] = vacancy
+            context['employer'] = employer
+        except Exception:
+            print(f'Employer not exists')
+        context['employments'] = Employments.objects.all()
+
+        return self.render_to_response(context)
