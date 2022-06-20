@@ -34,20 +34,22 @@
                             {% endif %}
                             <div class="form-group m-3">
                                 <label class="small mb-1" for="{{ form.date_end.id_for_label }}">Год окончания</label>
+                                <div data-toggle="tooltip" data-placement="bottom" title="Если еще учитесь, укажите предполагаемый год окончания">
                                 {{ form.date_end }}
+                                </div>
                             </div>
                             <div class="form-group m-3">
                                 <label class="small mb-1" for="{{ form.name.id_for_label }}">Наименование учебного
                                     заведения</label>
-                                {{ form.name }}
+                                <p class="card shadow-lg border-1 rounded-lg">{{ form.name }}</p>
                             </div>
                             <div class="form-group m-3">
                                 <label class="small mb-1" for="{{ form.department.id_for_label }}">Факультет</label>
-                                {{ form.department }}
+                                <p class="card shadow-lg border-1 rounded-lg">{{ form.department }}</p>
                             </div>
                             <div class="form-group m-3">
                                 <label class="small mb-1" for="{{ form.specialty.id_for_label }}">Специализация</label>
-                                {{ form.specialty }}
+                                <p class="card shadow-lg border-1 rounded-lg">{{ form.specialty }}</p>
                             </div>
                             <div class="form-group d-flex align-items-center justify-content-center mt-4 mb-0">
                                 <input class="btn btn-primary" type="submit" value="Coхранить">

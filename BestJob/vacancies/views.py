@@ -110,7 +110,7 @@ class VacancyCreate(CreateView):
 
     def post(self, request, *args, **kwargs):
         employer = EmployerProfile.objects.get(user=request.user.pk)
-        start_status = ApprovalStatus.objects.get(status='CHG')
+        start_status = ApprovalStatus.objects.get(status='NPB')
         form = self.form_class(data=request.POST)
         if form.is_valid():
             # сохраняем новую вакансию
