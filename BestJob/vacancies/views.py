@@ -26,7 +26,7 @@ class VacancyList(TemplateView):
         context = {
             'vacancies': Vacancy.objects.filter(employer_profile=employer_id, is_active=True),
             'employer': employer_id,
-            'status': ApprovalStatus.objects.get(status='CHG')
+            'status': ApprovalStatus.objects.get(status='APV')
         }
         return self.render_to_response(context)
 

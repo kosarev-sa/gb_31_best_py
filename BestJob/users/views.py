@@ -20,34 +20,34 @@ from users.forms import WorkerProfileForm, EmployerProfileForm, ModeratorProfile
 from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User
 
 
-class WorkerProfileDetailView(DetailView):
+class WorkerProfileView(UpdateView):
     """view для профиля соискателя"""
     model = WorkerProfile
     template_name = 'worker_profile.html'
-
-    def get_object(self, queryset=None):
-        worker = get_object_or_404(WorkerProfile, user_id=self.kwargs['pk'])
-        return worker
-
-
-class WorkerProfileView(UpdateView):
-    """view для редактирования профиля соискателя"""
-    model = WorkerProfile
-    template_name = 'worker_profile_update.html'
     form_class = WorkerProfileForm
-    # success_url = reverse_lazy('users:worker_profile')
-    success_url = reverse_lazy('index')
+    success_url = reverse_lazy('users:worker_profile')
+    title = 'BestJob | Профайл соискателя'
 
     def get_object(self, queryset=None):
-        worker = get_object_or_404(WorkerProfile, user_id=self.kwargs['pk'])
-        return worker
+        return get_object_or_404(WorkerProfile, user_id=self.kwargs['pk'])
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(WorkerProfileView, self).get_context_data(**kwargs)
-        return context
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(data=request.POST, files=request.FILES)
+        user_id = self.kwargs['pk']
+        workerProfile = WorkerProfile.objects.get(user_id=user_id)
+        form.instance.pk = workerProfile.id
+        form.instance.user_id = workerProfile.user.id
+        form.instance.user = workerProfile.user
+
+        if form.instance.image.closed:
+            form.instance.image = workerProfile.image
+
+        form.save()
+        return redirect(reverse("users:worker_profile", args=(user_id,)))
 
 
-class EmployerProfileView(ListView, BaseClassContextMixin):
+class EmployersProfileView(ListView, BaseClassContextMixin):
     """view для просмотра работодателей"""
     model = EmployerProfile
     template_name = 'employers.html'
@@ -68,31 +68,77 @@ class EmployerDetailView(DetailView, BaseClassContextMixin):
     template_name = 'employers_detail.html'
     title = 'BestJob | Работодатель'
 
+#
+# class EmployerProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
+#     """view для профиля работодателя"""
+#     model = EmployerProfile
+#     form_class = EmployerProfileForm
+#     template_name = 'employer_profile.html'
+#     success_url = reverse_lazy('users:employer_profile')
+#     title = 'BestJob | Профайл работодателя'
+#
+#     # def get_object(self, queryset=None):
+#     #     return get_object_or_404(User, pk=self.request.employer_profile.pk)
 
-class EmployerProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
+
+class EmployerProfileView(UpdateView):
     """view для профиля работодателя"""
     model = EmployerProfile
-    form_class = EmployerProfileForm
     template_name = 'employer_profile.html'
+    form_class = EmployerProfileForm
     success_url = reverse_lazy('users:employer_profile')
     title = 'BestJob | Профайл работодателя'
 
     def get_object(self, queryset=None):
-        employer = get_object_or_404(EmployerProfile, user_id=self.kwargs['pk'])
-        return employer
+        return get_object_or_404(EmployerProfile, user_id=self.kwargs['pk'])
+        
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(data=request.POST, files=request.FILES)
+        user_id = self.kwargs['pk']
+
+        emploerProfile = EmployerProfile.objects.get(user_id=user_id)
+
+        form.instance.pk = emploerProfile.id
+        form.instance.user_id = emploerProfile.user.id
+        form.instance.user = emploerProfile.user
+        form.instance.date_create = emploerProfile.date_create
+
+        if form.instance.image.closed:
+            form.instance.image = emploerProfile.image
+
+        form.save()
+        return redirect(reverse("users:employer_profile", args=(user_id,)))
 
 
 class ModeratorProfileView(UpdateView):
     """view для профиля модератора"""
-
     model = ModeratorProfile
     template_name = 'moderator_profile.html'
     form_class = ModeratorProfileForm
     success_url = reverse_lazy('users:moderator_profile')
+    title = 'BestJob | Профайл модератора'
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(ModeratorProfileView, self).get_context_data(**kwargs)
-        return context
+    def get_object(self, queryset=None):
+        return get_object_or_404(ModeratorProfile, user_id=self.kwargs['pk'])
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        form = self.form_class(data=request.POST, files=request.FILES)
+        user_id = self.kwargs['pk']
+        moderatorProfile = ModeratorProfile.objects.get(user_id=user_id)
+        form.instance.pk = moderatorProfile.id
+        form.instance.user_id = moderatorProfile.user.id
+        form.instance.user = moderatorProfile.user
+        form.instance.date_create = moderatorProfile.date_create
+
+        if form.instance.image.closed:
+            form.instance.image = moderatorProfile.image
+
+        form.save()
+        return redirect(reverse("users:moderator_profile", args=(user_id,)))
 
 
 class UserLoginView(LoginView):
@@ -199,3 +245,10 @@ class PassResetConfirmView(PasswordResetConfirmView):
 class PassResetCompletedView(PasswordResetCompleteView):
     """view что новый пароль сохранен"""
     template_name = 'password_reset_completed.html'
+
+
+class ModerationAwaiting(TemplateView):
+    """view ожидают модерации"""
+    template_name = 'moderation_awaiting.html'
+    success_url = reverse_lazy("users:moderation_awaiting")
+    title = 'BestJob | Модерация'

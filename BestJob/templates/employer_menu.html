@@ -3,10 +3,10 @@
 <div class="row pt-3 pb-3 border-bottom border-dark border-3 grey-bg-color">
     <div class="col d-flex flex-nowrap align-items-center justify-content-around">
         <div class="border-top border-bottom border-dark border-1 rounded p-1">
-            <a class="nolink big-font " href="{% url 'users:employer_profile' user.id %}">Профиль кампании</a>
+            <a class="nolink big-font {% if request.resolver_match.namespace == 'users' %}text-primary{% endif %}" href="{% url 'users:employer_profile' user.id %}">Профиль компании</a>
         </div>
         <div class="border-top border-bottom border-dark border-1 rounded p-1">
-            <a class="nolink big-font " href="{% url 'vacancies:vacancy_list' %}">Ваши вакансии</a>
+            <a class="nolink big-font {% if request.resolver_match.namespace == 'vacancies' %}text-primary{% endif %}" href="{% url 'vacancies:vacancy_list' %}">Ваши вакансии</a>
         </div>
         <div class="border-top border-bottom border-dark border-1 rounded p-1">
             <a class="nolink big-font " href="#">Отклики</a>
