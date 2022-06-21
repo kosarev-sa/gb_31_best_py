@@ -16,48 +16,29 @@
 {% endblock %}
 
 {% block content %}
-    <div class="giant-font text-center border-bottom border-secondary border-1">Мои резюме</div>
-    <div class="d-flex flex-wrap align-items-center justify-content-center ps-5 pe-5">
-        <table class="table" width="100%">
+    {% for cv in cvs %}
+        <table width="100%">
             <tr>
-                <th>Резюме. Должность</th>
-                <th>статус</th>
-                <th>дата создания</th>
-                <th>редактировать</th>
-                <th>удалить</th>
-                <th>разместить</th>
+                <td width="60%">
+                    {{ cv.post }}
+                </td>
+                <td>
+                    {{ cv.date_create }}
+                </td>
+                <td>
+                    <a href="{% url 'cv:update_cv' cv.id %}">редактировать</a>
+                </td>
+                <td>
+                    <a href="{% url 'cv:delete_cv' cv.id %}">удалить</a>
+                </td>
+                <td>
+                    <a href="{% url 'cv:distribute_cv' cv.id %}">разместить</a>
+                </td>
+
             </tr>
-            {% for cv in cvs %}
-                <tr>
-                    <td width="30%">
-                        {{ cv.post }}
-                    </td>
-                    <td>
-                        {{ cv.status }}
-                    </td>
-                    <td>
-                        {{ cv.date_create }}
-                    </td>
-                    <td>
-                        <a href="{% url 'cv:update_cv' cv.id %}">редактировать</a>
-                    </td>
-                    <td>
-                        <a href="{% url 'cv:delete_cv' cv.id %}">удалить</a>
-                    </td>
-                    <td>
-                        {% if cv.status.code == 'NPB' %}
-                            <a href="{% url 'cv:distribute_cv' cv.id %}">разместить</a>
-                        {% else %}
-                            <p>{{ cv.status }}</p>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
         </table>
-<<<<<<< HEAD
+
         <a href="{% url 'vacancy:vacancy_recommended' cv.id %}">вакансии для Вас</a>
+
     {% endfor %}
-=======
-    </div>
->>>>>>> origin/dev
 {% endblock %}
