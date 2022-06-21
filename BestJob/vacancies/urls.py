@@ -17,8 +17,11 @@ from django.urls import path
 
 
 from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
-from vacancies.views import VacancyList, VacancyCreate, VacancyUpdate, VacancyDelete, \
-    VacancyDistribute, ModeratorVacancyList, ModeratorVacancyUpdate, ResponseVacancyList, VacancyDetail, VacancyOpenList, RecommendedVacancyList
+
+from vacancies.views import VacancyList, VacancyCreate, VacancyUpdate, VacancyDelete, VacancyDistribute, \
+    ModeratorVacancyList, ModeratorVacancyUpdate, ResponseVacancyList, VacancyBaseList, VacancyDetail, VacancyOpenList, \
+    RecommendedVacancyList
+
 
 app_name = 'vacancy'
 

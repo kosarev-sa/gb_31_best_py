@@ -20,16 +20,33 @@
                     <div class="card-body">
                         <form action="" method="post">
                             {% csrf_token %}
+
+                            {% if messages %}
+
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert"
+                                     style="margin-top: 50px;">
+                                    {#                выводим ошибки#}
+                                    {% for message in messages %}
+                                        {{ message }}
+                                    {% endfor %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endif %}
+
                             <div class="form-group m-3">
-                                {{ form.language }}
+                                <label class="small mb-1" for="{{ form.language.id_for_label }}">Язык</label>
+                                <p class="card shadow-lg border-1 rounded-lg">{{ form.language }}</p>
                             </div>
                             <div class="form-group m-3">
-                                {{ form.level }}
+                                <label class="small mb-1" for="{{ form.level.id_for_label }}">Уровень</label>
+                                <p class="card shadow-lg border-1 rounded-lg">{{ form.level }}</p>
                             </div>
                             <div class="form-group d-flex align-items-center justify-content-center mt-4 mb-0">
                                 <input class="btn btn-primary" type="submit" value="Coхранить">
                             </div>
-
+                            <input type="hidden" name="cv_id" value="{{ cv_id }}">
                         </form>
                     </div>
                 </div>

@@ -2,7 +2,7 @@ from django import forms
 import time
 import datetime
 
-from cvs.models import CV, Experience, Education, LanguagesSpoken, CVMonths
+from cvs.models import CV, Experience, Education, LanguagesSpoken
 from search.models import Category, Currency, Languages, LanguageLevels
 
 now = datetime.datetime.now()
@@ -10,7 +10,8 @@ now = datetime.datetime.now()
 
 class CVCreateForm(forms.ModelForm):
     """форма создание резюме"""
-    speciality = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'), required=False)
+    speciality = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'),
+                                        required=False)
     post = forms.CharField(widget=forms.TextInput, required=False)
     skills = forms.CharField(widget=forms.TextInput, required=False)
 
@@ -30,6 +31,10 @@ class CVCreateForm(forms.ModelForm):
 
 class CVUpdateForm(forms.ModelForm):
     """форма просмотра\редактирования резюме"""
+    speciality = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'),
+                                        required=False)
+    post = forms.CharField(widget=forms.TextInput, required=False)
+    skills = forms.CharField(widget=forms.TextInput, required=False)
 
     class Meta:
         model = CV
@@ -82,26 +87,36 @@ class ExperienceCreateForm(forms.ModelForm):
     responsibilities = forms.CharField(widget=forms.Textarea, required=False)
     stack = forms.CharField(widget=forms.TextInput, required=False)
     year_begin = forms.IntegerField(min_value=1950, max_value=now.year)
-    year_end = forms.IntegerField( min_value=1950, max_value=now.year, required=False, label='Оставьте поле пустым, если продолжаете тут работать')
+    year_end = forms.IntegerField(min_value=1950, max_value=now.year, required=False,
+                                  label='Оставьте поле пустым, если продолжаете тут работать')
 
     class Meta:
         model = Experience
-        fields = ('post', 'name', 'month_begin','year_begin','month_end','year_end', 'stack', 'responsibilities')
-
+        fields = ('post', 'name', 'month_begin', 'year_begin', 'month_end', 'year_end', 'stack', 'responsibilities')
 
     def __init__(self, *args, **kwargs):
         super(ExperienceCreateForm, self).__init__(*args, **kwargs)
-        self.fields['responsibilities'].widget.attrs['placeholder'] = "Опишите Ваши обязанности, навыки и достижения на месте работы"
+        self.fields['responsibilities'].widget.attrs[
+            'placeholder'] = "Опишите Ваши обязанности, навыки и достижения на месте работы"
 
     def clean_year_end(self):
+        """Проверка что дата окончания не больше даты начала"""
         month_begin = format(self.cleaned_data['month_begin'], '02')
         year_begin = str(self.cleaned_data['year_begin'])
-        month_end = format(self.cleaned_data['month_end'], '02')
-        year_end = str(self.cleaned_data['year_end'])
         dt1 = time.strptime(year_begin + month_begin + '01', '%Y%m%d')
-        dt2 = time.strptime(year_end + month_end + '01', '%Y%m%d')
+
+        year_end = self.cleaned_data.get('year_end', None)
+        if year_end:
+            month_end = format(self.cleaned_data['month_end'], '02')
+            year_end = str(self.cleaned_data['year_end'])
+            dt2 = time.strptime(year_end + month_end + '01', '%Y%m%d')
+        else:
+            year_end = now.year
+            dt2 = time.strptime(str(year_end) + format(now.month, '02') + format(now.day, '02'), '%Y%m%d')
+
         if dt1 > dt2:
-            self.add_error('year_end', 'Дата начала не может быть больше дата окончания!')
+            self.add_error('year_end', 'Дата начала не может быть больше даты окончания!')
+
         return year_end
 
 
@@ -113,7 +128,7 @@ class EducationCreateForm(forms.ModelForm):
 
     class Meta:
         model = Education
-        fields = ('date_end','name', 'department', 'specialty')
+        fields = ('date_end', 'name', 'department', 'specialty')
 
     def __init__(self, *args, **kwargs):
         super(EducationCreateForm, self).__init__(*args, **kwargs)
@@ -126,14 +141,16 @@ class LanguagesCreateForm(forms.ModelForm):
 
     class Meta:
         model = LanguagesSpoken
-        fields = ('language','level')
+        fields = ('language', 'level')
 
     def __init__(self, *args, **kwargs):
         super(LanguagesCreateForm, self).__init__(*args, **kwargs)
 
-    # def clean_language(self):
-    #     language = self.cleaned_data['language']
-    #     languages = LanguagesSpoken.objects.filter(cv=self.instance.cv)
-    #     if language in languages:
-    #         self.add_error('language', f'{language} язык уже добавлен Вами в резюме!')
-    #     return language
+    def clean_language(self):
+        cv = CV.objects.filter(id=self.data['cv_id']).first()
+        language = Languages.objects.filter(id=self.data['language']).first()
+        languages = LanguagesSpoken.objects.filter(cv=cv, language=language)
+        if languages:
+            self.add_error('language', f'{language} язык уже добавлен Вами в резюме!')
+        return language
+
