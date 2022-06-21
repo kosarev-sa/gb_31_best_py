@@ -116,7 +116,7 @@ class CVCreate(CreateView):
 
     def post(self, request, *args, **kwargs):
         worker = WorkerProfile.objects.get(user=request.user.pk)
-        start_status = ApprovalStatus.objects.get(status='CHG')
+        start_status = ApprovalStatus.objects.get(status='NPB')
         form = self.form_class(data=request.POST)
         if form.is_valid():
             # сохраняем новое резюме
@@ -175,8 +175,6 @@ class CVUpdate(UpdateView):
         context['experience'] = Experience.objects.filter(cv=cv)
         context['educations'] = Education.objects.filter(cv=cv)
         context['langlevels'] = LanguagesSpoken.objects.filter(cv=cv)
-        # context['languages'] = Languages.objects.all()
-        # context['levels'] = LanguageLevels.objects.all()
         cv_employments = [cv_empl.employment_id for cv_empl in CVEmployment.objects.filter(cv=cv)]
         context['cv_employments'] = cv_employments
         context['employments'] = Employments.objects.all()
@@ -234,16 +232,31 @@ class CVDelete(DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-class CVDistribute(UpdateView):
-    """view для размещения резюме"""
-    model = CV
-    template_name = 'cv_distribute.html'
-    form_class = CVDistributeForm
-    success_url = reverse_lazy('cv:cv_list')
+# class CVDistribute(TemplateView):
+#     """view для размещения резюме"""
+#     model = CV
+#     # template_name = 'cv_distribute.html'
+#     # form_class = CVDistributeForm
+#     success_url = reverse_lazy('cv:cv_list')
+#
+#     # def get_context_data(self, *, object_list=None, **kwargs):
+#     #     context = super(CVDistribute, self).get_context_data(**kwargs)
+#     #     return context
+#
+#     def get(self, request, *args, **kwargs):
+#         return self.post(request, *args, **kwargs)
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(CVDistribute, self).get_context_data(**kwargs)
-        return context
+def set_public_status(request, pk):
+    cv = get_object_or_404(CV, pk=pk)
+    cv.status = ApprovalStatus.objects.get(status='PUB')
+    cv.save()
+    return HttpResponseRedirect(reverse('cv:cv_list'))
+
+# def order_forming_complete(request, pk): # метод формирования статуса
+#     order = get_object_or_404(Order, pk=pk)
+#     order.status = Order.SEND_TO_PROCEED
+#     order.save()
+#     return HttpResponseRedirect(reverse('orders:list'))
 
 
 class CVExperienceCreate(CreateView):

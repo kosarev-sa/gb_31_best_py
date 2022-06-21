@@ -28,6 +28,13 @@ class ApprovalStatus(models.Model):
             if status[0] == key:
                 return status[1]
 
+    def get_status_code(self, key):
+        for status in self.APPROVAL_STATUS_CHOICES:
+            if status[0] == key:
+                return status[0]
 
     def __str__(self):
         return self.get_status_name(self.status)
+
+    def code(self):
+        return self.get_status_code(self.status)
