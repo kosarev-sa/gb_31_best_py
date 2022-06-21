@@ -5,13 +5,14 @@
     "fields": {
       "worker_profile": 1,
       "status": 1,
+      "date_create": "2022-06-20T23:58:52.107Z",
       "is_active": true,
-      "speciality" : "BACKD",
-      "skills": "Python, Django, DRF, PyQt",
+      "speciality": "BACKD",
       "post": "Python разработчик",
-      "salary": 120000,
+      "skills": "Python, Django, DRF, PyQt",
       "education_level": 4,
       "moving": 2,
+      "salary": "120000.00",
       "currency": 1
     }
   },
@@ -21,14 +22,32 @@
     "fields": {
       "worker_profile": 2,
       "status": 1,
+      "date_create": "2022-06-20T23:58:52.127Z",
       "is_active": true,
-      "speciality" : "FRONTD",
+      "speciality": "BACKD",
+      "post": "Backend разработчик",
       "skills": "HTML, css, JS",
-      "post": "Frontend разработчик",
-      "salary": 100000,
       "education_level": 3,
       "moving": 1,
+      "salary": "100000.00",
       "currency": 1
+    }
+  },
+  {
+    "model": "cvs.cv",
+    "pk": 3,
+    "fields": {
+      "worker_profile": 2,
+      "status": 1,
+      "date_create": "2022-06-21T00:01:11.054Z",
+      "is_active": true,
+      "speciality": "TEST",
+      "post": "Tester",
+      "skills": "pytest",
+      "education_level": 4,
+      "moving": 1,
+      "salary": "100.00",
+      "currency": 2
     }
   }
 ]
