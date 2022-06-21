@@ -17,9 +17,11 @@ from django.urls import path
 
 
 from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
+
 from vacancies.views import VacancyList, VacancyCreate, VacancyUpdate, VacancyDelete, VacancyDistribute, \
     ModeratorVacancyList, ModeratorVacancyUpdate, ResponseVacancyList, VacancyBaseList, VacancyDetail, VacancyOpenList, \
     RecommendedVacancyList
+
 
 app_name = 'vacancy'
 
@@ -29,7 +31,6 @@ urlpatterns = [
     path('update/<int:pk>/', VacancyUpdate.as_view(), name='update_vacancy'),
     path('delete/<int:pk>/', VacancyDelete.as_view(), name='delete_vacancy'),
     path('distribute/<int:pk>/', VacancyDistribute.as_view(), name='distribute_vacancy'),
-
     # просмотр всех вакансий любым пользователем
     path('all/open/', VacancyOpenList.as_view(), name='vacancy_openlist'),
     # просмотр вакансий рекомендованных по конкретному резюме
@@ -37,6 +38,5 @@ urlpatterns = [
     path('moderator_vacancy/', ModeratorVacancyList.as_view(), name='moderator_vacancy_list'),
     path('moderator_vacancy_approve/<int:pk>/', ModeratorVacancyUpdate.as_view(), name='moderator_vacancy_approve'),
     path('responses/', ResponseVacancyList.as_view(), name='vacancy_responses'),
-    path('base/', VacancyBaseList.as_view(), name='vacancy_base'),
     path('detail/<int:pk>/', VacancyDetail.as_view(), name='detail_vacancy'),
 ]

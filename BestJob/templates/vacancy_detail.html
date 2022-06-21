@@ -4,7 +4,7 @@
 {% block menu %}
     <ul>
         <li>
-            <a href="{% url 'vacancies:vacancy_base' %}">вернуться к списку вакансий</a>
+            <a href="{% url 'vacancies:vacancy_openlist' %}">вернуться к списку вакансий</a>
         </li>
     </ul>
 
@@ -33,11 +33,11 @@
         <h5>Место нахождения: {{ vacancy.name }}</h5>
         <h5>Город: {{ vacancy.city }}</h5>
         <h5>Специализация: {{ vacancy.specialization }}</h5>
-{#        <h5>Опыт работы: {{ vacancy.experience }}</h5>#}
+        <h5>Опыт работы: {{ vacancy.get_experience_display }}</h5>
         <h5>Описание вакансии: {{ vacancy.description }}</h5>
         <h5>Зарплата от: {{ vacancy.salary_from }}</h5>
         <h5>Зарплата до: {{ vacancy.salary_to }}</h5>
-{#        <h5>Валюта: {{ vacancy.currency }}</h5>#}
+        <h5>Валюта: {{ vacancy.get_currency_display }}</h5>
        {% if vacancy.salary_on_hand %}
             <h5>Зарплата на руки: Да </h5>
             {% else %}

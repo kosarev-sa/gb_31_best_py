@@ -28,9 +28,11 @@
                         <div class="col d-flex align-items-center justify-content-center">
                             <div class="big-font">Резюме</div>
                         </div>
+                    {% if user.role_id == 3 %}
                         <div class="col d-flex align-items-center justify-content-center">
-                            <a class="big-font nolink" href="{% url 'vacancy:vacancy_base' %}">Вакансии</a>
+                            <a class="big-font nolink" href="{% url 'vacancy:vacancy_openlist' %}">Вакансии</a>
                         </div>
+                    {% endif %}
                         <div class="col d-flex align-items-center justify-content-center">
                             <a class="big-font nolink {% if request.resolver_match.url_name == 'haystack_search' %}text-primary{% endif %}" href="{% url 'haystack_search' %}">Поиск</a>
                         </div>
