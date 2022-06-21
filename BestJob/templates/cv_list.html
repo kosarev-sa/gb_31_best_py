@@ -31,6 +31,9 @@
                 <tr>
                     <td width="30%">
                         {{ cv.post }}
+                        <br>
+                        <a href="{% url 'vacancy:vacancy_recommended' cv.id %}">вакансии для
+                            Вас</a>
                     </td>
                     <td>
                         {{ cv.status }}
