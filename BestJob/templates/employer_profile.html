@@ -2,28 +2,91 @@
 {% load static %}
 
 {% block menu %}
-    <ul>
-        <li>
-            <a href="{% url 'vacancies:vacancy_list' %}">мои вакансии</a>
-        </li>
-        <li>
-            <a href="{% url 'news:moderate_news' %}">отклики по моим вакансиям</a>
-        </li>
-        <li>
-            <a href="{% url 'news:moderate_news' %}">поиск кандидатов</a>
-        </li>
-    </ul>
+{% include "employer_menu.html" %}
+<!--    <ul>-->
+<!--        <li>-->
+<!--            <a href="{% url 'vacancies:vacancy_list' %}">мои вакансии</a>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--            <a href="{% url 'news:moderate_news' %}">отклики по моим вакансиям</a>-->
+<!--        </li>-->
+<!--        <li>-->
+<!--            <a href="{% url 'news:moderate_news' %}">поиск кандидатов</a>-->
+<!--        </li>-->
+<!--    </ul>-->
 
 {% endblock %}
 
 {% block content %}
 
-    <form method="post" action="">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <br>
-        <input type="submit" value="сохранить">
-    </form>
+<!--    <form method="post" action="">-->
+<!--        {% csrf_token %}-->
+<!--        {{ form.as_p }}-->
+<!--        <br>-->
+<!--        <input type="submit" value="сохранить">-->
+<!--    </form>-->
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-5">
+            <div class="card shadow-lg border-0 rounded-lg mt-5 mb-5">
+                <div class="card-header"><h3 class="text-center font-weight-light my-4">Профиль компании</h3>
+                </div>
+                <div class="card-body">
+                    <form action="{% url 'users:employer_profile' object.user_id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <div class="form-group m-3">
+                            <label class="small mb-1" for="{{ form.name.id_for_label }}">Название компании:</label>
+                            <p class="card shadow-lg border-1 rounded-lg" id="city">{{ form.name }}</p>
+                        </div>
+
+                        <div class="form-group m-3">
+                            <div class="col-lg-12 text-center">
+                                <img width="300" height="300"
+                                     src="{% if object.image %} {{ object.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                                     class="img-thumbnail">
+                            </div>
+                            <br>
+                            <div class="col-lg-12">
+                                <div class="custom-file">
+                                    {{ form.image }}
+                                    <label class="custom-file-label" for="image">Выберите
+                                        изображение</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group m-3">
+                            <label class="small mb-1" for="{{ form.status.id_for_label }}">Статус:</label>
+                            <p class="card shadow-lg border-1 rounded-lg">{{ form.status }}</p>
+                        </div>
+
+                        <div class="form-group m-3">
+                            <label class="small mb-1" for="{{ form.is_active.id_for_label }}">Активна:</label>
+                            <p>{{ form.is_active }}</p>
+                        </div>
+
+                        <div class="form-group m-3">
+                            <label class="small mb-1" for="{{ form.city.id_for_label }}">Город местонахождения</label>
+                            <p class="card shadow-lg border-1 rounded-lg" id="city">{{ form.city }}</p>
+                        </div>
+
+                        <div class="form-group m-3">
+                            <label class="small mb-1" for="{{ form.data.id_for_label }}">Описание компании:</label>
+                            <p class="card shadow-lg border-1 rounded-lg">{{ form.data }}</p>
+                        </div>
+
+                        <div class="form-group d-flex align-items-center justify-content-around mt-4 mb-0">
+                            <a class="btn btn-primary" href="{% url 'index' %}">Вернуться</a>
+                            <input class="btn btn-danger" type="submit" value="Сохранить">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 

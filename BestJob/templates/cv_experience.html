@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block menu %}
+    <ul>
+        <li>
+            <a href="{% url 'cv:update_cv' cv_id %}">вернуться к резюме</a>
+        </li>
+    </ul>
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5">
+                <div class="card shadow-lg border-0 rounded-lg mt-5 mb-5">
+                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Опыт работы</h3>
+                    </div>
+                    <div class="card-body">
+                        <form action="" method="post">
+                            {% csrf_token %}
+
+                            {% if messages %}
+
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert"
+                                     style="margin-top: 50px;">
+                                    {#                выводим ошибки#}
+                                    {% for message in messages %}
+                                        {{ message }}
+                                    {% endfor %}
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <div class="form-group m-3">
+                                    <label class="small mb-1" for="{{ form.month_begin.id_for_label }} ">Месяц и год
+                                        начала</label>
+                                    <div>
+                                        {{ form.month_begin }}
+                                        {{ form.year_begin }}
+                                    </div>
+
+                                </div>
+                                <div class="form-group m-3">
+                                    <label class="small mb-1" for="{{ form.month_end.id_for_label }}">Месяц и год
+                                        окончания</label>
+                                    <div data-toggle="tooltip" data-placement="bottom" title="Оставьте поле год окончания пустым если работаете на текущий момент">
+                                        {{ form.month_end }}
+                                        {{ form.year_end }}
+                                    </div>
+
+                                </div>
+                                <div class="form-group m-3">
+                                    <label class="small mb-1" for="{{ form.name.id_for_label }}">Наименование
+                                        организации</label>
+                                    <p class="card shadow-lg border-1 rounded-lg">{{ form.name }}</p>
+                                </div>
+                                <div class="form-group m-3">
+                                    <label class="small mb-1" for="{{ form.post.id_for_label }}">Должность</label>
+                                    <p class="card shadow-lg border-1 rounded-lg"> {{ form.post }}</p>
+                                </div>
+                                <div class="form-group m-3">
+                                    <label class="small mb-1" for="{{ form.stack.id_for_label }}">Stack</label>
+                                    <p class="card shadow-lg border-1 rounded-lg">{{ form.stack }}</p>
+                                </div>
+                                <div class="form-group m-3">
+                                    <label class="small mb-1" for="{{ form.responsibilities.id_for_label }}">Обязанности
+                                        на рабочем месте</label>
+                                    <p class="card shadow-lg border-1 rounded-lg">{{ form.responsibilities }}</p>
+                                </div>
+                                <div class="form-group d-flex align-items-center justify-content-center mt-4 mb-0">
+                                    <input class="btn btn-primary" type="submit" value="Coхранить">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

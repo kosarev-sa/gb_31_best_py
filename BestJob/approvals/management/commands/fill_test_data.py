@@ -5,10 +5,11 @@ import json
 
 from approvals.models import ApprovalStatus
 from news.models import News
-from users.models import User, EmployerProfile, WorkerProfile
+from users.models import User, EmployerProfile, WorkerProfile, ModeratorProfile
 
 from vacancies.models import Vacancy
-from cvs.models import CV, CVSkills, CVEmployment, CVWorkSchedule, Education, Experience, LanguagesSpoken
+from cvs.models import CV, CVSkills, CVEmployment, CVWorkSchedule, Education, Experience, LanguagesSpoken, \
+    ConnectVacancyCv
 from search.models import Category, MainSkills, Languages, LanguageLevels, Employments, WorkSchedules
 
 JSON_PATH_NEWS = 'news/fixtures/'
@@ -75,6 +76,23 @@ class Command(BaseCommand):
 
             new_worker = WorkerProfile(**work)
             new_worker.save()
+
+        moderators = load_from_json(JSON_PATH_USERS + 'moderator.json')
+        ModeratorProfile.objects.all().delete()
+
+        for moderator in moderators:
+            moder = moderator.get('fields')
+            moder['id'] = moderator.get('pk')
+            user_id = moder.get('user')
+            _user = User.objects.get(id=user_id)
+            moder['user'] = _user  # Заменяем юзера объектом
+
+            date_create = datetime.datetime.strptime(moder.get('date_create'), '%Y-%m-%dT%H:%M:%S')
+            date_create = date_create.replace(tzinfo=datetime.timezone.utc)
+            moder['date_create'] = date_create
+
+            new_moder = ModeratorProfile(**moder)
+            new_moder.save()
 
         vacancies = load_from_json(JSON_PATH_VACANCIES + 'vacancies.json')
         Vacancy.objects.all().delete()
@@ -214,3 +232,11 @@ class Command(BaseCommand):
 
             new_schedule = CVWorkSchedule(**sch_row)
             new_schedule.save()
+
+        cv_responses = load_from_json(JSON_PATH_CV + 'cv_responses.json')
+        ConnectVacancyCv.objects.all().delete()
+
+        for resp in cv_responses:
+            resp['cv'] = CV.objects.get(id=resp['cv'])
+            resp['vacancy'] = Vacancy.objects.get(id=resp['vacancy'])
+            ConnectVacancyCv(**resp).save()
