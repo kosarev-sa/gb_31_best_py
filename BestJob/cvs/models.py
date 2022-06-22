@@ -91,7 +91,14 @@ class SelectedCV(models.Model):
 
 class ConnectVacancyCv(models.Model):
     """Связь отклика, вакансии и резюме"""
+    class Initiators(models.TextChoices):
+        EMPLOYER = "0", "Employer"
+        WORKER = "1", "Worker"
     cv = models.ForeignKey(CV, on_delete=models.CASCADE)
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
     status_worker = models.BooleanField(null=True, default=None)
     status_employer = models.BooleanField(null=True, default=None)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания", editable=False)
+    initiator = models.CharField(
+        max_length=2, verbose_name="Инициатор", choices=Initiators.choices, default=Initiators.WORKER
+    )
