@@ -4,10 +4,12 @@
         <p>Вы подтверждаете удаление {{ object }}?</p>
         <form action="" method="post">
             {% csrf_token %}
-            <input class="btn btn-link"
-                   type="button" value="Отмена"
-                   onclick="window.history.go(-1);"/>
-            <input class="btn btn-danger" type="submit" value="Удалить"/>
+            <div class="form-group d-flex align-items-center justify-content-around mt-4 mb-3">
+                <input class="btn btn-primary"
+                       type="button" value="Отмена"
+                       onclick="window.history.go(-1);"/>
+                <input class="btn btn-danger" type="submit" value="Удалить"/>
+            </div>
         </form>
     </div>
 </div>

@@ -2,16 +2,13 @@
 {% load static %}
 
 {% block menu %}
-    <ul>
-        <li>
-            <a href="{% url 'news:moderate_news' %}">вернуться к списку</a>
-        </li>
-    </ul>
-
+{% include "moderator_menu.html" %}
 {% endblock %}
 
 {% block content %}
-
-    {% include "inc_confirm_delete.html" %}
-
+    <div class="d-flex flex-wrap align-items-center justify-content-center ps-5 pe-5">
+        <div class="card-text">
+            {% include "inc_confirm_delete.html" %}
+        </div>
+    </div>
 {% endblock %}

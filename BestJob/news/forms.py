@@ -24,13 +24,3 @@ class NewsUpdateForm(forms.ModelForm):
         self.fields['title'].widget.attrs['placeholder'] = 'Введите заголовок'
         self.fields['body'].widget.attrs['placeholder'] = 'Введите содержимое'
 
-
-# class NewsDeleteForm(forms.ModelForm):
-#     class Meta:
-#         model = News
-#         fields = '__all__'
-#
-#     def __init__(self, *args, **kwargs):
-#         super(NewsDeleteForm, self).__init__(*args, **kwargs)
-#         self.fields['title'].widget.attrs['placeholder'] = 'Введите заголовок'
-#         self.fields['body'].widget.attrs['placeholder'] = 'Введите содержимое'

@@ -32,6 +32,22 @@ class VacancyUpdateForm(forms.ModelForm):
         self.fields['description'].widget.attrs['placeholder'] = 'Описание вакансии'
 
 
+class ModeratorVacancyUpdateForm(VacancyUpdateForm):
+    """форма просмотра\редактирования вакансии"""
+    disabled_fields = ('specialization', 'is_active', 'name', 'experience',
+                       'description', 'city', 'description', 'salary_from',
+                       'salary_to', 'currency', 'salary_on_hand',)
+
+    class Meta:
+        model = Vacancy
+        exclude = ('employer_profile',)
+
+    def __init__(self, *args, **kwargs):
+        super(ModeratorVacancyUpdateForm, self).__init__(*args, **kwargs)
+        for field in self.disabled_fields:
+            self.fields[field].disabled = True
+
+
 class VacancyDeleteForm(forms.ModelForm):
     """форма удаления вакансии"""
 

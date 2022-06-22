@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include "moderator_menu.html" %}
+    {% include "moderator_awaiting_menu.html" %}
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-wrap align-items-center justify-content-center ps-5 pe-5">
+        <div class="card-text">
+            <form method="post" action="">
+                {% csrf_token %}
+                {% if worker %}
+                    <div class="form-group m-3">
+                        <label class="small mb-1" for="{{ worker.name.id_for_label }}">Имя:</label>
+                        <p class="card shadow-lg border-1 rounded-lg">{{ worker.name }}</p>
+                    </div>
+                {% endif %}
+
+                <div class="form-group m-3">
+                    <img width="300" height="300"
+                                     src="{% if worker.image %} {{ worker.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                                     class="img-thumbnail">
+                </div>
+
+                <h3>Контактная информация: </h3>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ worker.city.id_for_label }}">Место нахождения:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ worker.city }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ worker.data.id_for_label }}">Род деятельности:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ worker.data }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ worker.user.email.id_for_label }}">Электронная почта:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ worker.user.email }}</p>
+                </div>
+                <br>
+
+                <h3>Основная информация:</h3>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.post.id_for_label }}">Заголовок:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.post }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ speciality.id_for_label }}">Специальность:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ speciality }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <p class="small mb-1 ">Активность резюме:</p>
+                    <p>{{ form.is_active }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.skills.id_for_label }}">Скилы:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.skills }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.education_level.id_for_label }}">Образование:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.education_level }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.moving.id_for_label }}">Возможность переезда:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.moving }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.salary.id_for_label }}">Зарплата:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.salary }}</p>
+                </div>
+
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.currency.id_for_label }}">Валюта:</label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.currency }}</p>
+                </div>
+
+                <h3>Установить статус модерации:</h3>
+                <div class="form-group m-3">
+                    <label class="small mb-1" for="{{ form.status.id_for_label }}"><b>Статус модерации:</b></label>
+                    <p class="card shadow-lg border-1 rounded-lg">{{ form.status }}</p>
+                </div>
+
+                <div class="form-group d-flex align-items-center justify-content-around mt-4 mb-3">
+                    <a class="btn btn-primary" href="{% url 'cv:moderator_cvs_list' %}">Вернуться</a>
+                    <input class="btn btn-danger" type="submit" value="Изменить">
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
