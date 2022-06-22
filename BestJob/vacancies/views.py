@@ -8,7 +8,7 @@ from cvs.models import CV
 from search.models import Category, Employments, WorkSchedules, Languages, \
     LanguageLevels
 from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDistributeForm, ModeratorVacancyUpdateForm
-from vacancies.models import Vacancy, WorkingHours
+from vacancies.models import Vacancy
 from users.models import EmployerProfile
 from approvals.models import ApprovalStatus
 
@@ -105,10 +105,6 @@ class VacancyCreate(CreateView):
         employer = EmployerProfile.objects.get(user=request.user.pk)
         context = self.get_context_data()
         context['employer'] = employer
-        context['employments'] = Employments.objects.all()
-        context['schedules'] = WorkSchedules.objects.all()
-        context['languages'] = Languages.objects.all()
-        context['levels'] = LanguageLevels.objects.all()
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
@@ -142,8 +138,6 @@ class VacancyUpdate(UpdateView):
     def get(self, request, *args, **kwargs):
         super(VacancyUpdate, self).get(request, *args, **kwargs)
         context = self.get_context_data()
-        vacancy_id = kwargs.get('pk')
-        vacancy = Vacancy.objects.get(id=vacancy_id)
         # Временное решение до реализации get view для вакансии
         try:
             employer = EmployerProfile.objects.get(user=request.user.pk)
@@ -151,24 +145,7 @@ class VacancyUpdate(UpdateView):
         except Exception:
             print(f'Employer {request.user.pk} not exists')
         context['employments'] = Employments.objects.all()
-        vacancy_schedules = [vacancy_sch.schedule_id for vacancy_sch in WorkingHours.objects.filter(vacancy=vacancy)]
-        context['vacancy_schedules'] = vacancy_schedules
-        context['languages'] = Languages.objects.all()
-        context['levels'] = LanguageLevels.objects.all()
-        context['schedules'] = WorkSchedules.objects.all()
         return self.render_to_response(context)
-
-    # def post(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     form = self.form_class(request.POST, instance=self.object)
-    #
-    #     if form.is_valid():
-    #         self.object.save()
-    #
-    #         return redirect(self.success_url)
-    #     else:
-    #         print(form.errors)
-    #     return self.form_invalid(form)
 
 
 class VacancyDelete(DeleteView):
