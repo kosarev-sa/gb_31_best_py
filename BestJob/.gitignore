@@ -3,5 +3,10 @@ db.sqlite3
 venv/
 !**/__pycache__/
 *.pyc
-/media/
 .env
+**/migrations/**
+!**/migrations
+!**/migrations/__init__.py
+whoosh_index/
+for_test_trash.py
+

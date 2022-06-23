@@ -1,0 +1,30 @@
+[
+  {
+    "model": "users.employerprofile",
+    "pk": 1,
+    "fields": {
+      "user": 3,
+      "name": "Новые метры",
+      "image": "company_images/Логотип_НМ_Белый_фон_Oypv5Dq.jpg",
+      "status": 1,
+      "date_create": "2022-06-03T14:04:22.185Z",
+      "is_active": true,
+      "city": "Нижний Новгород",
+      "data": "Агентство недвижимости"
+    }
+  },
+  {
+    "model": "users.employerprofile",
+    "pk": 2,
+    "fields": {
+      "user": 6,
+      "name": "СмениКвартиру",
+      "image": "company_images/401296.png",
+      "status": 3,
+      "date_create": "2022-06-03T14:29:22.699Z",
+      "is_active": true,
+      "city": "Пермь",
+      "data": "Сеть агентств"
+    }
+  }
+]

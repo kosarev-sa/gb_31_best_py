@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 import news.views
 
@@ -25,4 +27,8 @@ urlpatterns = [
     path('users/', include('users.urls', namespace='users')),
     path('cvs/', include('cvs.urls', namespace='cvs')),
     path('vacancies/', include('vacancies.urls', namespace='vacancies')),
+    path('search/', include('haystack.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

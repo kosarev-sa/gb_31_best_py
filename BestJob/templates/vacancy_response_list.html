@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+{% include "employer_menu.html" %}
+{% endblock %}
+
+{% block content %}
+<table width="100%">
+    <tr>
+        <td>
+            <span>Id отклика</span>
+        </td>
+        <td>
+            <span>Ссылка на вакансию</span>
+        </td>
+        <td>
+            <span>Ссылка на резюме</span>
+        </td>
+        <td>
+            <span>Решение компании</span>
+        </td>
+        <td>
+            <span>Решение сотрудника</span>
+        </td>
+    </tr>
+    {% for resp in responses %}
+    <tr>
+        <td>
+            <div>{{ resp.id }}</div>
+        </td>
+        <td>
+            <a href="{% url 'vacancies:update_vacancy' resp.vacancy_id %}">Вакансия №{{ resp.vacancy_id }}</a>
+        </td>
+        <td>
+            <a href="{% url 'cv:update_cv' resp.cv_id %}">Резюме №{{ resp.cv_id }}</a>
+        </td>
+        <td>
+            {% if resp.status_employer %} <span style="color: green">Приглашение</span>
+            {% elif resp.status_employer is False %} <span style="color: red">Отказ</span>
+            {% elif resp.status_employer is None %} <span>Ожидание</span>
+            {% endif %}
+        </td>
+        <td>
+            {% if resp.status_worker %} <span style="color: green">Согласие</span>
+            {% elif resp.status_worker is False %} <span style="color: red">Отказ</span>
+            {% elif resp.status_worker is None %} <span>Ожидание</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+{% endblock %}
+

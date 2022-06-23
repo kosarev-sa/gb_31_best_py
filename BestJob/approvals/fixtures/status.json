@@ -1,0 +1,37 @@
+[
+  {
+    "model": "approvals.approvalstatus",
+    "pk": 1,
+    "fields": {
+      "status": "NPB"
+    }
+  },
+  {
+    "model": "approvals.approvalstatus",
+    "pk": 2,
+    "fields": {
+      "status": "PUB"
+    }
+  },
+  {
+    "model": "approvals.approvalstatus",
+    "pk": 3,
+    "fields": {
+      "status": "FRV"
+    }
+  },
+  {
+    "model": "approvals.approvalstatus",
+    "pk": 4,
+    "fields": {
+      "status": "RJC"
+    }
+  },
+  {
+    "model": "approvals.approvalstatus",
+    "pk": 5,
+    "fields": {
+      "status": "APV"
+    }
+  }
+]

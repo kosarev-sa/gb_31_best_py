@@ -1,0 +1,146 @@
+[
+  {
+    "model": "vacancies.vacancy",
+    "pk": 1,
+    "fields": {
+      "employer_profile": 1,
+      "status": 1,
+      "specialization": "TEST",
+      "is_active": true,
+      "name": "Разработчик тестов",
+      "experience": "NO",
+      "city": "Москва",
+      "description": "Обязанности: тестировать.Требования: официальное оформление.Условия: нормальные.",
+      "salary_from": "100000.0",
+      "salary_to": "150000.0",
+      "currency": 1,
+      "salary_on_hand": true
+    }
+  },
+  {
+    "model": "vacancies.vacancy",
+    "pk": 2,
+    "fields": {
+      "employer_profile": 2,
+      "status": 2,
+      "specialization": "BACKD",
+      "is_active": true,
+      "name": "Требуется разработчик",
+      "experience": "BIG",
+      "city": "Санкт-Петербург",
+      "description": "Обязанности: кодить.\nТребования: ходить на работу.\nУсловия: хорошие.",
+      "salary_from": "2000.0",
+      "salary_to": "2500.0",
+      "currency": 2,
+      "salary_on_hand": false
+    }
+  },
+  {
+    "model": "vacancies.vacancy",
+    "pk": 3,
+    "fields": {
+      "employer_profile": 1,
+      "status": 1,
+      "specialization": "BACKD",
+      "is_active": true,
+      "name": "Python-developer",
+      "experience": "NO",
+      "city": "",
+      "description": "",
+      "salary_from": null,
+      "salary_to": "1000000.0",
+      "currency": 1,
+      "salary_on_hand": true
+    }
+  },
+  {
+    "model": "vacancies.vacancy",
+    "pk": 4,
+    "fields": {
+      "employer_profile": 2,
+      "status": 1,
+      "specialization": "BACKD",
+      "is_active": true,
+      "name": "Python-dev Senior",
+      "experience": "BIG",
+      "city": "Москва",
+      "description": "Надо сеньора очень",
+      "salary_from": "50.0",
+      "salary_to": null,
+      "currency": 1,
+      "salary_on_hand": false
+    }
+  },
+  {
+    "model": "vacancies.vacancy",
+    "pk": 5,
+    "fields": {
+      "employer_profile": 1,
+      "status": 1,
+      "specialization": "TEST",
+      "is_active": true,
+      "name": "fullstack",
+      "experience": "NO",
+      "city": "",
+      "description": "",
+      "salary_from": null,
+      "salary_to": "3000.0",
+      "currency": 4,
+      "salary_on_hand": true
+    }
+  },
+  {
+    "model": "vacancies.vacancy",
+    "pk": 6,
+    "fields": {
+      "employer_profile": 2,
+      "status": 1,
+      "specialization": "TEST",
+      "is_active": true,
+      "name": "Pytester",
+      "experience": "EXP",
+      "city": "",
+      "description": "",
+      "salary_from": "100.0",
+      "salary_to": "500.0",
+      "currency": 3,
+      "salary_on_hand": true
+    }
+  },
+  {
+    "model": "vacancies.vacancy",
+    "pk": 7,
+    "fields": {
+      "employer_profile": 1,
+      "status": 1,
+      "specialization": "FRONTD",
+      "is_active": true,
+      "name": "Frontend React dev",
+      "experience": "EXP",
+      "city": "",
+      "description": "",
+      "salary_from": null,
+      "salary_to": "99999.0",
+      "currency": 1,
+      "salary_on_hand": true
+    }
+  },
+  {
+    "model": "vacancies.vacancy",
+    "pk": 8,
+    "fields": {
+      "employer_profile": 2,
+      "status": 1,
+      "specialization": "PM",
+      "is_active": true,
+      "name": "superProj analyst",
+      "experience": "BIG",
+      "city": "",
+      "description": "Нужен раб",
+      "salary_from": null,
+      "salary_to": "1000.0",
+      "currency": 1,
+      "salary_on_hand": false
+    }
+  }
+]

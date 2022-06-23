@@ -1,0 +1,31 @@
+[
+  {
+    "pk": 1,
+    "cv": 1,
+    "vacancy": 1,
+    "status_worker": null,
+    "status_employer": true
+  },
+  {
+    "pk": 2,
+    "cv": 2,
+    "vacancy": 2,
+    "status_worker": true,
+    "status_employer": null
+  },
+  {
+    "pk": 3,
+    "cv": 2,
+    "vacancy": 1,
+    "status_worker": true,
+    "status_employer": true
+  },
+  {
+    "pk": 4,
+    "cv": 2,
+    "vacancy": 2,
+    "status_worker": true,
+    "status_employer": false,
+    "initiator": 0
+  }
+]

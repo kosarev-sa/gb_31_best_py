@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block menu %}
+{% include "worker_menu.html" %}
     <ul>
         <li>
             <a href="{% url 'cv:cv_list' %}">вернуться к списку</a>
@@ -14,8 +15,161 @@
 
     <form method="post" action="">
         {% csrf_token %}
-        {{ form.data }}
+
+        <h3>{{ worker.name }}</h3>
+        {% if worker.image %}
+            <p><img class="card-img-top" src="{{ worker.image.url }}" alt=""></p>
+        {% else %}
+            <p>Нет фото</p>
+        {% endif %}
+        <div>
+            <h4>Контактные данные:</h4>
+            <div>
+                <label for="phone_number">Мобильный телефон</label>
+                <p id="phone_number">{{ worker.phone_number }}</p>
+            </div>
+            <div>
+                <label for="email">Email</label>
+                <p id="email">{{ worker.user.email }}</p>
+            </div>
+            <div>
+                <label for="{{ worker.city }}">Город проживания</label>
+                <p id="{{ worker.city }}">{{ worker.city }}</p>
+            </div>
+        </div>
+        <div>
+            <h4>Основная информация:</h4>
+            <div>
+                <label>Дата рождения</label>
+                <p>{{ worker.birth_date }}</p>
+            </div>
+            <div>
+                <label>Пол</label>
+                <p>{{ worker.gender }}</p>
+            </div>
+        </div>
+        <div>
+            <label>Специализация</label>
+            {{ form.speciality }}
+        </div>
+        <div>
+            <label>Основные навыки</label>
+            {{ form.skills }}
+        </div>
+        <div>
+            <label>Желаемая должность</label>
+            {{ form.post }}
+        </div>
         <br>
+        <div>
+            <label>Зарплата</label>
+            {{ form.salary }}
+            {{ form.currency }}
+        </div>
+        <h4>Опыт работы:</h4>
+        <table>
+            <tr>
+                <th>Начало работы</th>
+                <th>Окончание работы</th>
+                <th>Нименование организации</th>
+                <th>Должность</th>
+                <th>Навыки</th>
+                <th>Обязанности</th>
+                <th>Изменить</th>
+                <th>Удалить</th>
+            </tr>
+            {% for exp in experience %}
+                <tr>
+                    <td>{{ exp.get_month_begin_display }} {{ exp.year_begin }}</td>
+                    <td>{% if exp.year_end %}{{ exp.get_month_end_display }} {{ exp.year_end }} {% else %} Настоящее время {% endif %}</td>
+                    <td>{{ exp.name }}</td>
+                    <td>{{ exp.post }}</td>
+                    <td>{{ exp.stack }}</td>
+                    <td>{{ exp.responsibilities }}</td>
+                    <td><a class="btn btn-sm btn-danger" href="{% url 'cv:update_experience' exp.id %} ">Изменить</a>
+                    </td>
+                    <td><a class="btn btn-sm btn-danger" href="{% url 'cv:delete_experience' exp.id %}" type="submit">Удалить</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <div>
+            <a class="btn btn-sm btn-success" href="{% url 'cv:create_experience' cv_id %}">Добавить опыт работы</a>
+        </div>
+
+        <div>
+            <h4>Образование: </h4>
+            <label>Уровень образования</label>
+            {{ form.education_level }}<br>
+            <table>
+                <tr>
+                    <th>Год окончания</th>
+                    <th>Учебное заведение</th>
+                    <th>Факультет</th>
+                    <th>Специализация</th>
+                    <th>Изменить</th>
+                    <th>Удалить</th>
+                </tr>
+                {% for education in educations %}
+                    <tr>
+                        <td>{{ education.date_end }}</td>
+                        <td>{{ education.name }}</td>
+                        <td>{{ education.department }}</td>
+                        <td>{{ education.specialty }}</td>
+                        <td><a class="btn btn-sm btn-danger" href="{% url 'cv:update_education' education.id %} ">Изменить</a>
+                        </td>
+                        <td><a class="btn btn-sm btn-danger" href="{% url 'cv:delete_education' education.id %}"
+                               type="submit">Удалить</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <div>
+                <a class="btn btn-sm btn-success" href="{% url 'cv:create_education' cv_id %}">Добавить место
+                    обучения</a>
+            </div>
+        </div>
+        <div>
+            <h4>Владение языками:</h4>
+
+            <table>
+                {% for langl in langlevels %}
+                    <tr>
+                        <td>{{ langl.language }}</td>
+                        <td>{{ langl.level }}</td>
+                        <td><a class="btn btn-sm btn-danger"
+                               href="{% url 'cv:update_language' langl.id %} ">Изменить</a></td>
+                        <td><a class="btn btn-sm btn-danger" href="{% url 'cv:delete_language' langl.id %}"
+                               type="submit">Удалить</a></td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <div>
+                <a class="btn btn-sm btn-success" href="{% url 'cv:create_language' cv_id %}">Указать еще один язык</a>
+            </div>
+        </div>
+        <div>
+            <h4>Возможность переезда: </h4>
+            {{ form.moving }}
+        </div>
+        <br>
+        <div name="employment">
+            <h4>Занятость: </h4>
+            {% for empl in employments %}
+                <input type="checkbox" name="empl_{{ empl.code }}" value="{{ empl.code }}"
+                        {% if empl.id in cv_employments %} checked {% endif %}>
+                <label>{{ empl.employment }}</label><br>
+            {% endfor %}
+        </div>
+        <br>
+        <div name="schedule">
+            <h4>График работы: </h4>
+            {% for sch in schedules %}
+                <input type="checkbox" name="schedule_{{ sch.code }}" value="{{ sch.code }}"
+                        {% if sch.id in cv_schedules %} checked {% endif %}>
+                <label>{{ sch.schedule }}</label><br>
+            {% endfor %}
+        </div>
+
         <input type="submit" value="сохранить">
     </form>
 

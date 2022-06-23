@@ -1,0 +1,30 @@
+[
+  {
+    "model": "users.workerprofile",
+    "pk": 1,
+    "fields": {
+      "user": 3,
+      "name": "111 1111",
+      "image": "worker_photo/1.jpg",
+      "city": "Нижний Новгород",
+      "phone_number": "+79000001111",
+      "gender": "F",
+      "birth_date": "1998-10-12",
+      "data": "Краткое описание 1 соискателя"
+    }
+  },
+  {
+    "model": "users.workerprofile",
+    "pk": 2,
+    "fields": {
+      "user": 4,
+      "name": "222 22222",
+      "image": "worker_photo/2.jpg",
+      "city": "Курган",
+      "phone_number": "+79000002222",
+      "gender": "M",
+      "birth_date": "1986-06-18",
+      "data": "Краткое описание 2 соискателя"
+    }
+  }
+]

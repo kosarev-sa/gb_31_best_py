@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+{% include "moderator_menu.html" %}
+{% include "moderator_awaiting_menu.html" %}
+{% endblock %}
+
+{% block content %}
+<div class="giant-font text-center border-bottom border-secondary border-1">Модерация вакансий</div>
+<div class="d-flex flex-wrap align-items-center justify-content-center ps-5 pe-5">
+
+{% if vacancies_list %}
+    <table class="table" width="100%">
+        <thead>
+            <tr>
+                <th>ИД</th>
+                <th>Название компании</th>
+                <th>Наименование вакансии</th>
+                <th>Статус</th>
+                <th>Специлизация</th>
+                <th>Активность</th>
+                <th>Анализ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in vacancies_list %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.employer_profile.name }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.status }}</td>
+                    <td>{{ item.specialization }}</td>
+                    <td>{% if item.is_active %} Да {% else %} Нет {% endif %} </td>
+                    <td>
+                        <a class="btn btn-link m-0" href="{% url 'vacancies:moderator_vacancy_approve' item.id %}">просмотр</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>Данные отсутствуют</p>
+{% endif %}
+
+</div>
+{% endblock %}

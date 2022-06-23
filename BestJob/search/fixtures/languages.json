@@ -1,0 +1,106 @@
+[
+  {
+    "code": "RU",
+    "language": "Русский"
+  },
+  {
+    "code": "EN",
+    "language": "Английский"
+  },
+  {
+    "code": "DE",
+    "language": "Немецкий"
+  },
+   {
+    "code": "FR",
+    "language": "Французский"
+  },
+ {
+    "code": "IT",
+    "language": "Итальянский"
+  },
+  {
+    "code": "AZ",
+    "language": "Азербайджанский"
+  },
+  {
+    "code": "AR",
+    "language": "Армянский"
+  },
+  {
+    "code": "ARB",
+    "language": "Арабский"
+  },
+   {
+    "code": "BE",
+    "language": "Белорусский"
+  },
+   {
+    "code": "VIE",
+    "language": "Вьетнамский"
+  },
+  {
+    "code": "DUT",
+    "language": "Голландский"
+  },
+  {
+    "code": "GR",
+    "language": "Греческий"
+  },
+  {
+    "code": "GRU",
+    "language": "Грузинский"
+  },
+  {
+    "code": "DAG",
+    "language": "Дагестанский"
+  },
+  {
+    "code": "DAT",
+    "language": "Датский"
+  },
+  {
+    "code": "HEB",
+    "language": "Иврит"
+  },
+  {
+    "code": "SPA",
+    "language": "Испанский"
+  },
+  {
+    "code": "KAZ",
+    "language": "Казахский"
+  },
+  {
+    "code": "CHI",
+    "language": "Китайский"
+  },
+  {
+    "code": "LAT",
+    "language": "Латышский"
+  },
+  {
+    "code": "LIT",
+    "language": "Литовский"
+  },
+  {
+    "code": "POL",
+    "language": "Польский"
+  },
+  {
+    "code": "TAD",
+    "language": "Таджикский"
+  },
+  {
+    "code": "UZB",
+    "language": "Узбекский"
+  },
+  {
+    "code": "UKR",
+    "language": "Украинский"
+  },
+  {
+    "code": "FIN",
+    "language": "Финский"
+  }
+]

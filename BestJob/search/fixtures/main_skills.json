@@ -1,0 +1,90 @@
+[
+  {
+    "code": "AGILE_PM",
+    "skill": "Agile project manager"
+  },
+  {
+    "code": "DJANGO",
+    "skill": "Django Framework"
+  },
+  {
+    "code": "DRF",
+    "skill": "Django REST Framework"
+  },
+  {
+    "code": "PYTHON",
+    "skill": "Python"
+  },
+  {
+    "code": "JAVA",
+    "skill": "Java"
+  },
+  {
+    "code": "JS",
+    "skill": "Java Script"
+  },
+  {
+    "code": "HTML",
+    "skill": "HTML"
+  },
+  {
+    "code": "ORACLE",
+    "skill": "Oracle"
+  },
+  {
+    "code": "REACT",
+    "skill": "React"
+  },
+  {
+    "code": "GRAPHQL",
+    "skill": "GraphQL"
+  },
+  {
+    "code": "DOCKER",
+    "skill": "Docker"
+  },
+  {
+    "code": "DOCKCOM",
+    "skill": "Docker Compose"
+  },
+  {
+    "code": "PYQT",
+    "skill": "PyQt"
+  },
+  {
+    "code": "ALCHEMY",
+    "skill": "SQL Alchemy"
+  },
+  {
+    "code": "PLSQL",
+    "skill": "PL/SQL"
+  },
+  {
+    "code": "LINUX",
+    "skill": "Linux"
+  },
+  {
+    "code": "GIT",
+    "skill": "Git"
+  },
+  {
+    "code": "POSTGRE",
+    "skill": "PostgreSQL"
+  },
+  {
+    "code": "CSHARP",
+    "skill": "C#"
+  },
+  {
+    "code": "PHP",
+    "skill": "PHP"
+  },
+  {
+    "code": "XML",
+    "skill": "XML"
+  },
+  {
+    "code": "BASH",
+    "skill": "Bash"
+  }
+]

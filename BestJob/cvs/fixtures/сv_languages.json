@@ -1,0 +1,32 @@
+[
+  {
+    "cv": 1,
+    "language": "RU",
+    "level": "NAT"
+  },
+  {
+    "cv": 1,
+    "language": "EN",
+    "level": "B2"
+  },
+  {
+    "cv": 1,
+    "language": "SPA",
+    "level": "A1"
+  },
+  {
+    "cv": 2,
+    "language": "RU",
+    "level": "NAT"
+  },
+  {
+    "cv": 2,
+    "language": "EN",
+    "level": "A2"
+  },
+  {
+    "cv": 2,
+    "language": "AZ",
+    "level": "NAT"
+  }
+]
