@@ -30,15 +30,15 @@ class CVSearchForm(SearchForm):
             sqs = sqs.filter(salary__gte=self.cleaned_data['salary'])
 
         # если есть требование по спеуиальности - фильтруем
-        if self.cleaned_data['speciality'] != '-':
+        if self.cleaned_data['speciality'] != '-' and self.cleaned_data['speciality'] != '':
             sqs = sqs.filter(speciality=Category.objects.get(code=self.cleaned_data['speciality']))
 
         # если есть требование по образованию - фильтруем
-        if self.cleaned_data['education_level'] != '-':
+        if self.cleaned_data['education_level'] != '-' and  self.cleaned_data['education_level'] != '':
             sqs = sqs.filter(education_level=int(self.cleaned_data['education_level']))
 
         # если есть требование по переезду - фильтруем
-        if self.cleaned_data['moving'] != '-':
+        if self.cleaned_data['moving'] != '-' and self.cleaned_data['moving'] != '':
             sqs = sqs.filter(moving=int(self.cleaned_data['moving']))
 
         return sqs
