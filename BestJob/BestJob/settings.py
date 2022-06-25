@@ -161,3 +161,5 @@ HAYSTACK_CONNECTIONS = {
 }
 
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+NEWS_BODY_LEN_ON_NEWS_LIST = 297

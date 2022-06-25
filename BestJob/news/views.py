@@ -3,8 +3,9 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DeleteView
+from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DeleteView, DetailView
 
+from BestJob.settings import NEWS_BODY_LEN_ON_NEWS_LIST
 from news.forms import NewsCreateForm, NewsUpdateForm#, NewsDeleteForm
 from news.models import News
 from search.models import Category
@@ -29,15 +30,39 @@ class IndexView(TemplateView):
 class NewsListView(ListView):
     """view главной страницы с новостями"""
     paginate_by = 3
-    model = News
     template_name = 'news_list.html'
     queryset = News.objects.filter(is_active=True).order_by('-created')
 
-    # def get_context_data(self, *, object_list=None, **kwargs):
-    #     context = super(NewsListView, self).get_context_data(**kwargs)
-    #     news_list = News.objects.filter(is_active=True).order_by('-created')
-    #     context['news_list'] = news_list
-    #     return context
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(NewsListView, self).get_context_data(**kwargs)
+        queryset = context['object_list']
+        object_list = list()
+        for item in queryset:
+            if len(item.body) > NEWS_BODY_LEN_ON_NEWS_LIST:
+                item.body = item.body[0:NEWS_BODY_LEN_ON_NEWS_LIST - 3] + '...'
+
+            object_list.append(item)
+
+        context['object_list'] = object_list
+        return context
+
+
+class NewsDetailView(DetailView):
+    """view главной страницы с новостями"""
+    model = News
+    template_name = 'news_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        super(NewsDetailView, self).get(request, *args, **kwargs)
+        context = self.get_context_data()
+        news_id = kwargs.get('pk')
+        try:
+            news = News.objects.get(id=news_id)
+            context['news_object'] = news
+        except Exception:
+            print(f'News not exists')
+
+        return self.render_to_response(context)
 
 
 class NewsModerateList(TemplateView):
