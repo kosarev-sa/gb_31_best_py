@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 
 import news.views
 
-from search.views import CVSearchView
+from search.views import CVSearchView, VacancySearchView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -30,7 +30,8 @@ urlpatterns = [
     path('cvs/', include('cvs.urls', namespace='cvs')),
     path('vacancies/', include('vacancies.urls', namespace='vacancies')),
     path('search/', include('haystack.urls')),
-    path('search_cv/', CVSearchView.as_view(), name='search_cv')
+    path('search_cv/', CVSearchView.as_view(), name='search_cv'),
+    path('search_vacancy/', VacancySearchView.as_view(), name='search_vacancy'),
 ]
 
 if settings.DEBUG:

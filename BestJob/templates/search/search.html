@@ -1,6 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <a href="{% url 'search_vacancy' %}">детальный поиск вакансий</a>
+    <br>
+    <a href="{% url 'search_cv' %}">детальный поиск резюме</a>
 
     <form method="get" action=".">
         <table>
