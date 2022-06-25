@@ -1,0 +1,47 @@
+<!-- ===== Start of Main Search Section ===== -->
+<section class="main overlay-black">
+
+    <!-- Start of Wrapper -->
+    <div class="container wrapper">
+        <h1 class="capitalize text-center text-white">найди работу мечты</h1>
+
+        <!-- Start of Form -->
+        <form class="job-search-form row pt40" action="#" method="post">
+            {% csrf_token %}
+
+            <!-- Start of keywords input -->
+            <div class="col-md-5 col-sm-12 search-keywords">
+                <label for="search-keywords">Keywords</label>
+                <input type="text" name="search-keywords" id="search-keywords" placeholder="Разработчик">
+            </div>
+
+            <!-- Start of category input -->
+            <div class="col-md-4 col-sm-12 search-categories">
+                <label for="search-categories">Категории</label>
+                <select name="search-categories" class="selectpicker" id="search-categories" data-live-search="true"
+                        title="Категории" data-size="5" data-container="body">
+                    {% for category in categories  %}
+                        <option value="{{ category.code }}">{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Start of submit input -->
+            <div class="col-md-2 col-sm-12 search-submit">
+                <button type="submit" class="btn btn-blue btn-effect btn-large"><i class="fa fa-search"></i>найти
+                </button>
+            </div>
+
+        </form>
+        <!-- End of Form -->
+
+        <div class="extra-info pt20">
+            {#            <span class="text-left text-white"><b>36</b> job offers for <b>you.</b></span>#}
+            <a href="#" class="capitalize pull-right text-white">расширенный поиск</a>
+        </div>
+
+    </div>
+    <!-- End of Wrapper -->
+
+</section>
+<!-- ===== End of Main Search Section ===== -->

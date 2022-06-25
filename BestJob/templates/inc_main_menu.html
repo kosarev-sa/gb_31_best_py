@@ -1,0 +1,75 @@
+{% load static %}
+<!-- =============== Start of Header 1 Navigation =============== -->
+<header class="header1">
+    <nav class="navbar navbar-default navbar-static-top fluid_header centered">
+        <div class="container">
+
+            <!-- Logo -->
+            <div class="col-md-2 col-sm-6 col-xs-8 nopadding">
+                <a class="navbar-brand nomargin" href="{% url 'index' %}"><img src="{% static 'img/index/logo.svg' %}" alt="logo"></a>
+            </div>
+
+            <!-- ======== Start of Main Menu ======== -->
+            <div class="col-md-10 col-sm-6 col-xs-4 nopadding">
+                <div class="navbar-header page-scroll">
+                    <button type="button" class="navbar-toggle toggle-menu menu-right push-body" data-toggle="collapse"
+                            data-target="#main-nav" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+                <!-- Start of Main Nav -->
+                <div class="collapse navbar-collapse cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="main-nav">
+                    <ul class="nav navbar-nav pull-right">
+
+                        <!-- Simple Menu Item -->
+                        <li class="dropdown simple-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Соискателю<i
+                                    class="fa fa-angle-down"></i></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">профиль соискателя</a></li>
+                                <li><a href="#">резюме</a></li>
+                                <li><a href="#">поиск вакансий</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Simple Menu Item -->
+                        <li class="dropdown simple-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Работадателю<i
+                                    class="fa fa-angle-down"></i></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">профиль работадателя</a></li>
+                                <li><a href="#">вакансии</a></li>
+                                <li><a href="#">поиск резюме</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Simple Menu Item -->
+                        <li class="dropdown simple-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Модератору<i
+                                    class="fa fa-angle-down"></i></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="#">профиль модератора</a></li>
+                                <li><a href="#">модерация новостей</a></li>
+                                <li><a href="#">модерация резюме</a></li>
+                                <li><a href="#">модерация вакансий</a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Login Menu Item -->
+                        <li class="menu-item login-btn">
+                            <a id="modal_trigger" href="javascript:void(0)" role="button"><i class="fa fa-lock"></i>Войти</a>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- End of Main Nav -->
+            </div>
+            <!-- ======== End of Main Menu ======== -->
+        </div>
+    </nav>
+</header>
+<!-- =============== End of Header 1 Navigation =============== -->

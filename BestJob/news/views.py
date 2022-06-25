@@ -7,15 +7,22 @@ from django.views.generic import TemplateView, CreateView, UpdateView, ListView,
 
 from news.forms import NewsCreateForm, NewsUpdateForm#, NewsDeleteForm
 from news.models import News
+from search.models import Category
 
 
 class NewsView(TemplateView):
     """view главной страницы с новостями"""
-    template_name = 'news.html'
+    template_name = 'index.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(NewsView, self).get_context_data(**kwargs)
-        context['news_list'] = News.objects.filter(is_active=True).order_by('-created')
+        news_list = News.objects.filter(is_active=True).order_by('-created')
+
+        if len(news_list) >= 3:
+            #  Берём top 3.
+            context['news_list'] = news_list[:3]
+
+        context['categories'] = Category.objects.all().order_by('name')
         return context
 
 

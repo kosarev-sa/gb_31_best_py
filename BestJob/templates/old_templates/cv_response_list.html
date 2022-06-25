@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+{% include "worker_menu.html" %}
+{% endblock %}
+
+{% block content %}
+<table width="100%">
+    <tr>
+        <td>
+            <h5><b>Дата отклика</b></h5>
+        </td>
+        <td>
+            <h5><b>Ссылка на вакансию</b></h5>
+        </td>
+        <td>
+            <h5><b>Статус отклика</b></h5>
+        </td>
+
+    </tr>
+    {% for resp in responses %}
+    <tr>
+        <td>
+            {{ resp.created_at }}
+        </td>
+        <td>
+            <a href="{% url 'vacancies:detail_vacancy' resp.vacancy_id %}">"{{ resp.vacancy.name }}"</a>
+        </td>
+        <td>
+            {% if resp.status_employer %} <span style="color: green">Вас пригласили пройти собеседование</span>
+            {% elif resp.status_employer is False %} <span style="color: red">Вас не готовы пригласить в "{{ resp.vacancy.employer_profile.name }}"</span>
+            {% elif resp.status_employer is None %} <span>Резюме находится на проверке у работодателя</span>
+            {% endif %}
+        </td>
+
+    </tr>
+    {% endfor %}
+
+</table>
+{% endblock %}
+
+

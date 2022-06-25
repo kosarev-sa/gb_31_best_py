@@ -25,6 +25,7 @@
     "cv": 2,
     "vacancy": 2,
     "status_worker": true,
-    "status_employer": false
+    "status_employer": false,
+    "initiator": 0
   }
 ]
