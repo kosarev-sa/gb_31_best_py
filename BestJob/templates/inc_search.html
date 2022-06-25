@@ -19,7 +19,7 @@
             <div class="col-md-4 col-sm-12 search-categories">
                 <label for="search-categories">Категории</label>
                 <select name="search-categories" class="selectpicker" id="search-categories" data-live-search="true"
-                        title="Разработка" data-size="5" data-container="body">
+                        title="Категории" data-size="5" data-container="body">
                     {% for category in categories  %}
                         <option value="{{ category.code }}">{{ category.name }}</option>
                     {% endfor %}
