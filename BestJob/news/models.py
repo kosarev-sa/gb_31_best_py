@@ -13,5 +13,7 @@ class News(models.Model):
     title = models.CharField(verbose_name='Заголовок', blank=True, null=False, max_length = 500)
     body = models.TextField(verbose_name='Содержание', blank=True)
     is_active = models.BooleanField(verbose_name='Aктивена', default=True)
+    image = models.ImageField(upload_to='Фото новости', blank=True)
+
 
 

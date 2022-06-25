@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Search</h2>
+    <a href="{% url 'search_vacancy' %}">детальный поиск вакансий</a>
+    <br>
+    <a href="{% url 'search_cv' %}">детальный поиск резюме</a>
 
     <form method="get" action=".">
         <table>
@@ -18,12 +20,11 @@
             <h3>Results</h3>
 
 
-
             {% for result in page.object_list %}
                 {% if result.object.post %}
                     <p>
                         <a href="{% url 'cv:update_cv' result.object.id %}">
-                            [резюме] {{ result.object.post }}</a>
+                            [резюме] {{ result.object.post }} [{{ result.object.salary }}]</a>
                     </p>
                 {% endif %}
                 {% if result.object.name %}
