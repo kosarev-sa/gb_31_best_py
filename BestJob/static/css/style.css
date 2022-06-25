@@ -1969,7 +1969,7 @@ footer {
 
 footer .footer-info {
     position: relative;
-    background: url(../images/img/footer-bg.jpg) no-repeat;
+    /*background: url(../images/img/footer-bg.jpg) no-repeat;*/
     background-size: cover;
 }
 
@@ -2349,7 +2349,7 @@ footer .copyright .social-btn-roll {
 /*** ====== 7.1.1 Version 1 ====== ***/
 
 section.main {
-    background: url('../images/img/image1.jpg') no-repeat;
+    background: url('../img/index/career-bg.jpg') no-repeat;
     background-size: cover;
     background-position: center center;
     height: 500px;

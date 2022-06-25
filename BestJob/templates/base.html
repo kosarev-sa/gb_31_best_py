@@ -26,6 +26,9 @@
     {% block menu %}
     {% endblock %}
 
+    {% block search %}
+    {% endblock %}
+
     {% block content %}
     {% endblock %}
 
@@ -102,8 +105,8 @@
 
     <!-- ===== All Javascript at the bottom of the page for faster page loading ===== -->
     <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'vendor/bootstrap/js/bootstrap-select.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap-select.min.js' %}"></script>
     <script src="{% static 'js/swiper.min.js' %}"></script>
     <script src="{% static 'js/jquery.ajaxchimp.js' %}"></script>
     <script src="{% static 'js/jquery.countTo.js' %}"></script>

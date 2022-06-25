@@ -5,61 +5,51 @@
             <h2>Новости</h2>
         </div>
 
-        <!-- Start Blog Posts Column -->
-        <div class="col-md-6">
+        {% if news_list %}
 
-            <!-- Start of Blog Post 1 -->
-            <div class="col-md-12 blog-post">
-                <!-- Post info -->
-                <div class="post-info">
-                    <!-- Post Title -->
-                    <a href="blog-post.html" class="blog-post-link pb10"><h4>10 tips for Web Developers</h4></a>
-                    <span class="pt20">by Author</span>
+            <div class="col-md-6">
+                <div class="col-md-12 blog-post">
+                    <!-- Post info -->
+                    <div class="post-info">
+                        <!-- Post Title -->
+                        <a href="blog-post.html" class="blog-post-link pb10"><h4>{{ news_list.0.title }}</h4></a>
+                        <span class="pt20">{{ news_list.0.author.first_name }}</span>
+                    </div>
+                    <!-- Background Post Image -->
+                    <a href="blog-post.html"><img src="{{ news_list.0.image.url }}" alt=""></a>
                 </div>
-                <!-- Background Post Image -->
-                <a href="blog-post.html"><img src="images/blog/blog1.jpg" alt=""></a>
-            </div>
-            <!-- End of Blog Post 1 -->
 
-
-            <!-- Start of Blog Post 2 -->
-            <div class="col-md-12 blog-post mt40">
-                <!-- Post info -->
-                <div class="post-info">
-                    <!-- Post Title -->
-                    <a href="blog-post.html" class="blog-post-link pb10"><h4>How to prepare for an Interview</h4></a>
-                    <span class="pt20">by Author</span>
+                <div class="col-md-12 blog-post mt40">
+                    <!-- Post info -->
+                    <div class="post-info">
+                        <!-- Post Title -->
+                        <a href="blog-post.html" class="blog-post-link pb10"><h4>{{ news_list.1.title }}</h4></a>
+                        <span class="pt20">{{ news_list.1.author.first_name }}</span>
+                    </div>
+                    <!-- Background Post Image -->
+                    <a href="blog-post.html"><img src="{{ news_list.1.image.url }}" alt=""></a>
                 </div>
-                <!-- Background Post Image -->
-                <a href="blog-post.html"><img src="images/blog/blog2.jpg" alt=""></a>
             </div>
-            <!-- End of Blog Post 2 -->
 
-        </div>
-        <!-- End Blog Posts Column -->
-
-
-        <!-- Start Featured Blog Post -->
-        <div class="col-md-6">
-            <div class="blog-post-featured">
-                <span class="featured btn">featured</span>
-                <!-- Post info -->
-                <div class="post-info">
-                    <!-- Post Title -->
-                    <a href="blog-post.html" class="blog-post-link pb10"><h4>Freelancing vs Employment</h4></a>
-                    <span class="pt20">by Author</span>
+            <div class="col-md-6">
+                <div class="blog-post-featured">
+                    <span class="featured btn">уже работает</span>
+                    <!-- Post info -->
+                    <div class="post-info">
+                        <!-- Post Title -->
+                        <a href="blog-post.html" class="blog-post-link pb10"><h4>{{ news_list.2.title }}</h4></a>
+                        <span class="pt20">{{ news_list.2.author.first_name }}</span>
+                    </div>
+                    <!-- Background Post Image -->
+                    <a href="blog-post.html"><img src="{{ news_list.2.image.url }}" alt=""></a>
                 </div>
-                <!-- Background Post Image -->
-                <a href="blog-post.html"><img src="images/blog/blog3.jpg" alt=""></a>
             </div>
-        </div>
-        <!-- End Featured Blog Post -->
+
+        {% endif %}
 
         <!-- Read More Button -->
         <div class="col-md-12 text-center mt40">
             <a href="blog-right-sidebar-v1.html" class="btn btn-blue btn-effect">читать дальше</a>
         </div>
-
-    </div>
 </section>
 <!-- ===== End of Latest News Section ===== -->
