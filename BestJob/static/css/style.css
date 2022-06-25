@@ -1062,7 +1062,7 @@ ul.list {
 
 section.page-header {
     position: relative;
-    background: url(../images/img/page-header.jpg) no-repeat;
+    /*background: url(../images/img/page-header.jpg) no-repeat;*/
     background-position: center center;
     background-size: cover;
     text-align: center;
@@ -1189,7 +1189,7 @@ section.page-header3 .breadcrumb > .active {
 
 section.page-header4 {
     position: relative;
-    background: url(../images/img/page-header.jpg) no-repeat;
+    /*background: url(../images/img/page-header.jpg) no-repeat;*/
     background-position: center center;
     background-size: cover;
     background-attachment: fixed;

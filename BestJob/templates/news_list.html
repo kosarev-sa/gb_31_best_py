@@ -1,10 +1,97 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    {% include 'inc_news_list_header.html' %}
+{% endblock %}
+
+{% block content %}
+
+
+    <!-- ===== Start of Blog Listing Section ===== -->
+    <section class="blog-listing ptb80" id="version1">
+        <div class="container">
+            <div class="row">
+
+                <!-- Start of Blog Posts -->
+                <div class="col-md-12 blog-posts-wrapper">
+
+                    {% for item in page_obj %}
+
+                        <article class="col-md-12 blog-post">
+
+                            <!-- Blog Post Thumbnail -->
+                            <div class="col-md-4 blog-thumbnail">
+                                <a href="blog-post.html" class="hover-link"><img
+                                        src="{{ item.image.url }}"
+                                        class="img-responsive"
+                                        alt=""></a>
+                                <div class="date">
+                                    <span class="day">{{ item.created|date:"d" }}</span>
+                                    <span class="publish-month">{{ item.created|date:"M" }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Blog Post Description -->
+                            <div class="col-md-8 blog-desc">
+                                <h5><a href="blog-post.html">{{ item.title }}</a></h5>
+                                <div class="post-detail pt10 pb20">
+                                    <span><i class="fa fa-user"></i>{{ item.author.first_name }}</span>
+                                    <span><i class="fa fa-clock-o"></i>{{ item.created|date:"H" }}</span>
+                                </div>
+
+                                <p>{{ item.body }}</p>
+                                <a href="blog-post.html" class="btn btn-blue btn-effect mt10">read
+                                    more</a>
+                            </div>
+                        </article>
+
+                    {% endfor %}
+
+
+                    <!-- Start of Pagination -->
+{#                    <div class="col-md-12">#}
+{#                        <ul class="pagination list-inline text-center">#}
+{#                            <li class="active"><a href="javascript:void(0)">1</a></li>#}
+{#                            <li><a href="#">2</a></li>#}
+{#                            <li><a href="#">3</a></li>#}
+{#                            <li><a href="#">4</a></li>#}
+{#                            <li><a href="#">Next</a></li>#}
+{#                        </ul>#}
+{#                    </div>#}
+                    <div class="pagination">
+                        <span class="step-links">
+                            {% if page_obj.has_previous %}
+                                <a href="?page=1">&laquo; first</a>
+                                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                            {% endif %}
+
+                            <span class="current">
+                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                            </span>
+
+                            {% if page_obj.has_next %}
+                                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <!-- End of Pagination -->
+
+                </div>
+                <!-- End of Blog Posts -->
+
+            </div>
+        </div>
+    </section>
+    <!-- ===== End of Blog Listing Section ===== -->
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

@@ -10,12 +10,12 @@ from news.models import News
 from search.models import Category
 
 
-class NewsView(TemplateView):
+class IndexView(TemplateView):
     """view главной страницы с новостями"""
     template_name = 'index.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(NewsView, self).get_context_data(**kwargs)
+        context = super(IndexView, self).get_context_data(**kwargs)
         news_list = News.objects.filter(is_active=True).order_by('-created')
 
         if len(news_list) >= 3:
@@ -24,6 +24,20 @@ class NewsView(TemplateView):
 
         context['categories'] = Category.objects.all().order_by('name')
         return context
+
+
+class NewsListView(ListView):
+    """view главной страницы с новостями"""
+    paginate_by = 3
+    model = News
+    template_name = 'news_list.html'
+    queryset = News.objects.filter(is_active=True).order_by('-created')
+
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     context = super(NewsListView, self).get_context_data(**kwargs)
+    #     news_list = News.objects.filter(is_active=True).order_by('-created')
+    #     context['news_list'] = news_list
+    #     return context
 
 
 class NewsModerateList(TemplateView):

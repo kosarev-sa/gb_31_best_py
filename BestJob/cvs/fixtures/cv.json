@@ -12,7 +12,7 @@
       "skills": "Python, Django, DRF, PyQt",
       "education_level": 4,
       "moving": 2,
-      "salary": "120000.00",
+      "salary": "120000",
       "currency": 1
     }
   },
@@ -29,7 +29,7 @@
       "skills": "HTML, css, JS",
       "education_level": 3,
       "moving": 1,
-      "salary": "100000.00",
+      "salary": "100000",
       "currency": 1
     }
   },
@@ -46,7 +46,7 @@
       "skills": "pytest",
       "education_level": 4,
       "moving": 1,
-      "salary": "100.00",
+      "salary": "100",
       "currency": 2
     }
   }
