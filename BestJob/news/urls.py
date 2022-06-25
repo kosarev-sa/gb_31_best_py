@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.urls import path
 
-from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
+from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList, NewsListView
 
 app_name = 'news'
 
 urlpatterns = [
     path('all/', NewsModerateList.as_view(), name='moderate_news'),
+    path('list/', NewsListView.as_view(), name='list_news'),
     path('create/', NewsCreate.as_view(), name='create_news'),
     path('update/<int:pk>/', NewsUpdate.as_view(), name='update_news'),
     path('delete/<int:pk>/', NewsDelete.as_view(), name='delete_news'),
