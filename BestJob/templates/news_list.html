@@ -52,33 +52,26 @@
 
                     {% endfor %}
 
+                    <div class="col-md-12">
+                        <ul class="pagination list-inline text-center">
+                                {% if page_obj.has_previous %}
+                                    <li><a href="?page=1">&laquo; первая</a></li>
+                                    <li><a href="?page={{ page_obj.previous_page_number }}">следующая</a></li>
 
-                    <!-- Start of Pagination -->
-{#                    <div class="col-md-12">#}
-{#                        <ul class="pagination list-inline text-center">#}
-{#                            <li class="active"><a href="javascript:void(0)">1</a></li>#}
-{#                            <li><a href="#">2</a></li>#}
-{#                            <li><a href="#">3</a></li>#}
-{#                            <li><a href="#">4</a></li>#}
-{#                            <li><a href="#">Next</a></li>#}
-{#                        </ul>#}
-{#                    </div>#}
-                    <div class="pagination">
-                        <span class="step-links">
-                            {% if page_obj.has_previous %}
-                                <a href="?page=1">&laquo; first</a>
-                                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-                            {% endif %}
+                                {% endif %}
 
-                            <span class="current">
-                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                            </span>
+                                <span class="current">
+                                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+                                </span>
 
-                            {% if page_obj.has_next %}
-                                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-                            {% endif %}
-                        </span>
+                                <li class="active"><a href="javascript:void(0)">{{ page_obj.number }}</a></li>
+
+                                {% if page_obj.has_next %}
+
+                                    <li><a href="?page={{ page_obj.next_page_number }}">следующая</a></li>
+                                    <li><a href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a></li>
+                                {% endif %}
+                        </ul>
                     </div>
                     <!-- End of Pagination -->
 
