@@ -4,12 +4,15 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DeleteView, DetailView
 
+from cvs.models import CV
 from search.models import Category, Employments, WorkSchedules, Languages, \
     LanguageLevels
 from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDistributeForm, ModeratorVacancyUpdateForm
-from vacancies.models import Vacancy, WorkingHours
+from vacancies.models import Vacancy
 from users.models import EmployerProfile
 from approvals.models import ApprovalStatus
+
+from BestJob.mixin import BaseClassContextMixin, UserDispatchMixin
 from cvs.models import ConnectVacancyCv
 
 
@@ -102,15 +105,11 @@ class VacancyCreate(CreateView):
         employer = EmployerProfile.objects.get(user=request.user.pk)
         context = self.get_context_data()
         context['employer'] = employer
-        context['employments'] = Employments.objects.all()
-        context['schedules'] = WorkSchedules.objects.all()
-        context['languages'] = Languages.objects.all()
-        context['levels'] = LanguageLevels.objects.all()
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         employer = EmployerProfile.objects.get(user=request.user.pk)
-        start_status = ApprovalStatus.objects.get(status='CHG')
+        start_status = ApprovalStatus.objects.get(status='NPB')
         form = self.form_class(data=request.POST)
         if form.is_valid():
             # сохраняем новую вакансию
@@ -139,8 +138,6 @@ class VacancyUpdate(UpdateView):
     def get(self, request, *args, **kwargs):
         super(VacancyUpdate, self).get(request, *args, **kwargs)
         context = self.get_context_data()
-        vacancy_id = kwargs.get('pk')
-        vacancy = Vacancy.objects.get(id=vacancy_id)
         # Временное решение до реализации get view для вакансии
         try:
             employer = EmployerProfile.objects.get(user=request.user.pk)
@@ -148,24 +145,7 @@ class VacancyUpdate(UpdateView):
         except Exception:
             print(f'Employer {request.user.pk} not exists')
         context['employments'] = Employments.objects.all()
-        vacancy_schedules = [vacancy_sch.schedule_id for vacancy_sch in WorkingHours.objects.filter(vacancy=vacancy)]
-        context['vacancy_schedules'] = vacancy_schedules
-        context['languages'] = Languages.objects.all()
-        context['levels'] = LanguageLevels.objects.all()
-        context['schedules'] = WorkSchedules.objects.all()
         return self.render_to_response(context)
-
-    # def post(self, request, *args, **kwargs):
-    #     self.object = self.get_object()
-    #     form = self.form_class(request.POST, instance=self.object)
-    #
-    #     if form.is_valid():
-    #         self.object.save()
-    #
-    #         return redirect(self.success_url)
-    #     else:
-    #         print(form.errors)
-    #     return self.form_invalid(form)
 
 
 class VacancyDelete(DeleteView):
@@ -187,28 +167,39 @@ class VacancyDistribute(UpdateView):
         return context
 
 
-class VacancyBaseList(TemplateView):
-    """Просмотра всех вакансий независимо от регистрации"""
+class VacancyOpenList(TemplateView, BaseClassContextMixin):
+    """view просмотра активных вакансий любым пользователем"""
     template_name = 'vacancy_base.html'
+    title = 'BestJob | Вакансии'
 
     def get(self, request, *args, **kwargs):
-        super(VacancyBaseList, self).get(request, *args, **kwargs)
+        super(VacancyOpenList, self).get(request, *args, **kwargs)
         context = {
-            'vacancies': Vacancy.objects.all(),
-            'status': ApprovalStatus.objects.get(status='APV')
+            'vacancies': Vacancy.objects.filter(is_active=True),
         }
         return self.render_to_response(context)
 
+
+class RecommendedVacancyList(ListView, BaseClassContextMixin):
+    """view просмотра рекомендованных по резюме вакансий"""
+    template_name = 'vacancy_list.html'
+    model = Vacancy
+    title = 'BestJob | Рекомендованные вакансии'
+
+    def get(self, request, *args, **kwargs):
+        super(RecommendedVacancyList, self).get(request, *args, **kwargs)
+        cv = CV.objects.get(id=self.kwargs['pk'])
+        context = {
+            'vacancies': Vacancy.objects.filter(specialization=cv.speciality),
+        }
+        
+        return self.render_to_response(context)
+        
 
 class VacancyDetail(DetailView):
     """Просмотр одной вакансии независимо от регистрации"""
     model = Vacancy
     template_name = 'vacancy_detail.html'
-    success_url = reverse_lazy('vacancy:vacancy_list')
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(VacancyDetail, self).get_context_data(**kwargs)
-        return context
 
     def get(self, request, *args, **kwargs):
         super(VacancyDetail, self).get(request, *args, **kwargs)

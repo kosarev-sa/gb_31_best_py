@@ -81,7 +81,7 @@
             {% for exp in experience %}
                 <tr>
                     <td>{{ exp.get_month_begin_display }} {{ exp.year_begin }}</td>
-                    <td>{{ exp.get_month_end_display }} {{ exp.year_end }}</td>
+                    <td>{% if exp.year_end %}{{ exp.get_month_end_display }} {{ exp.year_end }} {% else %} Настоящее время {% endif %}</td>
                     <td>{{ exp.name }}</td>
                     <td>{{ exp.post }}</td>
                     <td>{{ exp.stack }}</td>

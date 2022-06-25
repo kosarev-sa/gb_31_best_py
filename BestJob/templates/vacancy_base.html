@@ -3,7 +3,7 @@
 
 {% block menu %}
 {% if user.id %}
-    {% include "employer_menu.html" %}
+    {% include "worker_menu.html" %}
     {% endif %}
 
 {% endblock %}
@@ -14,7 +14,7 @@
     <table width="100%">
         <tr>
             <td width="60%">
-                <h4>"{{ vacancy.name }}"</h4>
+                <h6>"{{ vacancy.name }}"</h6>
             </td>
             <td>
                 <a href="{% url 'vacancies:detail_vacancy' vacancy.id %}">просмотр</a>
@@ -22,4 +22,5 @@
         </tr>
     </table>
     {% endfor %}
+
 {% endblock %}

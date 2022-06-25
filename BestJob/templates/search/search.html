@@ -26,7 +26,7 @@
                 {% endif %}
                 {% if result.object.name %}
                     <p>
-                        <a href="{% url 'vacancy:update_vacancy' result.object.id %}">
+                        <a href="{% url 'vacancy:detail_vacancy' result.object.id %}">
                             [вакансия] {{ result.object.name }}</a>
                     </p>
                 {% endif %}
