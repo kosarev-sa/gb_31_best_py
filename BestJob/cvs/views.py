@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 # Create your views here.
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse, resolve
-from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView, DetailView
 
 from approvals.models import ApprovalStatus
 
@@ -47,7 +47,7 @@ class ModeratorCVList(TemplateView):
 
 class ResponseCVList(TemplateView):
     """view список откликов на резюме соискателя"""
-    template_name = 'cv_response_list.html'
+    template_name = 'cv_response_list_.html'
 
     def get(self, request, *args, **kwargs):
         super(ResponseCVList, self).get(request, *args, **kwargs)
@@ -230,6 +230,47 @@ class CVDelete(DeleteView):
         self.object.is_active = False
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
+
+
+class CVDetailView(DetailView):
+    """view просмотр резюме"""
+    model = CV
+    template_name = 'cv_detail.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(CVDetailView, self).get_context_data(**kwargs)
+
+        cv_id = self.kwargs['pk']
+        cv = CV.objects.get(id=cv_id)
+        context['object'] = cv
+
+        '''Разделение строки навыки на пункты и передача в контекст списком'''
+        skills = cv.skills.split(', ')
+        context['skills'] = skills
+
+        experience = Experience.objects.filter(cv=cv)
+        # '''Разделение строки обязанности на пункты и передача в контекст списком'''
+        # for el in experience:
+        #     responsibilities = el.responsibilities.split(', ')
+        #     el.responsibilities = responsibilities
+        context['experience'] = experience
+
+        context['educations'] = Education.objects.filter(cv=cv)
+        context['langlevels'] = LanguagesSpoken.objects.filter(cv=cv)
+        cv_employments = [cv_empl.employment_id for cv_empl in CVEmployment.objects.filter(cv=cv)]
+        employments = []
+        for el in cv_employments:
+            employment = Employments.objects.filter(id=el).first()
+            employments.append(employment)
+        context['employments'] = employments
+
+        cv_schedules = [cv_sch.schedule_id for cv_sch in CVWorkSchedule.objects.filter(cv=cv)]
+        schedules = []
+        for el in cv_schedules:
+            schedule = WorkSchedules.objects.filter(id=el).first()
+            schedules.append(schedule)
+        context['schedules'] = schedules
+        return context
 
 
 # class CVDistribute(TemplateView):
@@ -455,6 +496,7 @@ class CVLanguageUpdate(UpdateView):
         else:
             messages.error(request, form.errors)
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 class CVLanguageDelete(DeleteView):
     """Удаление вледения языком без формы"""
