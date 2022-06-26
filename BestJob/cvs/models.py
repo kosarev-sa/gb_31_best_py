@@ -20,6 +20,7 @@ class CV(models.Model):
     moving = models.PositiveSmallIntegerField(choices=Moving.choices, default=Moving.UNREAL, null=True)
     salary = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, verbose_name='Зарплата')
     currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB, null=True)
+    about = models.TextField(max_length=5000, blank=True, null=True)
 
 
 class CVSkills(models.Model):

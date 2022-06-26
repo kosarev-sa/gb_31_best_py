@@ -10,7 +10,7 @@ from django.views.generic import TemplateView, CreateView, UpdateView, DeleteVie
 from approvals.models import ApprovalStatus
 
 from cvs.forms import CVCreateForm, CVUpdateForm, CVDeleteForm, CVDistributeForm, ExperienceCreateForm, \
-    EducationCreateForm, LanguagesCreateForm, ModeratorCVUpdateForm
+    EducationCreateForm, LanguagesCreateForm, ModeratorCVUpdateForm, LanguagesUpdateForm
 from cvs.models import CV, Experience, CVWorkSchedule, CVEmployment, Education, LanguagesSpoken, CVMonths, \
     ConnectVacancyCv
 
@@ -123,6 +123,7 @@ class CVCreate(CreateView):
             cv = form.save(commit=False)
             cv.worker_profile = worker
             cv.status = start_status
+            cv.about = form.data['about']
             cv.save()
 
             for key, value in form.data.items():
@@ -130,7 +131,7 @@ class CVCreate(CreateView):
                     schedule = WorkSchedules.objects.get(code=value)
                     cv_schedule = CVWorkSchedule(cv=cv, schedule=schedule)
                     cv_schedule.save()
-                    print(cv_schedule.schedule)
+
                 elif key.startswith('empl_'):
                     employment = Employments.objects.get(code=value)
                     cv_employment = CVEmployment(cv=cv, employment=employment)
@@ -287,17 +288,13 @@ class CVDetailView(DetailView):
 #     def get(self, request, *args, **kwargs):
 #         return self.post(request, *args, **kwargs)
 
+
 def set_public_status(request, pk):
     cv = get_object_or_404(CV, pk=pk)
     cv.status = ApprovalStatus.objects.get(status='PUB')
     cv.save()
     return HttpResponseRedirect(reverse('cv:cv_list'))
 
-# def order_forming_complete(request, pk): # метод формирования статуса
-#     order = get_object_or_404(Order, pk=pk)
-#     order.status = Order.SEND_TO_PROCEED
-#     order.save()
-#     return HttpResponseRedirect(reverse('orders:list'))
 
 
 class CVExperienceCreate(CreateView):
@@ -477,7 +474,7 @@ class CVLanguageUpdate(UpdateView):
     """Изменение вледения языком"""
     model = LanguagesSpoken
     template_name = 'cv_languages.html'
-    form_class = LanguagesCreateForm
+    form_class = LanguagesUpdateForm
     success_url = reverse_lazy('cv:cv_list')
 
     def get_context_data(self, *, object_list=None, **kwargs):
