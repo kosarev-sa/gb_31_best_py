@@ -31,7 +31,8 @@
                                     class="fa fa-angle-down"></i></a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="#">профиль соискателя</a></li>
-                                <li><a href="#">резюме</a></li>
+                                <li><a href="{% url 'cvs:cv_list' %}">Ваши резюме</a></li>
+                                <li><a href="{% url 'cvs:cv_responses' %}">Отклики на ваши резюме</a></li>
                                 <li><a href="#">поиск вакансий</a></li>
                             </ul>
                         </li>

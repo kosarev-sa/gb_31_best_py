@@ -26,7 +26,7 @@
 
                             <!-- Blog Post Thumbnail -->
                             <div class="col-md-4 blog-thumbnail">
-                                <a href="blog-post.html" class="hover-link"><img
+                                <a href="{% url 'news:detail_news' item.pk %}" class="hover-link"><img
                                         src="{{ item.image.url }}"
                                         class="img-responsive"
                                         alt=""></a>
@@ -38,47 +38,39 @@
 
                             <!-- Blog Post Description -->
                             <div class="col-md-8 blog-desc">
-                                <h5><a href="blog-post.html">{{ item.title }}</a></h5>
+                                <h5><a href="{% url 'news:detail_news' item.pk %}">{{ item.title }}</a></h5>
                                 <div class="post-detail pt10 pb20">
                                     <span><i class="fa fa-user"></i>{{ item.author.first_name }}</span>
-                                    <span><i class="fa fa-clock-o"></i>{{ item.created|date:"H" }}</span>
+                                    <span><i class="fa fa-clock-o"></i>{{ item.created|date:"H:i" }}</span>
                                 </div>
 
                                 <p>{{ item.body }}</p>
-                                <a href="blog-post.html" class="btn btn-blue btn-effect mt10">read
-                                    more</a>
+                                <a href="{% url 'news:detail_news' item.pk %}" class="btn btn-blue btn-effect mt10">подробнее</a>
                             </div>
                         </article>
 
                     {% endfor %}
 
-
-                    <!-- Start of Pagination -->
-{#                    <div class="col-md-12">#}
-{#                        <ul class="pagination list-inline text-center">#}
-{#                            <li class="active"><a href="javascript:void(0)">1</a></li>#}
-{#                            <li><a href="#">2</a></li>#}
-{#                            <li><a href="#">3</a></li>#}
-{#                            <li><a href="#">4</a></li>#}
-{#                            <li><a href="#">Next</a></li>#}
-{#                        </ul>#}
-{#                    </div>#}
-                    <div class="pagination">
-                        <span class="step-links">
+                    <div class="col-md-12">
+                        <ul class="pagination list-inline text-center">
                             {% if page_obj.has_previous %}
-                                <a href="?page=1">&laquo; first</a>
-                                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                                <li><a href="?page=1">&laquo; первая</a></li>
+                                <li><a href="?page={{ page_obj.previous_page_number }}">следующая</a></li>
+
                             {% endif %}
 
                             <span class="current">
-                                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-                            </span>
+                                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+                                </span>
+
+                            <li class="active"><a href="javascript:void(0)">{{ page_obj.number }}</a></li>
 
                             {% if page_obj.has_next %}
-                                <a href="?page={{ page_obj.next_page_number }}">next</a>
-                                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+
+                                <li><a href="?page={{ page_obj.next_page_number }}">следующая</a></li>
+                                <li><a href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a></li>
                             {% endif %}
-                        </span>
+                        </ul>
                     </div>
                     <!-- End of Pagination -->
 

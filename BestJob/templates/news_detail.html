@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    {% include 'inc_news_list_header.html' %}
+{% endblock %}
+
+{% block content %}
+
+    <!-- ===== Start of Single Blog Post Section ===== -->
+    <section class="ptb80" id="blog-post">
+        <div class="container">
+
+            <!-- Start of Blog Post Content Wrapper -->
+            <div class="col-md-12 post-content-wrapper">
+
+                <!-- Start of Post Title -->
+                <div class="post-title">
+                    <h2>{{ news_object.title }}</h2>
+                    <!-- Post Details -->
+                    <div class="post-detail">
+                        <span><i class="fa fa-user"></i>{{ news_object.author.first_name }}</span>
+                        <span><i class="fa fa-clock-o"></i>{{ news_object.created|date:"H:i" }}</span>
+                    </div>
+                </div>
+                <!-- End of Post Title -->
+
+                <!-- Start of Post Content -->
+                <div class="post-content">
+                    <p>{{ news_object.body }}</p>
+
+                    <!-- Post Image -->
+                    <div class="post-img">
+                        <img src="{{ news_object.image.url }}" class="img-responsive" alt="">
+                    </div>
+
+                </div>
+                <!-- End of Post Content -->
+
+            </div>
+            <!-- End of Blog Post Content Wrapper -->
+        </div>
+    </section>
+    <!-- ===== End of Single Blog Post Section ===== -->
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

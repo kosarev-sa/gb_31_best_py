@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block content %}
+    <!--    Начало секции МОИ РЕЗЮМЕ-->
+    <section class="education ptb80" style="background: #f0f0f0;">
+        <div class="container">
+
+            <div class="col-md-12 text-center">
+                <h3 class="pb60">Мои резюме</h3>
+            </div>
+
+            {% for cv in cvs %}
+            <div class="col-md-12" style="margin-bottom: 15px;">
+                <div class="item-block shadow-hover" style="background: #ffffff;">
+
+                    <div class="education-header clearfix">
+                        <h5><small>Должность -</small><a href="{% url 'cv:detail_cv' cv.id %}">{{ cv.post }}</a></h5>
+                        <h5><small>Дата создания -</small> {{ cv.date_create }} </h5>
+                        <h5><small>Статус резюме -</small> {{ cv.status }} </h5>
+                    </div>
+
+                    <div class="col-md-12 text-right mt-4 mb-4" style="background: #ffffff;">
+                        <a class="btn btn-small btn-info mt15 mb15" href="{% url 'cv:distribute_cv' cv.id %}">Разместить резюме</a>
+                        <a class="btn btn-small btn-info mt15 mb15" href="{% url 'cv:update_cv' cv.id %}">редактировать</a>
+                        <a class="btn btn-small btn-info mt15 mb15" href="{% url 'cv:delete_cv' cv.id %}">удалить</a>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </section>
+<!--    Конец секции МОИ РЕЗЮМЕ-->
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

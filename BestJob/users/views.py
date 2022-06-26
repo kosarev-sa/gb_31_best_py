@@ -247,7 +247,7 @@ class UserRegisterView(FormView):
 
 class UserLogoutView(LogoutView):
     """view для выхода из-под учетки"""
-    template_name = 'news.html'
+    template_name = 'news_detail.html'
 
 
 class UserEmailVarifyView(TemplateView):
