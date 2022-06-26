@@ -71,6 +71,7 @@ class UserLoginForm(AuthenticationForm):
         self.fields['password'].widget.attrs['placeholder'] = 'Введите пароль'
 
 
+
 class UserRegisterForm(UserCreationForm):
     """форма для регистрации"""
 
@@ -88,6 +89,9 @@ class UserRegisterForm(UserCreationForm):
         self.fields['email'].widget.attrs.update({"class": "form-control", "placeholder": "Введите адрес эл.почты"})
         self.fields['password1'].widget.attrs.update({"class": "form-control", "placeholder": "Введите пароль"})
         self.fields['password2'].widget.attrs.update({"class": "form-control", "placeholder": "Подтвердите пароль"})
+        # self.fields['role'].widget.attrs['class'] = 'selectpicker'
+        # self.fields['role'].widget.attrs['data-size'] = '3'
+        # self.fields['role'].widget.attrs['container-size'] = 'body'
 
     def save(self, commit=True):
         """переопределяем метод save для того, чтобы добавить ключ активации email"""
