@@ -5,6 +5,10 @@
     {% include 'inc_main_menu.html' %}
 {% endblock %}
 
+{% block header %}
+    {% include 'inc_cv_list_header.html' %}
+{% endblock %}
+
 {% block content %}
 <!--    Начало секции Профиля соискателя-->
     <section class="ptb80" id="candidate-profile">
@@ -13,7 +17,7 @@
             <div class="row candidate-profile nomargin">
 
                 <div class="col-md-12 text-center">
-                    <h3 class="pb40">Резюме соискателя</h3>
+                    <h3 class="pb40">{{ object.post }}</h3>
                 </div>
 
                 <div class="col-md-3 col-xs-12">

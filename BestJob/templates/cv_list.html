@@ -5,14 +5,14 @@
     {% include 'inc_main_menu.html' %}
 {% endblock %}
 
+{% block header %}
+    {% include 'inc_cv_list_header.html' %}
+{% endblock %}
+
 {% block content %}
-    <!--    Начало секции МОИ РЕЗЮМЕ-->
+ <!--    Начало секции МОИ РЕЗЮМЕ-->
     <section class="education ptb80" style="background: #f0f0f0;">
         <div class="container">
-
-            <div class="col-md-12 text-center">
-                <h3 class="pb60">Мои резюме</h3>
-            </div>
 
             {% for cv in cvs %}
             <div class="col-md-12" style="margin-bottom: 15px;">
