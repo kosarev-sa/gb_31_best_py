@@ -1,0 +1,297 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block content %}
+<!--    Начало секции Профиля соискателя-->
+    <section class="ptb80" id="candidate-profile">
+        <div class="container">
+
+            <div class="row candidate-profile nomargin">
+
+                <div class="col-md-12 text-center">
+                    <h3 class="pb40">Резюме соискателя</h3>
+                </div>
+
+                <div class="col-md-3 col-xs-12">
+                    <div class="profile-photo">
+
+                         <img src="{% if object.worker_profile.image %} {{ object.worker_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}" class="img-thumbnail">
+                    </div>
+                </div>
+
+                <div class="col-md-9 col-xs-12">
+                    <div class="profile-descr">
+
+                        <div class="profile-title">
+<!--                            Имя соискателя-->
+                            {% if object.worker_profile.name %}
+                                <h2 class="capitalize">{{ object.worker_profile.name }}</h2>
+                            {% endif %}
+
+<!--                            Пол-->
+                            {% if object.worker_profile.gender %}
+                                <h5 class="pt10">Пол: {{ object.worker_profile.gender }}</h5>
+                            {% endif %}
+
+<!--                            Специализация-->
+                            {% if object.speciality %}
+                                <h5 class="pt10">{{ object.speciality }}</h5>
+                            {% endif %}
+                        </div>
+
+                        <div class="profile-details mt20">
+<!--                            Легенда( нужно завести поле в моделе с описанием каждой специализации)-->
+                            <p>Разработчики интерфейсов используют HTML, CSS и JavaScript для кодирования веб-сайтов и веб-приложений, созданных веб-дизайнерами. Код, который они пишут, выполняется внутри браузера пользователя (в отличие от серверного разработчика, чей код выполняется на веб-сервере). Также отвечает за то, чтобы убедиться в отсутствии ошибок или ошибок во внешнем интерфейсе, а также убедиться, что дизайн выглядит так, как он должен выглядеть на различных платформах и браузерах.</p>
+                        </div>
+
+                        <ul class="profile-info mt20 nopadding">
+                            {% if object.worker_profile.city %}
+                                <li>
+                                    <i class="fa fa-map-marker"></i>
+    <!--                                Город проживания-->
+                                    <span>{{ object.worker_profile.city }}</span>
+                                </li>
+                            {% endif %}
+
+                            <li>
+                                <i class="fa fa-globe"></i>
+                                <a href="#">best_job.com</a>
+                            </li>
+
+                            {% if object.salary %}
+                                <li>
+                                    <i class="fa fa-money"></i>
+    <!--                                Желаемая зарплата-->
+                                    <span>{{ object.salary }} {{ object.get_currency_display }}</span>
+                                </li>
+                            {% endif %}
+
+                            {% if object.worker_profile.birth_date %}
+                                <li>
+                                    <i class="fa fa-birthday-cake"></i>
+    <!--                                Возраст(Нужно в контроллере вычислить возраст и передовать года)-->
+                                    <span>{{ object.worker_profile.birth_date }}</span>
+                                </li>
+                            {% endif %}
+
+                            {% if object.worker_profile.phone_number %}
+                                <li>
+                                    <i class="fa fa-phone"></i>
+    <!--                                Телефон соискателя-->
+                                    <span>{{ object.worker_profile.phone_number }}</span>
+                                </li>
+                            {% endif %}
+
+                            {% if object.worker_profile.user.email %}
+                                <li>
+                                    <i class="fa fa-envelope"></i>
+    <!--                                email соискателя-->
+                                    <a href="#">{{ object.worker_profile.user.email }}</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+
+                    </div>
+                </div>
+
+            </div>
+
+            {% if skills %}
+            <div class="row skills mt40">
+
+                <div class="col-md-12 text-center">
+                    <h3 class="pb40">Мои навыки</h3>
+                </div>
+
+                <div class="col-sm-12 text-center">
+                    {% for el in skills %}
+                        <span style="margin-left: 20px;
+                                 margin-right: 20px;
+                                 font-weight: bold;
+                                 font-size: 20px">{{ el }}</span>
+                    {% endfor %}
+                </div>
+
+            </div>
+            {% endif %}
+
+            {% if object.post %}
+            <div class="row skills mt40">
+
+                <div class="col-md-12 text-center">
+                    <h3 class="pb40">Желаемая должность - {{ object.post }}</h3>
+                </div>
+
+            </div>
+            {% endif %}
+
+        </div>
+    </section>
+<!--    Конец секции Профиля соискателя-->
+
+<!--    Начало секции ОБРАЗОВАНИЕ-->
+    {% if educations %}
+    <section class="education ptb80" style="background: #f0f0f0;">
+        <div class="container">
+
+            <div class="col-md-12 text-center">
+                <h3 class="pb60">Образование - {{ object.get_education_level_display }}</h3>
+            </div>
+
+            {% for education in educations %}
+            <div class="col-md-12" style="margin-bottom: 15px;">
+                <div class="item-block shadow-hover" style="background: #ffffff;">
+
+                    <div class="education-header clearfix">
+                        {% if education.name %}
+                            <h4><small>Учебное заведение -</small> {{ education.name }} </h4>
+                        {% endif %}
+
+                        {% if education.department %}
+                            <h5>{{ education.department }}</h5>
+                        {% endif %}
+
+                        {% if education.specialty %}
+                            <h5><small>Специализация -</small> {{ education.specialty }}</h5>
+                        {% endif %}
+
+                        {% if education.date_end %}
+                            <h5><small>Год окончания -</small> {{ education.date_end }}</h5>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </section>
+    {% endif %}
+<!--    Конец секции ОБРАЗОВАНИЕ-->
+
+<!--    Начало секции ОПЫТ РАБОТЫ-->
+    {% if experience %}
+    <section class="work-experience ptb80" style="background: #ffffff;">
+        <div class="container">
+
+            <div class="col-md-12 text-center">
+                <h3 class="pb60">Опыт работы</h3>
+            </div>
+
+            {% for exp in experience %}
+            <div class="col-md-12" style="margin-bottom: 15px;">
+                <div class="item-block shadow-hover" style="background: #f0f0f0;">
+
+                    <div class="experience-header clearfix">
+                        <div>
+                            {% if exp.name %}
+                                <h4>{{ exp.name }}</h4>
+                            {% endif %}
+
+                            {% if exp.post %}
+                                <h5><small>{{ exp.post }}</small></h5>
+                            {% endif %}
+                        </div>
+                        <h6 class="time">{{ exp.get_month_begin_display }} {{ exp.year_begin }} - {% if exp.year_end %}{{ exp.get_month_end_display }} {{ exp.year_end }} {% else %} Настоящее время {% endif %}</h6>
+                    </div>
+
+                    <div class="experience-body">
+                        {% if exp.stack %}
+                            <p>Навыки:</p>
+                            <p>{{ exp.stack }}</p>
+                        {% endif %}
+
+                        {% if exp.responsibilities %}
+                            <p>Обязанности:</p>
+                            <p>{{ exp.responsibilities }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+<!--    Конец секции ОПЫТ РАБОТЫ-->
+
+<!--    Начало секции ВЛАДЕНИЕ ЯЗЫКАМИ-->
+    {% if langlevels %}
+     <section class="education ptb80" style="background: #f0f0f0;">
+        <div class="container">
+
+            <div class="col-md-12 text-center">
+                <h3 class="pb60">Владение языками</h3>
+            </div>
+
+            {% for langl in langlevels %}
+            <div class="col-md-12" style="margin-bottom: 15px;">
+                <div class="item-block shadow-hover" style="background: #ffffff;">
+
+                    <div class="education-header clearfix">
+                        {% if langl.language %}
+                            <h4><small>Язык -</small> {{ langl.language }}</h4>
+                        {% endif %}
+                        {% if langl.level %}
+                            <h4><small>Уровень знания -</small> {{ langl.level }}</h4>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    </section>
+    {% endif %}
+<!--    Конец секции ВЛАДЕНИЕ ЯЗЫКАМИ-->
+
+<!--    Начало секции УСЛОВИЯ РАБОТЫ-->
+    <section class="work-experience ptb80" style="background: #ffffff;">
+        <div class="container">
+
+            <h3 class="pb60 text-center">Условия работы</h3>
+
+            <div class="item-block shadow-hover col-md-12 d-flex justify-content-around" style="background: #f0f0f0;">
+
+                <div class="col-md-4 mt15 mb15">
+                    <p>Занятость:</p>
+                    <ul class="list mt10">
+                        {% for employment in employments %}
+                            <li>{{ employment.employment }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="col-md-4 mt15 mb15">
+                    <p>График работы:</p>
+                    <ul class="list mt10">
+                        {% for schedule in schedules %}
+                            <li>{{ schedule.schedule }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="col-md-4 mt15 mb15">
+                    <p>Возможность переезда:</p>
+                    <ul class="list mt10">
+                        <li>{{ object.get_moving_display }}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-md-12 text-right mt30 mb-4">
+                <a class="btn btn-small btn-info mt15 mb15" href="{% url 'cv:cv_list' %}">Вернуться к списку</a>
+            </div>
+
+        </div>
+    </section>
+<!--    Конец секции УСЛОВИЯ РАБОТЫ-->
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

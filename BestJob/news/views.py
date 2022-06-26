@@ -19,9 +19,10 @@ class IndexView(TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
         news_list = News.objects.filter(is_active=True).order_by('-created')
 
-        if len(news_list) >= 3:
-            #  Берём top 3.
-            context['news_list'] = news_list[:3]
+# Временно закоментировал(Ширгин Алексей) При запуске сервера появлялась ошибка
+        # if len(news_list) >= 3:
+        #     #  Берём top 3.
+        #     context['news_list'] = news_list[:3]
 
         context['categories'] = Category.objects.all().order_by('name')
         return context
