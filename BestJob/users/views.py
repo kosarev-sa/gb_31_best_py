@@ -14,6 +14,8 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import UpdateView, FormView, TemplateView, ListView, DetailView
 
 from BestJob import settings
+from news.models import News
+from search.models import Category
 from users.forms import WorkerProfileForm, EmployerProfileForm, ModeratorProfileForm, UserLoginForm, UserRegisterForm, \
     PassResetForm, PassResetConfirmForm
 
@@ -247,7 +249,19 @@ class UserRegisterView(FormView):
 
 class UserLogoutView(LogoutView):
     """view для выхода из-под учетки"""
-    template_name = 'news_detail.html'
+    template_name = 'index.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(UserLogoutView, self).get_context_data(**kwargs)
+        news_list = News.objects.filter(is_active=True).order_by('-created')
+
+        if news_list:
+            if len(news_list) >= 3:
+                #  Берём top 3.
+                context['news_list'] = news_list[:3]
+
+        context['categories'] = Category.objects.all().order_by('name')
+        return context
 
 
 class UserEmailVarifyView(TemplateView):
