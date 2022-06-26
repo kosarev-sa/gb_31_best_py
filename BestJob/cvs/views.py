@@ -96,7 +96,7 @@ class ModeratorCVUpdate(UpdateView):
 class CVCreate(CreateView):
     """view создание резюме"""
     model = CV
-    template_name = 'submit-resume.html'
+    template_name = 'cv_create.html'
     form_class = CVCreateForm
     success_url = reverse_lazy('cv:cv_list')
 
