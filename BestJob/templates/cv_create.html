@@ -6,34 +6,11 @@
     {% include 'inc_main_menu.html' %}
 {% endblock %}
 
+{% block header %}
+    {% include 'inc_cv_header.html' %}
+{% endblock %}
+
 {% block content %}
-    <body>
-    <!-- =============== Start of Page Header 1 Section =============== -->
-    <section class="page-header">
-        <div class="container">
-
-            <!-- Start of Page Title -->
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Ваше резюме</h2>
-                </div>
-            </div>
-            <!-- End of Page Title -->
-
-            <!-- Start of Breadcrumb -->
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="breadcrumb">
-                        <li><a href="{% url 'cv:cv_list' %}">к списку резюме</a></li>
-                        <li class="active">Ваше резюме</li>
-                    </ul>
-                </div>
-            </div>
-            <!-- End of Breadcrumb -->
-
-        </div>
-    </section>
-
     <!-- ===== Start of Main Wrapper Section ===== -->
     <section class="ptb80" id="post-job">
         <div class="container">
