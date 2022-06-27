@@ -34,7 +34,7 @@
                         <li><a href="post-job.html"><i class="fa fa-angle-double-right"></i>добавить вакансию</a></li>
                     {% endif %}
                     <li><a href="{% url 'news:list_news' %}"><i class="fa fa-angle-double-right"></i>новости</a></li>
-                    <li><a href="search-jobs-1.html"><i class="fa fa-angle-double-right"></i>поиск работы</a></li>
+                    <li><a href="{% url 'haystack_search' %}"><i class="fa fa-angle-double-right"></i>поиск</a></li>
                     <li><a href="{% url 'users:login' %}"><i class="fa fa-angle-double-right"></i>войти</a></li>
                     <li><a href="{% url 'users:registration' %}"><i class="fa fa-angle-double-right"></i>регистрация</a>
                     </li>
