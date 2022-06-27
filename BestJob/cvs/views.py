@@ -29,7 +29,9 @@ class CVList(TemplateView):
         worker_id = WorkerProfile.objects.get(user=user_id)
         context = {
             'cvs': CV.objects.filter(worker_profile=worker_id, is_active=True),
-            'worker': worker_id
+            'worker': worker_id,
+            'title': "Мои резюме",
+            'heading': "Мои резюме",
         }
         return self.render_to_response(context)
 
@@ -47,7 +49,7 @@ class ModeratorCVList(TemplateView):
 
 class ResponseCVList(TemplateView):
     """view список откликов на резюме соискателя"""
-    template_name = 'cv_response_list_.html'
+    template_name = 'cv_response_list.html'
 
     def get(self, request, *args, **kwargs):
         super(ResponseCVList, self).get(request, *args, **kwargs)
@@ -56,6 +58,10 @@ class ResponseCVList(TemplateView):
 
         context = {
             'responses': ConnectVacancyCv.objects.filter(cv_id__in=cv_worker_ids),
+            'title': "Отклики",
+            'heading': "Отклики",
+            'link': "/cvs/all/",
+            'heading_link': "Список резюме",
         }
         return self.render_to_response(context)
 
@@ -103,6 +109,9 @@ class CVCreate(CreateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVCreate, self).get_context_data(**kwargs)
         context['title'] = 'Новое резюме'
+        context['heading'] = "Ваше резюме"
+        context['link'] = "/cvs/all/"
+        context['heading_link'] = "Список резюме"
         return context
 
     def get(self, request, *args, **kwargs):
@@ -152,6 +161,67 @@ class CVCreate(CreateView):
             print(form.errors)
         return self.form_invalid(form)
 
+# class CVUpdate(UpdateView):
+#     """view изменение резюме"""
+#     model = CV
+#     template_name = 'cv_update.html'
+#     form_class = CVUpdateForm
+#     success_url = reverse_lazy('cv:cv_list')
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super(CVUpdate, self).get_context_data(**kwargs)
+#
+#         context['heading'] = "Ваше резюме"
+#         context['link'] = "/cvs/all/"
+#         context['heading_link'] = "Список резюме"
+#         return context
+#
+#     def get(self, request, *args, **kwargs):
+#         super(CVUpdate, self).get(request, *args, **kwargs)
+#         context = self.get_context_data()
+#         cv_id = kwargs.get('pk')
+#         cv = CV.objects.get(id=cv_id)
+#         worker = WorkerProfile.objects.get(user=request.user.pk)
+#         context['cv_id'] = cv.id
+#         context['worker'] = worker
+#         context['speciality'] = Category.objects.all().order_by('name')
+#         context['experience'] = Experience.objects.filter(cv=cv)
+#         context['educations'] = Education.objects.filter(cv=cv)
+#         context['langlevels'] = LanguagesSpoken.objects.filter(cv=cv)
+#         cv_employments = [cv_empl.employment_id for cv_empl in CVEmployment.objects.filter(cv=cv)]
+#         context['cv_employments'] = cv_employments
+#         context['employments'] = Employments.objects.all()
+#         cv_schedules = [cv_sch.schedule_id for cv_sch in CVWorkSchedule.objects.filter(cv=cv)]
+#         context['cv_schedules'] = cv_schedules
+#         context['schedules'] = WorkSchedules.objects.all()
+#         return self.render_to_response(context)
+#
+#     def post(self, request, *args, **kwargs):
+#         self.object = self.get_object()
+#         form = self.form_class(request.POST, instance=self.object)
+#
+#         if form.is_valid():
+#
+#             self.object.save()
+#
+#             cv_schedules = CVWorkSchedule.objects.filter(cv=self.object)
+#             cv_schedules.delete()
+#             cv_employments = CVEmployment.objects.filter(cv=self.object)
+#             cv_employments.delete()
+#             for key, value in form.data.items():
+#                 if key.startswith('schedule_'):
+#                     schedule = WorkSchedules.objects.get(code=value)
+#                     cv_schedule = CVWorkSchedule(cv=self.object, schedule=schedule)
+#                     cv_schedule.save()
+#                 elif key.startswith('empl_'):
+#                     employment = Employments.objects.get(code=value)
+#                     cv_employment = CVEmployment(cv=self.object, employment=employment)
+#                     cv_employment.save()
+#             return redirect(self.success_url)
+#         else:
+#             print(form.errors)
+#         return self.form_invalid(form)
+
 
 class CVUpdate(UpdateView):
     """view изменение резюме"""
@@ -162,6 +232,10 @@ class CVUpdate(UpdateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVUpdate, self).get_context_data(**kwargs)
+        context['title'] = "Изменение резюме"
+        context['heading'] = "Ваше резюме"
+        context['link'] = "/cvs/all/"
+        context['heading_link'] = "Список резюме"
         return context
 
     def get(self, request, *args, **kwargs):
@@ -183,7 +257,6 @@ class CVUpdate(UpdateView):
         context['cv_schedules'] = cv_schedules
         context['schedules'] = WorkSchedules.objects.all()
         return self.render_to_response(context)
-
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -245,6 +318,9 @@ class CVDetailView(DetailView):
         cv = CV.objects.get(id=cv_id)
         context['object'] = cv
 
+        # about = self.preparing_text(cv.about)
+        # context['about'] = about
+
         '''Разделение строки навыки на пункты и передача в контекст списком'''
         skills = cv.skills.split(', ')
         context['skills'] = skills
@@ -271,7 +347,18 @@ class CVDetailView(DetailView):
             schedule = WorkSchedules.objects.filter(id=el).first()
             schedules.append(schedule)
         context['schedules'] = schedules
+
+        context['heading'] = "Резюме"
+        context['link'] = "/cvs/all/"
+        context['heading_link'] = "Список резюме"
         return context
+
+    # @staticmethod
+    # def preparing_text(string):
+    #     string = string.replace('<p>','')
+    #     text = string.split('</p>')
+    #     return text
+
 
 
 # class CVDistribute(TemplateView):
@@ -296,13 +383,11 @@ def set_public_status(request, pk):
     return HttpResponseRedirect(reverse('cv:cv_list'))
 
 
-
 class CVExperienceCreate(CreateView):
     """Создание опыта работы"""
     model = Experience
     template_name = 'cv_experience.html'
     form_class = ExperienceCreateForm
-
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)

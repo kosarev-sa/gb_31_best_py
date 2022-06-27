@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block header %}
-    {% include 'inc_cv_list_header.html' %}
+    {% include 'inc_cv_header.html' %}
 {% endblock %}
 
 {% block content %}
@@ -48,8 +48,12 @@
                         </div>
 
                         <div class="profile-details mt20">
-<!--                            Легенда( нужно завести поле в моделе с описанием каждой специализации)-->
-                            <p>Разработчики интерфейсов используют HTML, CSS и JavaScript для кодирования веб-сайтов и веб-приложений, созданных веб-дизайнерами. Код, который они пишут, выполняется внутри браузера пользователя (в отличие от серверного разработчика, чей код выполняется на веб-сервере). Также отвечает за то, чтобы убедиться в отсутствии ошибок или ошибок во внешнем интерфейсе, а также убедиться, что дизайн выглядит так, как он должен выглядеть на различных платформах и браузерах.</p>
+                            {% if cv.about %}
+                                {{ cv.about }}
+<!--                                {% for el in about %}-->
+<!--                                    <p>{{ el }}</p>-->
+<!--                                {% endfor %}-->
+                            {% endif %}
                         </div>
 
                         <ul class="profile-info mt20 nopadding">
@@ -288,7 +292,7 @@
             </div>
 
             <div class="col-md-12 text-right mt30 mb-4">
-                <a class="btn btn-small btn-info mt15 mb15" href="{% url 'cv:cv_list' %}">Вернуться к списку</a>
+                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:cv_list' %}">Вернуться к списку</a>
             </div>
 
         </div>
