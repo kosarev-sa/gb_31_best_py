@@ -24,7 +24,67 @@ def load_from_json(file_name):
 
 
 class Command(BaseCommand):
+    user_pk = 0
+    ROLES_MAP = {
+        'moderator': 1,
+        'employer': 2,
+        'worker': 3
+    }
+
+    def create_user(self, role):
+        self.user_pk += 1
+        print(f'Создан пользовател {role}_{self.user_pk}\tПароль {self.user_pk}')
+        user = User.objects.create_user(pk=self.user_pk, username=f'{role}_{self.user_pk}',
+                                        email=f'{self.user_pk}@mail.ru', password=f'{self.user_pk}',
+                                        first_name=f'first_name_{self.user_pk}', last_name=f'last_name_{self.user_pk}',
+                                        role_id=self.ROLES_MAP[role])
+        user.save()
+        return self.user_pk
+
     def handle(self, *args, **options):
+        moderators = load_from_json(JSON_PATH_USERS + 'moderator.json')
+        ModeratorProfile.objects.all().delete()
+
+        for moderator in moderators:
+            user_id = self.create_user('moderator')
+            moderator['id'] = user_id
+            moderator['user'] = User.objects.get(id=user_id)  # Заменяем юзера объектом
+
+            date_create = datetime.datetime.strptime(moderator.get('date_create'), '%Y-%m-%dT%H:%M:%S')
+            date_create = date_create.replace(tzinfo=datetime.timezone.utc)
+            moderator['date_create'] = date_create
+
+            new_moder = ModeratorProfile(**moderator)
+            new_moder.save()
+
+        employers = load_from_json(JSON_PATH_USERS + 'employers.json')
+        EmployerProfile.objects.all().delete()
+
+        for employer in employers:
+            user_id = self.create_user('employer')
+            employer['id'] = user_id
+            employer['user'] = User.objects.get(id=user_id)  # Заменяем юзера объектом
+
+            status = employer.get('status')
+            employer['status'] = ApprovalStatus.objects.get(id=status)  # Заменяем юзера объектом
+            new_employer = EmployerProfile(**employer)
+            new_employer.save()
+
+        # Соискатель
+        workers = load_from_json(JSON_PATH_USERS + 'workers.json')
+        WorkerProfile.objects.all().delete()
+
+        for worker in workers:
+            user_id = self.create_user('worker')
+            worker['id'] = user_id
+            worker['user'] = User.objects.get(id=user_id)  # Заменяем юзера объектом
+
+            birth_date = datetime.datetime.strptime(worker.get('birth_date'), '%Y-%m-%d')
+            birth_date = birth_date.replace(tzinfo=datetime.timezone.utc)
+            worker['birth_date'] = birth_date
+
+            new_worker = WorkerProfile(**worker)
+            new_worker.save()
 
         # Запуск после создания пользователя.
         news = load_from_json(JSON_PATH_NEWS + 'news.json')
@@ -41,58 +101,6 @@ class Command(BaseCommand):
             j_news['updated'] = today
             new_news = News(**j_news)
             new_news.save()
-
-        employers = load_from_json(JSON_PATH_USERS + 'employers.json')
-        EmployerProfile.objects.all().delete()
-
-        for employer in employers:
-            emp = employer.get('fields')
-            emp['id'] = employer.get('pk')
-            user = emp.get('user')
-            _user = User.objects.get(id=user)
-            emp['user'] = _user  # Заменяем юзера объектом
-
-            status = emp.get('status')
-            _status = ApprovalStatus.objects.get(id=status)
-            emp['status'] = _status  # Заменяем юзера объектом
-
-            new_employer = EmployerProfile(**emp)
-            new_employer.save()
-
-        # Соискатель
-        workers = load_from_json(JSON_PATH_USERS + 'workers.json')
-        WorkerProfile.objects.all().delete()
-
-        for worker in workers:
-            work = worker.get('fields')
-            work['id'] = worker.get('pk')
-            user = work.get('user')
-            _user = User.objects.get(id=user)
-            work['user'] = _user  # Заменяем юзера объектом
-
-            birth_date = datetime.datetime.strptime(work.get('birth_date'), '%Y-%m-%d')
-            birth_date = birth_date.replace(tzinfo=datetime.timezone.utc)
-            work['birth_date'] = birth_date
-
-            new_worker = WorkerProfile(**work)
-            new_worker.save()
-
-        moderators = load_from_json(JSON_PATH_USERS + 'moderator.json')
-        ModeratorProfile.objects.all().delete()
-
-        for moderator in moderators:
-            moder = moderator.get('fields')
-            moder['id'] = moderator.get('pk')
-            user_id = moder.get('user')
-            _user = User.objects.get(id=user_id)
-            moder['user'] = _user  # Заменяем юзера объектом
-
-            date_create = datetime.datetime.strptime(moder.get('date_create'), '%Y-%m-%dT%H:%M:%S')
-            date_create = date_create.replace(tzinfo=datetime.timezone.utc)
-            moder['date_create'] = date_create
-
-            new_moder = ModeratorProfile(**moder)
-            new_moder.save()
 
         vacancies = load_from_json(JSON_PATH_VACANCIES + 'vacancies.json')
         Vacancy.objects.all().delete()

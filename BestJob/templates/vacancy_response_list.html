@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+{% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block content %}
+<table width="100%">
+    <tr>
+        <td>
+            <span>Название вакансии</span>
+        </td>
+        <td>
+            <span>Дата размещения</span>
+        </td>
+        <td>
+            <span>Количество откликов</span>
+        </td>
+    </tr>
+    {% for vacancy in vacancies_cvs %}
+    <tr>
+        <td>
+            <div>{{ vacancy.0 }}</div>
+        </td>
+        <td>
+            <div>{{ vacancy.0.created_at }}</div>
+        </td>
+        <td>
+            {% if vacancy.1|length %} <a href="{% url 'vacancy:vacancy_cvs' vacancy.0.id %}">{{ vacancy.1|length}}</a>
+            {% else %} <span>{{ vacancy.1|length}}</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
+{% endblock %}
+
+{% block footer %}
+{% include 'inc_footer.html' %}
+{% endblock %}
