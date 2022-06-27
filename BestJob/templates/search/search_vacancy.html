@@ -1,91 +1,131 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block content %}
-    <h2>Поиск вакансий:</h2>
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
 
-    <form method="get" action=".">
-        <table>
-            {{ form.as_table }}
-            <tr>
-                <td>&nbsp;</td>
-                <td>
-                    <input type="submit" value="Поиск">
-                </td>
-            </tr>
-        </table>
+{% block search %}
+    <section class="ptb80 overlay-black">
+        <div class="container">
+            <div class="col-md-12 text-center">
+                <h2 class="pb40">Поиск вакансий</h2>
+            </div>
+            <form method="get" action="." class="post-job-resume job-search-form mt50">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <div class="col-md-8 mx-auto search-keywords">
+                            {{ form.q }}
+                        </div>
+                        <div class="col-md-4 mx-auto">
+                            <input type="submit" value="найти" class="btn btn-blue btn-effect btn-large">
+                        </div>
+                    </div>
 
-
-
-        {% if query %}
-            <br>
-            <h3>Результаты поиска:</h3>
-            <table width="100%">
-                <tr>
-                    <th> Название</th>
-                    <th>Зарплата от</th>
-                    <th>Зарплата до</th>
-                    <th>Зарплата на руки</th>
-                    <th>Специализация</th>
-                    <th>Опыт</th>
-                </tr>
-
-                {% for result in object_list %}
-                    <tr>
-                        <td>
-                            <a href="{% url 'vacancy:update_vacancy' result.object.id %}">
-                                {{ result.object.name }}</a>
-                        </td>
-                        <td>
-                            {% if result.object.salary_to == None %}
-                            -
-                            {% else %}
-                            {{ result.object.salary_to }}
-                            {% endif %}
-
-                        </td>
-                        <td>
-                            {% if result.object.salary_from == None %}
-                            -
-                            {% else %}
-                            {{ result.object.salary_from }}
-                            {% endif %}
-
-                        </td>
-                        <td>
-                            {% if result.object.salary_on_hand%}
-                            да
-                            {% else %}
-                            нет
-                            {% endif %}
-                        </td>
-                        <td>
-                            {{ result.object.specialization }}
-                        </td>
-                        <td>
-                            {{ result.object.get_experience_display }}
-                        </td>
-
-
-
-                        {% empty %}
-                        <p>Нет вакансий, удовлетворяющих условия поиска</p>
-                    </tr>
-                {% endfor %}
-            </table>
-
-            {% if page.has_previous or page.has_next %}
-                <div>
-                    {% if page.has_previous %}
-                        <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous
-                    {% if page.has_previous %}</a>{% endif %}
-                    |
-                    {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next
-                    &raquo;{% if page.has_next %}</a>{% endif %}
                 </div>
+                <br>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="{{ form.speciality.id_for_label }}"><br>Специальность & опыт</label>
+                        <div class="col-md-6 mx-auto">
+                            {{ form.specialization }}
+                        </div>
+                        <div class="col-md-6 mx-auto">
+                            {{ form.experience }}
+                        </div>
+
+                    </div>
+                </div>
+                <div class="pt20"></div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="{{ form.salary.id_for_label }}"><br>Диапазон оклад (от - до)</label>
+                        <div class="col-md-6 mx-auto" style="background-color: transparent">
+                            {{ form.salary_from }}
+                        </div>
+                        <div class="col-md-6 mx-auto">
+                            {{ form.salary_to }}
+                        </div>
+
+                    </div>
+                </div>
+{#                <div class="col-md-12">#}
+{#                    <div class="form-group">#}
+{#                        <label for="{{ form.salary.id_for_label }}"><br>Оклад на руки</label>#}
+{#                        <div class="col-md-6 mx-auto form-group pt30 nomargin" >#}
+{#                            {{ form.salary_on_hand }}#}
+{#                        </div>#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+
+
+            </form>
+
+            <br>
+
+        </div>
+    </section>
+{% endblock %}
+
+
+{% block content %}
+    <section class="education ptb80 " style="background-color: rgba(41, 177, 253, 0.25)">
+
+        <div class="container">
+            {% if query %}
+                {% for result in object_list %}
+                    <div class="col-md-12" style="margin-bottom: 15px;">
+                        <div class="item-block shadow-hover" style="background: #ffffff;">
+
+                            <div class="education-header clearfix">
+                                <div style="margin-bottom: 15px; border-bottom: 1px solid #e3e3e3; width: 100%">
+                                    Резюме
+                                </div>
+                                <br>
+                                <a href="{% url 'cv:detail_cv' result.object.id %}">
+                                    <div style="margin-bottom: 15px;"><h4>{{ result.object.name }}</h4></div>
+                                    <div style="margin-bottom: 15px;"><h6>
+                                        Специальность: {{ result.object.specialization }}</h6></div>
+
+                                    <div><h6>Опыт: {{ result.object.get_experience_display }}</h6></div>
+                                </a>
+                                <br>
+                                <div><h6>{{ result.object.salary_from }} - {{ result.object.salary_to }} RUB</h6></div>
+
+                                <a href="#" style="color: lightgray">
+                                    <div class="pull-right shadow-hover"><h3>★</h3></div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                {% empty %}
+                    <p>Нет вакансий, удовлетворяющих условиям поиска</p>
+                {% endfor %}
+
+
+                {% if page.has_previous or page.has_next %}
+                    <div>
+                        {% if page.has_previous %}
+                            <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo;
+                        Previous
+                        {% if page.has_previous %}</a>{% endif %}
+                        |
+                        {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}
+                        Next
+                        &raquo;{% if page.has_next %}</a>{% endif %}
+                    </div>
+                {% endif %}
+            {% else %}
+                {# Show some example queries to run, maybe query syntax, something else? #}
             {% endif %}
-        {% else %}
-            {# Show some example queries to run, maybe query syntax, something else? #}
-        {% endif %}
-    </form>
+            <br>
+        </div>
+    </section>
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
 {% endblock %}
