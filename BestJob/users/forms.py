@@ -89,9 +89,7 @@ class UserRegisterForm(UserCreationForm):
         self.fields['email'].widget.attrs.update({"class": "form-control", "placeholder": "Введите адрес эл.почты"})
         self.fields['password1'].widget.attrs.update({"class": "form-control", "placeholder": "Введите пароль"})
         self.fields['password2'].widget.attrs.update({"class": "form-control", "placeholder": "Подтвердите пароль"})
-        # self.fields['role'].widget.attrs['class'] = 'selectpicker'
-        # self.fields['role'].widget.attrs['data-size'] = '3'
-        # self.fields['role'].widget.attrs['container-size'] = 'body'
+
 
     def save(self, commit=True):
         """переопределяем метод save для того, чтобы добавить ключ активации email"""
@@ -108,7 +106,7 @@ class PassResetForm(PasswordResetForm):
 
     def __init__(self, *args, **kwargs):
         super(PassResetForm, self).__init__(*args, **kwargs)
-        self.fields['email'].widget.attrs['placeholder'] = 'email'
+        self.fields['email'].widget.attrs.update({"class": "form-control","placeholder": "email"})
 
 
 class PassResetConfirmForm(SetPasswordForm):
@@ -116,6 +114,6 @@ class PassResetConfirmForm(SetPasswordForm):
 
     def __init__(self, *args, **kwargs):
         super(PassResetConfirmForm, self).__init__(*args, **kwargs)
-        self.fields['new_password1'].widget.attrs['placeholder'] = 'password'
-        self.fields['new_password2'].widget.attrs['placeholder'] = 'password'
+        self.fields['new_password1'].widget.attrs.update({"placeholder": "пароль", "class":"form-control"})
+        self.fields['new_password2'].widget.attrs.update({"placeholder": "подтверждение пароля", "class":"form-control"})
 

@@ -108,7 +108,7 @@ class CVCreate(CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVCreate, self).get_context_data(**kwargs)
-        context['title'] = 'Новое резюме'
+        context['title'] = 'Ваше резюме'
         context['heading'] = "Ваше резюме"
         context['link'] = "/cvs/all/"
         context['heading_link'] = "Список резюме"
@@ -270,6 +270,7 @@ class CVUpdate(UpdateView):
             cv_schedules.delete()
             cv_employments = CVEmployment.objects.filter(cv=self.object)
             cv_employments.delete()
+
             for key, value in form.data.items():
                 if key.startswith('schedule_'):
                     schedule = WorkSchedules.objects.get(code=value)
