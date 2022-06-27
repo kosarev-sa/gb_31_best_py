@@ -15,7 +15,6 @@
     <div class="ptb80" id="post-job">
         <div class="container">
             <!-- Start of Post Resume Form -->
-<!--            {#            <form action="#" class="post-job-resume mt50">#}-->
             <div class="row candidate-profile nomargin">
 
                 <!-- Start of Profile Picture -->
@@ -26,9 +25,7 @@
                         {% else %}
                             <p>Нет фото</p>
                         {% endif %}
-
                     </div>
-
 
                 </div>
                 <!-- End of Profile Picture -->
@@ -40,7 +37,6 @@
                         <!-- Profile Title -->
                         <div class="profile-title">
                             <h2 class="capitalize">{{ worker.name }}</h2>
-                            {#                            <h5 class="pt10">Front-End Developer</h5>#}
                         </div>
 
                         <!-- Profile Details -->
@@ -235,7 +231,6 @@
                     </div>
                     {% endfor %}
                 </section>
-
                 {% endif %}
 
                 <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_language' cv.id %}">Добавить язык</a>
@@ -246,16 +241,13 @@
                     {{ form.moving }}
                 </div>
 
-<!--                Остановился на этом месте!!!!-->
-
-<!--                    </section>-->
-<!--                    {#                        <div class="form-group pt30 nomargin">#}-->
                 <div class="col-md-6 mx-auto form-group pt30 nomargin">
                     <label>Занятость </label>
+
                     {% for empl in employments %}
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="empl_{{ empl.code }}"
-                               id="empl_{{ empl.code }}">
+                        <input class="form-check-input" name="empl_{{ empl.code }}" type="checkbox" value="{{ empl.code }}"
+                               id="empl_{{ empl.code }}" {% if empl.id in cv_employments %} checked {% endif %}>
                         <label class="form-check-label" for="empl_{{ empl.code }}">
                             {{ empl.employment }}
                         </label>
@@ -265,10 +257,11 @@
                 </div>
                 <div class="col-md-6 mx-auto form-group pt30 nomargin">
                     <label>График работы </label>
+
                     {% for sch in schedules %}
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="schedule_{{ sch.code }}"
-                               id="schedule_{{ sch.code }}">
+                        <input class="form-check-input" type="checkbox" name="schedule_{{ sch.code }}" value="{{ sch.code }}"
+                               id="schedule_{{ sch.code }}" {% if sch.id in cv_schedules %} checked {% endif %}>
                         <label class="form-check-label" for="schedule_{{ sch.code }}">
                             {{ sch.schedule }}
                         </label>

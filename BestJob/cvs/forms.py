@@ -124,7 +124,7 @@ class ExperienceCreateForm(forms.ModelForm):
             'placeholder'] = "Опишите Ваши обязанности, навыки и достижения на месте работы"
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
-        self.fields['responsibilities'].widget.attrs['class'] = "tinymce"
+        # self.fields['responsibilities'].widget.attrs['class'] = "tinymce"
 
 
     def clean_year_end(self):
