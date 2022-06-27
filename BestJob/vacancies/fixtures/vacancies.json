@@ -3,7 +3,7 @@
     "model": "vacancies.vacancy",
     "pk": 1,
     "fields": {
-      "employer_profile": 1,
+      "employer_profile": 3,
       "status": 1,
       "specialization": "TEST",
       "is_active": true,
@@ -39,7 +39,7 @@
     "model": "vacancies.vacancy",
     "pk": 3,
     "fields": {
-      "employer_profile": 1,
+      "employer_profile": 3,
       "status": 1,
       "specialization": "BACKD",
       "is_active": true,
@@ -75,7 +75,7 @@
     "model": "vacancies.vacancy",
     "pk": 5,
     "fields": {
-      "employer_profile": 1,
+      "employer_profile": 3,
       "status": 1,
       "specialization": "TEST",
       "is_active": true,
@@ -111,7 +111,7 @@
     "model": "vacancies.vacancy",
     "pk": 7,
     "fields": {
-      "employer_profile": 1,
+      "employer_profile": 3,
       "status": 1,
       "specialization": "FRONTD",
       "is_active": true,

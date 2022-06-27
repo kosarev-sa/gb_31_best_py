@@ -26,6 +26,7 @@ class Vacancy(models.Model):
     salary_to = models.DecimalField(max_digits=8, decimal_places=1, blank=True, null=True, verbose_name='доход до')
     currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB, verbose_name='валюта')
     salary_on_hand = models.BooleanField(default=True, blank=True, verbose_name='Зарплата на руки')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     def __str__(self):
         return self.name

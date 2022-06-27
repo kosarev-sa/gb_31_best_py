@@ -1,6 +1,7 @@
 from django import forms
 
 from vacancies.models import Vacancy
+from cvs.models import ConnectVacancyCv
 
 
 class VacancyCreateForm(forms.ModelForm):
@@ -68,3 +69,11 @@ class VacancyDistributeForm(forms.ModelForm):
         self.fields['name'].widget.attrs['placeholder'] = 'Backend разработчик'
         self.fields['city'].widget.attrs['placeholder'] = 'Москва'
         self.fields['description'].widget.attrs['placeholder'] = 'Описание вакансии'
+
+
+class VacancyResponseForm(forms.ModelForm):
+    """форма изменения отклика на вакансию"""
+
+    class Meta:
+        model = ConnectVacancyCv
+        exclude = ('cv', 'vacancy', 'status_worker', 'created_at', 'initiator')
