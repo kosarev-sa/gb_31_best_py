@@ -196,6 +196,9 @@ class UserLoginView(LoginView):
 
     def get_context_data(self, **kwargs):
         context = super(UserLoginView, self).get_context_data()
+        context['title'] = 'Авторизация'
+        context['link'] = '/'
+        context['heading_link'] = 'На главную'
         return context
 
 
@@ -206,6 +209,14 @@ class UserRegisterView(FormView):
     form_class = UserRegisterForm
     success_url = reverse_lazy('users:email_verify')
     unsuccess_url = reverse_lazy('users:registration')
+
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(UserRegisterView, self).get_context_data(**kwargs)
+        context['title'] = 'Регистрация'
+        context['link'] = '/'
+        context['heading_link'] = 'На главную'
+        return context
 
     def post(self, request, *args, **kwargs):
         """метод сохранения нового юзера. изначально он не активен, нужно подтвердить email"""
@@ -272,12 +283,22 @@ class UserEmailVarifyView(TemplateView):
         context = super(UserEmailVarifyView, self).get_context_data()
         # передаем в контексте из настроек, сколько есть времени на активацию профиля
         context['verify_time'] = settings.USER_EMAIL_KEY_LIFETIME
+        context['title'] = 'Подтверждение E-mail'
+        context['link'] = '/'
+        context['heading_link'] = 'На главную'
         return context
 
 
 class UserVarifyStatusView(TemplateView):
     """view для результата активации профиля"""
     template_name = 'user_verify.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(UserVarifyStatusView, self).get_context_data()
+        context['title'] = 'Активация пользователя'
+        context['link'] = '/'
+        context['heading_link'] = 'На главную'
+        return context
 
 
 class PassResetView(PasswordResetView):
@@ -287,10 +308,22 @@ class PassResetView(PasswordResetView):
     success_url = reverse_lazy("users:password_reset_done")
     form_class = PassResetForm
 
+    def get_context_data(self, **kwargs):
+        context = super(PassResetView, self).get_context_data()
+        context['title'] = 'Сброс пароля'
+        context['link'] = '/'
+        context['heading_link'] = 'На главную'
+        return context
+
 
 class PassResetDoneView(PasswordResetDoneView):
     """view о том, что пароль сброшен"""
     template_name = 'password_reset_done.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PassResetDoneView, self).get_context_data()
+        context['title'] = 'Cброс пароля выполнен'
+        return context
 
 
 class PassResetConfirmView(PasswordResetConfirmView):
@@ -300,10 +333,22 @@ class PassResetConfirmView(PasswordResetConfirmView):
     success_url = reverse_lazy("users:password_reset_complete")
     form_class = PassResetConfirmForm
 
+    def get_context_data(self, **kwargs):
+        context = super(PassResetConfirmView, self).get_context_data()
+        context['title'] = 'Ввод нового пароля'
+        return context
+
 
 class PassResetCompletedView(PasswordResetCompleteView):
     """view что новый пароль сохранен"""
     template_name = 'password_reset_completed.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(PassResetCompletedView, self).get_context_data()
+        context['title'] = 'Новый пароль сохранен'
+        context['link'] = '/'
+        context['heading_link'] = 'На главную'
+        return context
 
 
 class ModerationAwaiting(TemplateView):

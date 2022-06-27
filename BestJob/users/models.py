@@ -42,7 +42,7 @@ class WorkerProfile(models.Model):
     city = models.CharField('Город проживания', max_length=80, blank=True)
     phone_number = models.CharField('Телефон для связи', max_length=12, blank=True)
     gender = models.CharField('Пол', max_length=1, blank=True)
-    birth_date = models.DateField('Дата рождения', blank=True)
+    birth_date = models.DateField('Дата рождения', blank=True, null=True)
     data = models.TextField('О себе', blank=True)
 
 

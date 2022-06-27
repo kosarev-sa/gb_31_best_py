@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    {% include 'inc_page_header.html' %}
+{% endblock %}
+
+{% block content %}
+    <section class="ptb80">
+        <div class="container">
+            <div class="col-md-12">
+
+                <h4 class="ptb20">На указанную почту отправлено письмо с ссылкой на активацию аккаунта. <br>
+                    Ссылка действительна в течении {{ verify_time }} часов
+                </h4>
+
+
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

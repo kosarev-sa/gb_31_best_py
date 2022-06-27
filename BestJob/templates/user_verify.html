@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    {% include 'inc_page_header.html' %}
+{% endblock %}
+
+{% block content %}
+    <section class="ptb80">
+        <div class="container">
+            <div class="col-md-12">
+
+                {% if user.is_authenticated %}
+                    <h3>Ваш Email подтвержден.</h3>
+                    <h4>Пользователь {{ user.username }} успешно активирован.</h4>
+                {% else %}
+                    <h3>Неверная ссылка. </h3> <br> <h4>Пользователь не активирован.</h4>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

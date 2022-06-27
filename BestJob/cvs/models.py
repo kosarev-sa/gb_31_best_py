@@ -13,7 +13,7 @@ class CV(models.Model):
     status = models.ForeignKey(ApprovalStatus, on_delete=models.CASCADE)
     date_create = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True, db_index=True)
-    speciality = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
+    speciality = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
     post = models.CharField(max_length=256, blank=True, null=True)
     skills = models.CharField(max_length=256, blank=True, null=True)
     education_level = models.PositiveSmallIntegerField(choices=EducationLevel.choices, default=EducationLevel.HIGHER)
