@@ -35,7 +35,7 @@ class CVCreateForm(forms.ModelForm):
                 field.widget.attrs['data-size'] = '5'
                 field.widget.attrs['data-container'] = 'body'
 
-        self.fields['about'].widget.attrs['class'] = "tinymce"
+        # self.fields['about'].widget.attrs['class'] = "tinymce"
 
 
 class CVUpdateForm(forms.ModelForm):
@@ -66,7 +66,7 @@ class CVUpdateForm(forms.ModelForm):
                 field.widget.attrs['data-size'] = '5'
                 field.widget.attrs['data-container'] = 'body'
 
-        self.fields['about'].widget.attrs['class'] = "tinymce"
+        # self.fields['about'].widget.attrs['class'] = "tinymce"
 
 
 class ModeratorCVUpdateForm(CVUpdateForm):
@@ -125,7 +125,7 @@ class ExperienceCreateForm(forms.ModelForm):
             'placeholder'] = "Опишите Ваши обязанности, навыки и достижения на месте работы"
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
-        self.fields['responsibilities'].widget.attrs['class'] = "tinymce"
+        # self.fields['responsibilities'].widget.attrs['class'] = "tinymce"
 
 
     def clean_year_end(self):
