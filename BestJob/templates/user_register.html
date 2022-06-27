@@ -2,8 +2,12 @@
 
 {% load static %}
 
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
 {% block header %}
-    {% include 'inc_user_register_header.html' %}
+    {% include 'inc_page_header.html' %}
 {% endblock %}
 
 {% block content %}
@@ -14,24 +18,9 @@
             <div class="row justify-content-center">
                 <div class="col-md-6 col-md-offset-3 col-xs-12">
 
-                    {% if messages or form.non_field_errors %}
-                        <div class="alert {% if messages %} alert-success {% else %} alert-warning {% endif %} alert-dismissible show"
-                             role="alert" style="margin-top: 50px;">
-
-                            {% if messages %}
-                                {% for message in messages %}
-                                    <p>{{ message }}</p>
-                                {% endfor %}
-                            {% else %}
-                                {% for error in form.non_field_errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
-                            {% endif %}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    {% endif %}
+                    {% block messages %}
+                        {% include 'inc_messages.html' %}
+                    {% endblock %}
                 </div>
             </div>
         </div>

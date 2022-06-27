@@ -20,7 +20,7 @@ from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
 
 from vacancies.views import VacancyList, VacancyCreate, VacancyUpdate, VacancyDelete, \
     VacancyDistribute, ModeratorVacancyList, ModeratorVacancyUpdate, ResponseVacancyList, \
-    VacancyDetail, VacancyOpenList, RecommendedVacancyList
+    VacancyDetail, VacancyOpenList, RecommendedVacancyList, ResponseVacancyCVs
 
 app_name = 'vacancy'
 
@@ -37,5 +37,7 @@ urlpatterns = [
     path('moderator_vacancy/', ModeratorVacancyList.as_view(), name='moderator_vacancy_list'),
     path('moderator_vacancy_approve/<int:pk>/', ModeratorVacancyUpdate.as_view(), name='moderator_vacancy_approve'),
     path('responses/', ResponseVacancyList.as_view(), name='vacancy_responses'),
+    path('responses/cvs/<int:pk>/', ResponseVacancyCVs.as_view(), name='vacancy_cvs'),
+    path('responses/cvs/<int:pk>/<int:resp_id>/', ResponseVacancyCVs.as_view(), name='vacancy_cvs'),
     path('detail/<int:pk>/', VacancyDetail.as_view(), name='detail_vacancy'),
 ]

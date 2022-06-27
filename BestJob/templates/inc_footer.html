@@ -30,12 +30,18 @@
 
                 <!-- Links -->
                 <ul class="nopadding">
-                    <li><a href="post-job.html"><i class="fa fa-angle-double-right"></i>добавить вакансию</a></li>
+                    {% if user.role_id == 2 or user.is_superuser %}
+                        <li><a href="post-job.html"><i class="fa fa-angle-double-right"></i>добавить вакансию</a></li>
+                    {% endif %}
                     <li><a href="{% url 'news:list_news' %}"><i class="fa fa-angle-double-right"></i>новости</a></li>
                     <li><a href="search-jobs-1.html"><i class="fa fa-angle-double-right"></i>поиск работы</a></li>
-                    <li><a href="login.html"><i class="fa fa-angle-double-right"></i>войти</a></li>
-                    <li><a href="register.html"><i class="fa fa-angle-double-right"></i>регистрация</a></li>
-                    <li><a href="submit-resume.html"><i class="fa fa-angle-double-right"></i>создать резюме</a></li>
+                    <li><a href="{% url 'users:login' %}"><i class="fa fa-angle-double-right"></i>войти</a></li>
+                    <li><a href="{% url 'users:registration' %}"><i class="fa fa-angle-double-right"></i>регистрация</a>
+                    </li>
+                    {% if user.role_id == 3 or user.is_superuser %}
+                        <li><a href="{% url 'cvs:create_cv' %}"><i class="fa fa-angle-double-right"></i>создать
+                            резюме</a></li>
+                    {% endif %}
                 </ul>
             </div>
 

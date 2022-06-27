@@ -10,8 +10,7 @@ now = datetime.datetime.now()
 
 class CVCreateForm(forms.ModelForm):
     """форма создание резюме"""
-    speciality = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'),
-                                        required=False)
+    speciality = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'))
     post = forms.CharField(widget=forms.TextInput, required=False)
     skills = forms.CharField(widget=forms.TextInput, required=False)
     about = forms.CharField(widget=forms.Textarea, required=False)
