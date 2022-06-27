@@ -1,33 +1,10 @@
 {% extends "base.html" %}
 
+{% block header %}
+    {% include 'inc_user_login_header.html' %}
+{% endblock %}
+
 {% block content %}
-    <!-- =============== Start of Page Header 1 Section =============== -->
-    <section class="page-header">
-        <div class="container">
-
-            <!-- Start of Page Title -->
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Авторизация</h2>
-                </div>
-            </div>
-            <!-- End of Page Title -->
-
-            <!-- Start of Breadcrumb -->
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="breadcrumb">
-                        <li><a href="{% url 'index' %}">На главную</a></li>
-                        <li class="active">Авторизация</li>
-                    </ul>
-                </div>
-            </div>
-            <!-- End of Breadcrumb -->
-
-        </div>
-    </section>
-    <!-- =============== End of Page Header 1 Section =============== -->
-
     <!-- =============== Start of Messages Section =============== -->
     <section id="login">
         <div class="container">
@@ -114,4 +91,8 @@
     </section>
     <!-- ===== End of Login - Register Section ===== -->
 
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
 {% endblock %}

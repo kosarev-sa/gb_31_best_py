@@ -10,8 +10,8 @@
             </div>
 
             <!-- ======== Start of Main Menu ======== -->
-            <div class="col-md-10 col-sm-6 col-xs-4 nopadding">
-                <div class="navbar-header page-scroll">
+                <div class="col-md-10 col-sm-6 col-xs-4 nopadding">
+                  <div class="navbar-header page-scroll">
                     <button type="button" class="navbar-toggle toggle-menu menu-right push-body" data-toggle="collapse"
                             data-target="#main-nav" aria-expanded="false">
                         <span class="sr-only">Toggle navigation</span>
@@ -26,40 +26,49 @@
                     <ul class="nav navbar-nav pull-right">
 
                         <!-- Simple Menu Item -->
-                        <li class="dropdown simple-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Соискателю<i
-                                    class="fa fa-angle-down"></i></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">профиль соискателя</a></li>
-                                <li><a href="{% url 'cvs:cv_list' %}">мои резюме</a></li>
-                                <li><a href="{% url 'cvs:cv_responses' %}">отклики на резюме</a></li>
-                                <li><a href="{% url 'cvs:create_cv' %}">создать резюме</a></li>
-                                <li><a href="#">поиск вакансий</a></li>
-                            </ul>
-                        </li>
+                        {% if user.role_id == 3 or user.is_superuser %}
+                            <li class="dropdown simple-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Соискателю<i
+                                        class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{% url 'cvs:create_cv' %}">создать резюме</a></li>
+                                    <li><a href="#">профиль соискателя</a></li>
+                                    <li><a href="{% url 'cvs:cv_list' %}">мои резюме</a></li>
+                                    <li><a href="{% url 'cvs:cv_responses' %}">отклики на резюме</a></li>
+                                    <li><a href="#">поиск вакансий</a></li>
+                                    <li><a href="#">избранные вакансии</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
 
                         <!-- Simple Menu Item -->
-                        <li class="dropdown simple-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Работодателю<i
-                                    class="fa fa-angle-down"></i></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">профиль работодателя</a></li>
-                                <li><a href="#">вакансии</a></li>
-                                <li><a href="#">поиск резюме</a></li>
-                            </ul>
-                        </li>
+                        {% if user.role_id == 2 or user.is_superuser%}
+                            <li class="dropdown simple-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Работодателю<i
+                                        class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">создать вакансию</a></li>
+                                    <li><a href="#">профиль работодателя</a></li>
+                                    <li><a href="#">вакансии</a></li>
+                                    <li><a href="#">поиск резюме</a></li>
+                                    <li><a href="#">избранные резюме</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
 
                         <!-- Simple Menu Item -->
-                        <li class="dropdown simple-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Модератору<i
-                                    class="fa fa-angle-down"></i></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">профиль модератора</a></li>
-                                <li><a href="#">модерация новостей</a></li>
-                                <li><a href="#">модерация резюме</a></li>
-                                <li><a href="#">модерация вакансий</a></li>
-                            </ul>
-                        </li>
+                        {% if user.role_id == 1 or user.is_superuser%}
+                            <li class="dropdown simple-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Модератору<i
+                                        class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="#">профиль модератора</a></li>
+                                    <li><a href="#">модерация новостей</a></li>
+                                    <li><a href="#">модерация резюме</a></li>
+                                    <li><a href="#">модерация вакансий</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
 
                         <!-- Login Menu Item -->
                         <li class="menu-item login-btn">
