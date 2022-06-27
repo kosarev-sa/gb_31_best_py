@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block header %}
-    {% include 'inc_cv_list_header.html' %}
+    {% include 'inc_cv_header.html' %}
 {% endblock %}
 
 {% block content %}
@@ -25,9 +25,9 @@
                     </div>
 
                     <div class="col-md-12 text-right mt-4 mb-4" style="background: #ffffff;">
-                        <a class="btn btn-small btn-info mt15 mb15" href="{% url 'cv:distribute_cv' cv.id %}">Разместить резюме</a>
-                        <a class="btn btn-small btn-info mt15 mb15" href="{% url 'cv:update_cv' cv.id %}">редактировать</a>
-                        <a class="btn btn-small btn-info mt15 mb15" href="{% url 'cv:delete_cv' cv.id %}">удалить</a>
+                        <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:distribute_cv' cv.id %}">Разместить резюме</a>
+                        <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:update_cv' cv.id %}">редактировать</a>
+                        <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:delete_cv' cv.id %}">удалить</a>
                     </div>
 
                 </div>
