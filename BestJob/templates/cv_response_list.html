@@ -20,8 +20,8 @@
 
                     <div class="education-header clearfix">
                         <h5><small>Вакансия - </small><a href="{% url 'vacancies:update_vacancy' resp.vacancy_id %}">{{ resp.vacancy.name }}</a></h5>
-                        <h5><small>Специализация - </small>{{ resp.vacancy.specialization }}</a></h5>
-                        <h5><small>Компания - </small>{{ resp.vacancy.employer_profile }}</a></h5>
+                        <h5><small>Специализация - </small>{{ resp.vacancy.specialization }}</h5>
+                        <h5><small>Компания - </small>{{ resp.vacancy.employer_profile }}</h5>
                         <h5><small>Отправленное </small><a href="{% url 'cv:detail_cv' resp.cv_id %}">резюме</a></h5>
 
                         <h5><small>Решение компании -</small>
