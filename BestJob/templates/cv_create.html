@@ -21,15 +21,8 @@
                 <!-- Start of Profile Picture -->
                 <div class="col-md-3 col-xs-12">
                     <div class="profile-photo">
-                        {% if worker.image %}
-                            <img src="{{ worker.image.url }}" class="img-responsive" alt="Нет фото">
-                        {% else %}
-                            <p>Нет фото</p>
-                        {% endif %}
-
+                        <img src="{% if object.worker_profile.image %} {{ object.worker_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}" class="img-thumbnail">
                     </div>
-
-
                 </div>
                 <!-- End of Profile Picture -->
 
