@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    {% include 'inc_cv_header.html' %}
+{% endblock %}
+
+{% block content %}
+ <!--    Начало секции Вакансии-->
+    <section class="education ptb80" style="background: #f0f0f0;">
+        <div class="container">
+
+            {% for vacancy in  vacancies %}
+            <div class="col-md-12" style="margin-bottom: 15px;">
+                <div class="item-block shadow-hover" style="background: #ffffff;">
+
+                    <div class="education-header clearfix">
+                        <h5><small>Вакансия -</small><a href="{% url 'vacancies:detail_vacancy' vacancy.id %}">{{ vacancy.name }}</a></h5>
+                        <h5><small>Работодатель -</small> {{ vacancy.employer_profile.name }} </h5>
+                        <h5><small>Зарплата -</small>
+                            {% if vacancy.salary_from %}
+                                {{ vacancy.salary_from }}
+                            {% endif %}
+
+                            {% if vacancy.salary_from and vacancy.salary_to %}
+                                 -
+                            {% endif %}
+
+                            {% if vacancy.salary_to %}
+                                {{ vacancy.salary_to }}
+                            {% endif %}</h5>
+                        <h5><small>Дата создания -</small> {{ vacancy.created_at }} </h5>
+                        <h5><small>Статус вакансии -</small> {{ vacancy.status }} </h5>
+                    </div>
+                    {% if employer %}
+                        <div>
+                            <div class="col-md-4 text-left mt-4 mb-4" style="background: #ffffff;">
+                                <a class="btn btn-blue btn-effect mt15 mb15" href="#">Соискатели для
+                                Вас</a>
+                            </div>
+
+                            <div class="col-md-8 text-right mt-4 mb-4" style="background: #ffffff;">
+                                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'vacancies:distribute_vacancy' vacancy.id %}">Разместить резюме</a>
+                                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'vacancies:update_vacancy' vacancy.id %}">редактировать</a>
+                                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'vacancies:delete_vacancy' vacancy.id %}">удалить</a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="col-md-12 text-right mt-4 mb-4" style="background: #ffffff;">
+                            <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'vacancies:detail_vacancy' vacancy.id %}">Просмотр</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if employer %}
+                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'vacancies:create_vacancy' %}">Создать вакансию</a>
+            {% endif %}
+        </div>
+    </section>
+<!--    Конец секции МОИ Вакансии-->
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}
