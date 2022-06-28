@@ -236,6 +236,15 @@ class CVDelete(DeleteView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVDelete, self).get_context_data(**kwargs)
+
+        cv_id = self.kwargs['pk']
+        cv = CV.objects.get(id=cv_id)
+
+        context['object'] = cv
+        context['title'] = "Удаление резюме"
+        context['heading'] = "Удаление резюме"
+        context['link'] = "/cvs/all/"
+        context['heading_link'] = "Список резюме"
         return context
 
     def post(self, request, *args, **kwargs):
@@ -287,6 +296,7 @@ class CVDetailView(DetailView):
             schedules.append(schedule)
         context['schedules'] = schedules
 
+        context['title'] = "Резюме"
         context['heading'] = "Резюме"
         context['link'] = "/cvs/all/"
         context['heading_link'] = "Список резюме"

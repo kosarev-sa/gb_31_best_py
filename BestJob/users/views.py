@@ -41,6 +41,14 @@ class WorkerProfileView(UpdateView):
             worker_profile.user = User.objects.get(pk=user_id)
             return worker_profile
 
+    def get_context_data(self, **kwargs):
+        context = super(WorkerProfileView, self).get_context_data(**kwargs)
+
+        context['title'] = "Профиль соискателя"
+        context['heading'] = "Профиль соискателя"
+        context['link'] = "/cvs/all/"
+        context['heading_link'] = "Список резюме"
+        return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -87,6 +95,7 @@ class EmployerDetailView(DetailView, BaseClassContextMixin):
     template_name = 'employers_detail.html'
     title = 'BestJob | Работодатель'
 
+
 #
 # class EmployerProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
 #     """view для профиля работодателя"""
@@ -118,7 +127,6 @@ class EmployerProfileView(UpdateView):
             employer_profile = EmployerProfile()
             employer_profile.user = User.objects.get(pk=user_id)
             return employer_profile
-        
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -209,7 +217,6 @@ class UserRegisterView(FormView):
     form_class = UserRegisterForm
     success_url = reverse_lazy('users:email_verify')
     unsuccess_url = reverse_lazy('users:registration')
-
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(UserRegisterView, self).get_context_data(**kwargs)

@@ -35,6 +35,9 @@ class WorkerProfileForm(forms.ModelForm):
         self.fields['birth_date'].widget.attrs['placeholder'] = 'Введите дату Вашего рождения'
         self.fields['data'].widget.attrs['placeholder'] = 'Введите пару слов о себе'
 
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
 
 class EmployerProfileForm(forms.ModelForm):
     """формы для профиля работодателя"""
