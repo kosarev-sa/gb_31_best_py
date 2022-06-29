@@ -21,7 +21,7 @@ class RelationHistoryDetailView(TemplateView):
         if request.user.is_authenticated:
             user = request.user
 
-            relations = list()
+            relations = set()
             history_lists = list()
 
             # Работодатель.
@@ -34,7 +34,9 @@ class RelationHistoryDetailView(TemplateView):
                         for vacancy in vacancies:
                             relation = Relations.objects.filter(vacancy_id=vacancy.pk).order_by('-updated')
                             if relation:
-                                relations.append(relation.first())
+                                for rel in relation:
+                                    relations.add(rel)
+
 
             # Соискатель.
             elif user.role_id == UserRole.WORKER:
@@ -46,7 +48,8 @@ class RelationHistoryDetailView(TemplateView):
                         for cv in cvs:
                             relation = Relations.objects.filter(cv_id=cv.pk).order_by('-updated')
                             if relation:
-                                relations.append(relation.first())
+                                for rel in relation:
+                                    relations.add(rel)
 
             for relation in relations:
                 relation_history = RelationHistory.objects.filter(relation_id=relation.pk,
