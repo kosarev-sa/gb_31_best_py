@@ -163,3 +163,12 @@ HAYSTACK_CONNECTIONS = {
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 NEWS_BODY_LEN_ON_NEWS_LIST = 297
+
+# Константы ролей пользователей.
+class UserRole:
+    # Модератор.
+    MODERATOR = 1
+    # Работодатель.
+    EMPLOYER = 2
+    # Соискатель.
+    WORKER = 3

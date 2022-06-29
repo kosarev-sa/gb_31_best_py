@@ -15,8 +15,8 @@ class RelationStatus(models.Model):
 class Relations(models.Model):
     created = models.DateTimeField(verbose_name='Дата создания', auto_now_add=True, db_index=True)
     updated = models.DateTimeField(verbose_name='Дата обновления', auto_now=True, db_index=True)
-    cv = models.ForeignKey(CV, verbose_name='Резюме', on_delete=models.CASCADE)
-    vacancy = models.ForeignKey(Vacancy, verbose_name='Вакансия', on_delete=models.CASCADE)
+    cv = models.ForeignKey(CV, verbose_name='Резюме', on_delete=models.PROTECT)
+    vacancy = models.ForeignKey(Vacancy, verbose_name='Вакансия', on_delete=models.PROTECT)
 
     class Meta:
         # Уникальный ключ на 2-е колонки.

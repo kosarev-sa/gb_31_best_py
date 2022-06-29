@@ -11,7 +11,7 @@
         {% for history_list in history_lists %}
 
             <p>Статус: {{ history_list.last_status }}</p>
-            <p>Дата: {{ history_list.last_date }}</p>
+            <p>Дата: {{ history_list.last_status_date }}</p>
 
             {% for history in history_list %}
 
@@ -21,7 +21,9 @@
 
                 {{ history.created }}<br>
                 {{ history.status.name }}<br>
-                {{ history.comment }}<br>
+                {{ history.comment }}
+                <br>
+                <br>
 
             {% endfor %}
 
