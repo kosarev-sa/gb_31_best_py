@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block content %}
+    {% if history_lists %}
+
+        {% for history_list in history_lists %}
+
+            <p>Статус: {{ history_list.last_status }}</p>
+            <p>Дата: {{ history_list.last_date }}</p>
+
+            {% for history in history_list %}
+
+                {{ history.relation.cv.post }}<br>
+
+                {{ history.relation.vacancy.name }}<br>
+
+                {{ history.created }}<br>
+                {{ history.status.name }}<br>
+                {{ history.comment }}<br>
+
+            {% endfor %}
+
+        {% endfor %}
+
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}
