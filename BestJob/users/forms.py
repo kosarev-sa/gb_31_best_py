@@ -44,13 +44,17 @@ class EmployerProfileForm(forms.ModelForm):
 
     class Meta:
         model = EmployerProfile
-        exclude = ['user']
+        # exclude = ['user']
+        fields = ('name', 'image', 'city', 'data')
 
     def __init__(self, *args, **kwargs):
         super(EmployerProfileForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget.attrs['placeholder'] = 'Введите название компании'
         self.fields['city'].widget.attrs['placeholder'] = 'Введите город местонахождения'
         self.fields['data'].widget.attrs['placeholder'] = 'Введите описание компании'
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
 
 
 class ModeratorProfileForm(forms.ModelForm):
@@ -72,7 +76,6 @@ class UserLoginForm(AuthenticationForm):
         super(UserLoginForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs['placeholder'] = 'Введите имя пользователя'
         self.fields['password'].widget.attrs['placeholder'] = 'Введите пароль'
-
 
 
 class UserRegisterForm(UserCreationForm):
