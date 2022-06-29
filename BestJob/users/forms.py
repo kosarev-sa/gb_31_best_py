@@ -1,7 +1,6 @@
 import hashlib
 from random import random
 
-from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
 
@@ -15,16 +14,7 @@ class WorkerProfileForm(forms.ModelForm):
     class Meta:
         model = WorkerProfile
         fields = ['name', 'image', 'city', 'phone_number', 'gender', 'birth_date', 'data']
-        widgets = {
-            'birth_date': DatePickerInput(
-            options = {
-                "format": "DD.MM.YYYY",
-                "locale": "ru",
-                "showClose": False,
-                "showClear": True,
-                "showTodayButton": True,
-            }),
-        }
+
 
     def __init__(self, *args, **kwargs):
         super(WorkerProfileForm, self).__init__(*args, **kwargs)
