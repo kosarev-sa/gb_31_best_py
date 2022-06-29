@@ -13,7 +13,7 @@
     <div class="ptb80" id="post-job">
         <div class="container">
 
-            <form action="{% url 'users:worker_profile' object.user_id %}" method="post" enctype="multipart/form-data" class="post-job-resume mt50">
+            <form action="{% url 'users:employer_profile' object.user_id %}" method="post" enctype="multipart/form-data" class="post-job-resume mt50">
                 {% csrf_token %}
 
                 <div class="row">
@@ -30,35 +30,27 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="{{ form.name.id_for_label }}">ФИО Соискателя</label>
+                            <label>Название работодателя</label>
                             {{ form.name }}
                         </div>
 
                         <div class="form-group">
-                            <label for="{{ form.city.id_for_label }}">Город проживания</label>
+                            <label>Статус работодателя</label>
+                            {{ object.status }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.city.id_for_label }}">Город местонахождения</label>
                             {{ form.city }}
                         </div>
 
                         <div class="form-group">
-                            <label for="{{ form.phone_number.id_for_label }}">Телефон для связи</label>
-                            {{ form.phone_number }}
+                            <label>Дата регистрации работодателя на сайте:</label>
+                            {{ object.date_create }}
                         </div>
 
                         <div class="form-group">
-                            <label class="small mb-1">Пол</label>
-                            <p><select name="gender">
-                                <option {% if object.gender == "М" %} selected {% endif %}>М</option>
-                                <option {% if object.gender == "Ж" %} selected {% endif %}>Ж</option>
-                            </select></p>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="{{ form.birth_date.id_for_label }}">Дата рождения</label>
-                            {{ form.birth_date }}
-                        </div>
-
-                        <div class="form-group">
-                            <label class="small mb-1" for="{{ form.data.id_for_label }}">О себе:</label>
+                            <label class="small mb-1" for="{{ form.data.id_for_label }}">Описание компании:</label>
                             {{ form.data }}
                         </div>
 

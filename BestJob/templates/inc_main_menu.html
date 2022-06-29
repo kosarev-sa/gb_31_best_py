@@ -48,7 +48,7 @@
                                         class="fa fa-angle-down"></i></a>
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="#">создать вакансию</a></li>
-                                    <li><a href="#">профиль работодателя</a></li>
+                                    <li><a href="{% url 'users:employer_profile' user.id %}">профиль работодателя</a></li>
                                     <li><a href="#">вакансии</a></li>
                                     <li><a href="#">поиск резюме</a></li>
                                     <li><a href="#">избранные резюме</a></li>
