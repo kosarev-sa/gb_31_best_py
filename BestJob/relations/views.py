@@ -99,6 +99,14 @@ class LastListView(ListView):
     model = RelationStatus
     template_name = 'relation_last_list.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(LastListView, self).get_context_data(**kwargs)
+        context['title'] = "Отклики и приглашения"
+        context['heading'] = "Отклики и приглашения"
+        context['link'] = "/"
+        context['heading_link'] = "На главную"
+        return context
+
     def get(self, request, *args, **kwargs):
         super(LastListView, self).get(request, *args, **kwargs)
         context = self.get_context_data()
@@ -183,6 +191,14 @@ class RelationDetailView(TemplateView):
     model = RelationHistory
     template_name = 'relations_detail.html'
 
+    def get_context_data(self, **kwargs):
+        context = super(RelationDetailView, self).get_context_data(**kwargs)
+        context['title'] = "Отклики и приглашения"
+        context['heading'] = "Отклики и приглашения"
+        context['link'] = "/relations/last_list/"
+        context['heading_link'] = "Назад"
+        return context
+
     def get(self, request, *args, **kwargs):
         global relation_history
         super(RelationDetailView, self).get(request, *args, **kwargs)
@@ -193,8 +209,7 @@ class RelationDetailView(TemplateView):
 
             # Работодатель.
             if user.role_id == UserRole.EMPLOYER:
-                relation_history = RelationHistory.objects.filter(relation_id=relation_id,
-                                                                  status__for_employer=True).order_by('-status__status_priority')
+                relation_history = RelationHistory.objects.filter(relation_id=relation_id).order_by('-status__status_priority')
 
                 if relation_history:
                     emp_his = relation_history.first()
@@ -206,8 +221,7 @@ class RelationDetailView(TemplateView):
             # Соискатель.
             elif user.role_id == UserRole.WORKER:
 
-                relation_history = RelationHistory.objects.filter(relation_id=relation_id,
-                                                                  status__for_worker=True).order_by('-status__status_priority')
+                relation_history = RelationHistory.objects.filter(relation_id=relation_id).order_by('-status__status_priority')
 
                 if relation_history:
                     work_his = relation_history.first()

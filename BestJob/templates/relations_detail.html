@@ -5,23 +5,58 @@
     {% include 'inc_main_menu.html' %}
 {% endblock %}
 
+{% block header %}
+    {% include 'inc_header.html' %}
+{% endblock %}
+
 {% block content %}
-    {% if relation_history %}
-        <p><b>Статус: {{ relation_history.last_status }}</b></p>
-        <p><b>Дата: {{ relation_history.last_status_date }}</b></p>
-        <p><b>Резюме: {{ relation_history.cv.post }}</b></p>
-        <p><b>Вакансия: {{ relation_history.vacancy.name }}</b></p>
-        <p><b>История статусов: </b></p>
-        <br>
-        {% for history_item in relation_history %}
-            <p>------------------------------------------------</p>
-            <p>Дата: {{ history_item.created }}</p>
-            <p>Статус: {{ history_item.status.name }}</p>
-            <p>Комментарий: {{ history_item.comment }}</p>
-            <p>------------------------------------------------</p>
-            <br>
-        {% endfor %}
-    {% endif %}
+    <section class="education ptb80" style="background: #f0f0f0;">
+        <div class="container">
+
+            {% if relation_history %}
+
+                <div class="col-md-12" style="margin-bottom: 15px;">
+                    <div class="item-block shadow-hover" style="background: #ffffff;">
+
+                        <div class="education-header clearfix">
+                            <h5><small>Статус: </small> {{ relation_history.last_status }} </h5>
+                            <h5><small>Дата: </small> {{ relation_history.last_status_date }} </h5>
+                            <h5><small>Резюме: </small><a
+                                    href="{% url 'cv:detail_cv' relation_history.cv.pk %}">{{ relation_history.cv.post }}</a>
+                            </h5>
+                            <h5><small>Вакансия: </small><a
+                                    href="{% url 'vacancies:detail_vacancy' relation_history.vacancy.pk %}">{{ relation_history.vacancy.name }}</a>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+
+                {% for history_item in relation_history %}
+
+                    <div class="col-md-12" style="margin-bottom: 15px;">
+                        <div class="item-block shadow-hover" style="background: #ffffff;">
+
+                            <div class="education-header clearfix">
+                                <h5><small>Дата: </small> {{ history_item.created }} </h5>
+                                <h5><small>Статус: </small> {{ history_item.status.name }} </h5>
+                                <h5><small>Комментарий: </small> {{ history_item.comment }} </h5>
+                            </div>
+
+{#                            <div>#}
+{#                                <div class="col-md-12 text-right mt-4 mb-4" style="background: #ffffff;">#}
+{#                                    <a class="btn btn-blue btn-effect mt15 mb15"#}
+{#                                       href="{% url 'relations:relation_detail' history_item.relation_id %}">Согласиться#}
+{#                                        на что нибудь</a>#}
+{#                                </div>#}
+{#                            </div>#}
+
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+
 {% endblock %}
 
 {% block footer %}

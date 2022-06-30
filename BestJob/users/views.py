@@ -82,7 +82,7 @@ class EmployersProfileView(ListView, BaseClassContextMixin):
     title = 'BestJob | Работодатели'
 
     def get_context_data(self, **kwargs):
-        context = super(EmployerProfileView, self).get_context_data(**kwargs)
+        context = super(EmployersProfileView, self).get_context_data(**kwargs)
         context.update({
             'employers': EmployerProfile.objects.all(),
         })
