@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'search',
     'users',
     'vacancies',
-    'relations'
+    'relations',
+    'widget_tweaks',
 
 ]
 
@@ -164,6 +165,9 @@ HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 
 NEWS_BODY_LEN_ON_NEWS_LIST = 297
 
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 4  # пагинация. кол-во на странице (HAYSTACK)
+
+
 # Константы ролей пользователей.
 class UserRole:
     # Модератор.
@@ -172,3 +176,4 @@ class UserRole:
     EMPLOYER = 2
     # Соискатель.
     WORKER = 3
+
