@@ -50,7 +50,7 @@
                                     <li><a href="#">создать вакансию</a></li>
                                     <li><a href="{% url 'users:employer_profile' user.id %}">профиль работодателя</a></li>
                                     <li><a href="#">вакансии</a></li>
-                                    <li><a href="search_cv">поиск резюме</a></li>
+                                    <li><a href="{% url 'search_cv' %}">поиск резюме</a></li>
                                     <li><a href="#">избранные резюме</a></li>
                                     <li><a href="{% url 'vacancy:vacancy_responses' %}">отклики</a></li>
                                 </ul>
