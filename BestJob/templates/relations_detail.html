@@ -1,10 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block content %}
+    {% if relation_history %}
+        <p><b>Статус: {{ relation_history.last_status }}</b></p>
+        <p><b>Дата: {{ relation_history.last_status_date }}</b></p>
+        <p><b>Резюме: {{ relation_history.cv.post }}</b></p>
+        <p><b>Вакансия: {{ relation_history.vacancy.name }}</b></p>
+        <p><b>История статусов: </b></p>
+        <br>
+        {% for history_item in relation_history %}
+            <p>------------------------------------------------</p>
+            <p>Дата: {{ history_item.created }}</p>
+            <p>Статус: {{ history_item.status.name }}</p>
+            <p>Комментарий: {{ history_item.comment }}</p>
+            <p>------------------------------------------------</p>
+            <br>
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

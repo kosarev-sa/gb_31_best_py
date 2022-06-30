@@ -15,7 +15,7 @@ class CustomRelationModel:
 
 
 class RelationHistoryDetailView(TemplateView):
-    template_name = 'relations_detail.html'
+    template_name = 'relations_detail_all.html'
     model = RelationStatus
 
     def get(self, request, *args, **kwargs):
@@ -63,13 +63,12 @@ class RelationHistoryDetailView(TemplateView):
                     relation_history = RelationHistory.objects.filter(relation_id=relation.pk,
                                                                       status__for_employer=True).order_by('-status__status_priority')
 
-                    emp_rel_his = relation_history.filter(status__for_employer=True).order_by('-status__status_priority')
-
-                    if emp_rel_his:
-                        relation_history.last_status = emp_rel_his.first().status.name
-                        relation_history.last_status_date = emp_rel_his.first().created
-                        relation_history.cv = emp_rel_his.first().relation.cv
-                        relation_history.vacancy = emp_rel_his.first().relation.vacancy
+                    if relation_history:
+                        emp_his = relation_history.first()
+                        relation_history.last_status = emp_his.status.name
+                        relation_history.last_status_date = emp_his.created
+                        relation_history.cv = emp_his.relation.cv
+                        relation_history.vacancy = emp_his.relation.vacancy
 
                 # Соискатель.
                 elif user.role_id == UserRole.WORKER:
@@ -77,12 +76,12 @@ class RelationHistoryDetailView(TemplateView):
                     relation_history = RelationHistory.objects.filter(relation_id=relation.pk,
                                                                       status__for_worker=True).order_by('-status__status_priority')
 
-                    work_rel_his = relation_history.filter(status__for_worker=True).order_by('-status__status_priority')
-                    if work_rel_his:
-                        relation_history.last_status = work_rel_his.first().status.name
-                        relation_history.last_status_date = work_rel_his.first().created
-                        relation_history.cv = work_rel_his.first().relation.cv
-                        relation_history.vacancy = work_rel_his.first().relation.vacancy
+                    if relation_history:
+                        work_his = relation_history.first()
+                        relation_history.last_status = work_his.status.name
+                        relation_history.last_status_date = work_his.created
+                        relation_history.cv = work_his.relation.cv
+                        relation_history.vacancy = work_his.relation.vacancy
 
                 history_lists.append(relation_history)
 
@@ -144,15 +143,14 @@ class LastListView(ListView):
                     relation_history = RelationHistory.objects.filter(relation_id=relation.pk,
                                                                       status__for_employer=True).order_by('-status__status_priority')
 
-                    emp_rel_his = relation_history.filter(status__for_employer=True).order_by('-status__status_priority')
-
-                    if emp_rel_his:
+                    if relation_history:
                         custom_relation_model = CustomRelationModel()
-                        custom_relation_model.last_status = emp_rel_his.first().status.name
-                        custom_relation_model.last_status_date = emp_rel_his.first().created
-                        custom_relation_model.cv = emp_rel_his.first().relation.cv
-                        custom_relation_model.vacancy = emp_rel_his.first().relation.vacancy
-                        custom_relation_model.relation_id = emp_rel_his.first().relation.pk
+                        emp_his = relation_history.first()
+                        custom_relation_model.last_status = emp_his.status.name
+                        custom_relation_model.last_status_date = emp_his.created
+                        custom_relation_model.cv = emp_his.relation.cv
+                        custom_relation_model.vacancy = emp_his.relation.vacancy
+                        custom_relation_model.relation_id = emp_his.relation.pk
                         short_history_lists.append(custom_relation_model)
 
                 # Соискатель.
@@ -161,14 +159,14 @@ class LastListView(ListView):
                     relation_history = RelationHistory.objects.filter(relation_id=relation.pk,
                                                                       status__for_worker=True).order_by('-status__status_priority')
 
-                    work_rel_his = relation_history.filter(status__for_worker=True).order_by('-status__status_priority')
-                    if work_rel_his:
+                    if relation_history:
                         custom_relation_model = CustomRelationModel()
-                        custom_relation_model.last_status = work_rel_his.first().status.name
-                        custom_relation_model.last_status_date = work_rel_his.first().created
-                        custom_relation_model.cv = work_rel_his.first().relation.cv
-                        custom_relation_model.vacancy = work_rel_his.first().relation.vacancy
-                        custom_relation_model.relation_id = work_rel_his.first().relation.pk
+                        work_his = relation_history.first()
+                        custom_relation_model.last_status = work_his.status.name
+                        custom_relation_model.last_status_date = work_his.created
+                        custom_relation_model.cv = work_his.relation.cv
+                        custom_relation_model.vacancy = work_his.relation.vacancy
+                        custom_relation_model.relation_id = work_his.relation.pk
                         short_history_lists.append(custom_relation_model)
 
             context['short_history_lists'] = short_history_lists
@@ -181,7 +179,49 @@ class LastListView(ListView):
         return self.render_to_response(context)
 
 
-class RelationDetailView(DetailView):
+class RelationDetailView(TemplateView):
     model = RelationHistory
     template_name = 'relations_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        global relation_history
+        super(RelationDetailView, self).get(request, *args, **kwargs)
+        context = self.get_context_data()
+        if request.user.is_authenticated:
+            user = request.user
+            relation_id = kwargs.get('relation_id')
+
+            # Работодатель.
+            if user.role_id == UserRole.EMPLOYER:
+                relation_history = RelationHistory.objects.filter(relation_id=relation_id,
+                                                                  status__for_employer=True).order_by('-status__status_priority')
+
+                emp_his = relation_history.first()
+                relation_history.last_status = emp_his.status.name
+                relation_history.last_status_date = emp_his.created
+                relation_history.cv = emp_his.relation.cv
+                relation_history.vacancy = emp_his.relation.vacancy
+
+            # Соискатель.
+            elif user.role_id == UserRole.WORKER:
+
+                relation_history = RelationHistory.objects.filter(relation_id=relation_id,
+                                                                  status__for_worker=True).order_by('-status__status_priority')
+
+                work_his = relation_history.first()
+                relation_history.last_status = work_his.status.name
+                relation_history.last_status_date = work_his.created
+                relation_history.cv = work_his.relation.cv
+                relation_history.vacancy = work_his.relation.vacancy
+
+                context['relation_history'] = relation_history
+
+        else:
+            error_message = f'user is not authenticated'
+            context['error_message'] = error_message
+            print(error_message)
+
+        return self.render_to_response(context)
+
+
 
