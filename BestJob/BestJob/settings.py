@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'vacancies',
     'relations',
     'widget_tweaks',
+    'favorites',
 
 ]
 
