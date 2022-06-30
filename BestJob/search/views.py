@@ -12,6 +12,7 @@ class CVSearchView(SearchView):
     queryset = SearchQuerySet().all()
     form_class = CVSearchForm
     model = CV
+    paginate_by = 2
 
 class VacancySearchView(SearchView):
     """My custom search view."""
@@ -19,6 +20,7 @@ class VacancySearchView(SearchView):
     queryset = SearchQuerySet().all()
     form_class = VacancySearchForm
     model = Vacancy
+    paginate_by = 2
 
 
 

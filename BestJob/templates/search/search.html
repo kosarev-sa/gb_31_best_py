@@ -38,20 +38,19 @@
     </section>
 {% endblock %}
 
-{% block content %}
-    <!-- ===== Start of Main Wrapper Section ===== -->
 
+{% block content %}
     <section class="search-jobs ptb80">
         <div class="container">
             <!-- Start of Form -->
             <form class="row job-search-form row " method="get" action=".">
 
-                <div class="col-md-5 col-sm-12 search-keywords">
+                <div class="col-md-8 col-sm-12 search-keywords">
                     {% render_field form.q class="form-control" %}
                 </div>
 
                 <!-- Start of submit input -->
-                <div class="col-md-3 col-sm-12 search-submit">
+                <div class="col-md-4 col-sm-12 search-submit">
                     <button type="submit" class="btn btn-blue btn-effect"><i class="fa fa-search"></i>Найти</button>
                 </div>
 
@@ -188,7 +187,8 @@
                             {% empty %}
                                 <p>Ничего не найдено...</p>
                             {% endfor %}
-                            {#                    {% if page.has_previous or page.has_next %}#}
+<div class="single-candidate row nomargin" style="height: 1px; padding: 0px">
+                            </div>                            {#                    {% if page.has_previous or page.has_next %}#}
                             <div class="col-md-12 mt10">
                                 <ul class="pagination list-inline text-center">
                                 {% if page.has_previous %}
