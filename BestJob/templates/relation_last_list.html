@@ -6,7 +6,21 @@
 {% endblock %}
 
 {% block content %}
+    {% if short_history_lists %}
 
+        {% for history_item in short_history_lists %}
+
+            <p><b>Статус: {{ history_item.last_status }}</b></p>
+            <p><b>Дата: {{ history_item.last_status_date }}</b></p>
+            <p><b>Резюме: {{ history_item.cv.post }}</b></p>
+            <p><b>Вакансия: {{ history_item.vacancy.name }}</b></p>
+            <a href="{% url 'relations:relation_detail' history_item.relation_id %}"><b>Подробнее</b></a>
+            <br>
+            <br>
+            <br>
+        {% endfor %}
+
+    {% endif %}
 {% endblock %}
 
 {% block footer %}
