@@ -28,6 +28,22 @@
                                     href="{% url 'vacancies:detail_vacancy' relation_history.vacancy.pk %}">{{ relation_history.vacancy.name }}</a>
                             </h5>
                         </div>
+
+                        {% if custom_relation_model %}
+                            <div>
+                                <div class="col-md-10 text-right mt-4 mb-4" style="background: #ffffff;">
+                                    <a class="btn btn-blue btn-effect mt15 mb15"
+                                       href="{% url 'relations:relation_status' relation_id=custom_relation_model.relation_id status_id=custom_relation_model.cancel_status_id %}">Отказаться</a>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="col-md-2 text-right mt-4 mb-4" style="background: #ffffff;">
+                                    <a class="btn btn-blue btn-effect mt15 mb15"
+                                       href="{% url 'relations:relation_status' relation_id=custom_relation_model.relation_id status_id=custom_relation_model.accept_status_id %}">Согласиться</a>
+                                </div>
+                            </div>
+                        {% endif %}
+
                     </div>
                 </div>
 
@@ -41,14 +57,6 @@
                                 <h5><small>Статус: </small> {{ history_item.status.name }} </h5>
                                 <h5><small>Комментарий: </small> {{ history_item.comment }} </h5>
                             </div>
-
-{#                            <div>#}
-{#                                <div class="col-md-12 text-right mt-4 mb-4" style="background: #ffffff;">#}
-{#                                    <a class="btn btn-blue btn-effect mt15 mb15"#}
-{#                                       href="{% url 'relations:relation_detail' history_item.relation_id %}">Согласиться#}
-{#                                        на что нибудь</a>#}
-{#                                </div>#}
-{#                            </div>#}
 
                         </div>
                     </div>
