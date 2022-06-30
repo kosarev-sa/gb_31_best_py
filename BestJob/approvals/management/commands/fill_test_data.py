@@ -5,6 +5,7 @@ import json
 
 from approvals.models import ApprovalStatus
 from news.models import News
+from relations.models import Relations, RelationHistory, RelationStatus
 from users.models import User, EmployerProfile, WorkerProfile, ModeratorProfile
 
 from vacancies.models import Vacancy
@@ -16,6 +17,7 @@ JSON_PATH_NEWS = 'news/fixtures/'
 JSON_PATH_USERS = 'users/fixtures/'
 JSON_PATH_VACANCIES = 'vacancies/fixtures/'
 JSON_PATH_CV = 'cvs/fixtures/'
+JSON_PATH_RELATIONS = 'relations/fixtures/'
 
 
 def load_from_json(file_name):
@@ -248,3 +250,39 @@ class Command(BaseCommand):
             resp['cv'] = CV.objects.get(id=resp['cv'])
             resp['vacancy'] = Vacancy.objects.get(id=resp['vacancy'])
             ConnectVacancyCv(**resp).save()
+
+        # RELATIONS
+        relations = load_from_json(JSON_PATH_RELATIONS + 'relation.json')
+        RelationHistory.objects.all().delete()
+        Relations.objects.all().delete()
+
+        for relation in relations:
+            relation_row = relation.get('fields')
+            relation_row['id'] = relation.get('pk')
+
+            date_create = datetime.datetime.strptime(relation_row.get('created'), '%Y-%m-%dT%H:%M:%S')
+            date_create = date_create.replace(tzinfo=datetime.timezone.utc)
+            relation_row['created'] = date_create
+
+            relation_row['cv'] = CV.objects.get(id=relation_row['cv'])
+            relation_row['vacancy'] = Vacancy.objects.get(id=relation_row['vacancy'])
+
+            new_relation = Relations(**relation_row)
+            new_relation.save()
+
+        relations_history = load_from_json(JSON_PATH_RELATIONS + 'relation_history.json')
+
+        for rh in relations_history:
+            rh_row = rh.get('fields')
+            rh_row['id'] = rh.get('pk')
+
+            date_create = datetime.datetime.strptime(rh_row.get('created'), '%Y-%m-%dT%H:%M:%S')
+            date_create = date_create.replace(tzinfo=datetime.timezone.utc)
+            rh_row['created'] = date_create
+
+            rh_row['relation'] = Relations.objects.get(pk=rh_row['relation'])
+            rh_row['status'] = RelationStatus.objects.get(pk=rh_row['status'])
+
+            new_rh = RelationHistory(**rh_row)
+            new_rh.save()
+

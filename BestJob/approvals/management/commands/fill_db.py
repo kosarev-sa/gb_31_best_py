@@ -3,7 +3,7 @@ import json
 from django.core.management import BaseCommand
 
 from approvals.models import ApprovalStatus
-from relations.models import RelationStatus
+from relations.models import RelationStatus, RelationHistory, Relations
 from search.models import Languages, LanguageLevels, MainSkills, Category, WorkSchedules, Employments
 from users.models import Role
 
@@ -100,6 +100,8 @@ class Command(BaseCommand):
             new_appr.save()
 
         relations = load_from_json(JSON_PATH_RELATIONS + 'relationrtatus.json')
+        RelationHistory.objects.all().delete()
+        Relations.objects.all().delete()
         RelationStatus.objects.all().delete()
 
         for relation in relations:
