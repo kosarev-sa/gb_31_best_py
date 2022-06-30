@@ -207,29 +207,14 @@ class RelationDetailView(TemplateView):
             user = request.user
             relation_id = kwargs.get('relation_id')
 
-            # Работодатель.
-            if user.role_id == UserRole.EMPLOYER:
-                relation_history = RelationHistory.objects.filter(relation_id=relation_id).order_by('-status__status_priority')
+            relation_history = RelationHistory.objects.filter(relation_id=relation_id).order_by('-status__status_priority')
 
-                if relation_history:
-                    emp_his = relation_history.first()
-                    relation_history.last_status = emp_his.status.name
-                    relation_history.last_status_date = emp_his.created
-                    relation_history.cv = emp_his.relation.cv
-                    relation_history.vacancy = emp_his.relation.vacancy
-
-            # Соискатель.
-            elif user.role_id == UserRole.WORKER:
-
-                relation_history = RelationHistory.objects.filter(relation_id=relation_id).order_by('-status__status_priority')
-
-                if relation_history:
-                    work_his = relation_history.first()
-                    relation_history.last_status = work_his.status.name
-                    relation_history.last_status_date = work_his.created
-                    relation_history.cv = work_his.relation.cv
-                    relation_history.vacancy = work_his.relation.vacancy
-
+            if relation_history:
+                work_his = relation_history.first()
+                relation_history.last_status = work_his.status.name
+                relation_history.last_status_date = work_his.created
+                relation_history.cv = work_his.relation.cv
+                relation_history.vacancy = work_his.relation.vacancy
 
             context['relation_history'] = relation_history
 
@@ -239,6 +224,3 @@ class RelationDetailView(TemplateView):
             print(error_message)
 
         return self.render_to_response(context)
-
-
-
