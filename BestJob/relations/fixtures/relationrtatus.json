@@ -48,5 +48,15 @@
       "for_worker": true,
       "status_priority": 1
     }
+  },
+  {
+    "model": "users.RelationStatus",
+    "pk": 6,
+    "fields": {
+      "name": "Встреча согласована",
+      "for_employer": true,
+      "for_worker": true,
+      "status_priority": 4
+    }
   }
 ]

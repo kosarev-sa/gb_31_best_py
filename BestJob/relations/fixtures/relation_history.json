@@ -24,6 +24,16 @@
     "pk": 3,
     "fields": {
       "created": "2022-06-28T15:04:22",
+      "relation": 1,
+      "status": 6,
+      "comment": "Встреча согласована"
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 4,
+    "fields": {
+      "created": "2022-06-28T15:04:22",
       "relation": 2,
       "status": 5,
       "comment": "Здравствуйте. Меня заинтересовала ваша вакансия. 2"
@@ -31,17 +41,17 @@
   },
   {
     "model": "users.RelationHistory",
-    "pk": 4,
+    "pk": 5,
     "fields": {
       "created": "2022-06-28T16:04:22",
       "relation": 2,
       "status": 3,
-      "comment": "К сожалени, вы нам не подходите."
+      "comment": "К сожалению, вы нам не подходите."
     }
   },
   {
     "model": "users.RelationHistory",
-    "pk": 5,
+    "pk": 6,
     "fields": {
       "created": "2022-06-28T16:07:00",
       "relation": 3,
@@ -51,7 +61,7 @@
   },
   {
     "model": "users.RelationHistory",
-    "pk": 6,
+    "pk": 7,
     "fields": {
       "created": "2022-06-28T16:07:00",
       "relation": 3,
@@ -61,7 +71,7 @@
   },
   {
     "model": "users.RelationHistory",
-    "pk": 7,
+    "pk": 8,
     "fields": {
       "created": "2022-06-28T17:04:22",
       "relation": 4,
@@ -71,7 +81,7 @@
   },
   {
     "model": "users.RelationHistory",
-    "pk": 8,
+    "pk": 9,
     "fields": {
       "created": "2022-06-28T17:04:22",
       "relation": 4,
@@ -81,7 +91,7 @@
   },
   {
     "model": "users.RelationHistory",
-    "pk": 9,
+    "pk": 10,
     "fields": {
       "created": "2022-06-28T18:04:22",
       "relation": 5,
@@ -91,7 +101,7 @@
   },
   {
     "model": "users.RelationHistory",
-    "pk": 10,
+    "pk": 11,
     "fields": {
       "created": "2022-06-29T18:04:22",
       "relation": 5,
@@ -101,7 +111,7 @@
   },
   {
     "model": "users.RelationHistory",
-    "pk": 11,
+    "pk": 12,
     "fields": {
       "created": "2022-06-29T10:15:22",
       "relation": 6,
@@ -111,12 +121,22 @@
   },
   {
     "model": "users.RelationHistory",
-    "pk": 12,
+    "pk": 13,
     "fields": {
       "created": "2022-06-29T10:15:22",
       "relation": 6,
       "status": 2,
       "comment": "Приглашение не просмотрено"
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 14,
+    "fields": {
+      "created": "2022-06-30T10:15:22",
+      "relation": 6,
+      "status": 6,
+      "comment": "Встреча согласована"
     }
   }
 ]

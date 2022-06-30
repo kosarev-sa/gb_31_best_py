@@ -10,23 +10,21 @@
 
         {% for history_list in history_lists %}
 
-            <p>Статус: {{ history_list.last_status }}</p>
-            <p>Дата: {{ history_list.last_status_date }}</p>
+            <p>------------------------------------------------</p>
+            <p><b>Статус: {{ history_list.last_status }}</b></p>
+            <p><b>Дата: {{ history_list.last_status_date }}</b></p>
 
             {% for history in history_list %}
 
-                {{ history.relation.cv.post }}<br>
-
-                {{ history.relation.vacancy.name }}<br>
-
-                {{ history.created }}<br>
-                {{ history.status.name }}<br>
-                {{ history.comment }}
-                <br>
+                <p>Резюме: {{ history.relation.cv.post }}</p>
+                <p>Вакансия: {{ history.relation.vacancy.name }}</p>
+                <p>Дата: {{ history.created }}</p>
+                <p>Статус: {{ history.status.name }}</p>
+                <p>Комментарий: {{ history.comment }}</p>
                 <br>
 
             {% endfor %}
-
+            <p>------------------------------------------------</p>
         {% endfor %}
 
     {% endif %}

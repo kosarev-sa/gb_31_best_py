@@ -16,6 +16,7 @@ class RelationHistoryDetailView(TemplateView):
     model = RelationStatus
 
     def get(self, request, *args, **kwargs):
+        global relation_history
         super(RelationHistoryDetailView, self).get(request, *args, **kwargs)
         context = self.get_context_data()
         if request.user.is_authenticated:
@@ -32,7 +33,7 @@ class RelationHistoryDetailView(TemplateView):
                     vacancies = Vacancy.objects.filter(employer_profile_id=profile.pk).order_by('-created_at')
                     if vacancies:
                         for vacancy in vacancies:
-                            relation = Relations.objects.filter(vacancy_id=vacancy.pk).order_by('-updated')
+                            relation = Relations.objects.filter(vacancy_id=vacancy.pk).order_by('-created')
                             if relation:
                                 for rel in relation:
                                     relations.add(rel)
@@ -46,17 +47,18 @@ class RelationHistoryDetailView(TemplateView):
                     cvs = CV.objects.filter(worker_profile_id=profile.pk).order_by('-date_create')
                     if cvs:
                         for cv in cvs:
-                            relation = Relations.objects.filter(cv_id=cv.pk).order_by('-updated')
+                            relation = Relations.objects.filter(cv_id=cv.pk).order_by('-created')
                             if relation:
                                 for rel in relation:
                                     relations.add(rel)
 
             for relation in relations:
-                relation_history = RelationHistory.objects.filter(relation_id=relation.pk,
-                                                                  status__for_employer=True).order_by('-status__status_priority')
 
                 # Работодатель.
                 if user.role_id == UserRole.EMPLOYER:
+
+                    relation_history = RelationHistory.objects.filter(relation_id=relation.pk,
+                                                                      status__for_employer=True).order_by('-status__status_priority')
 
                     emp_rel_his = relation_history.filter(status__for_employer=True).order_by('-status__status_priority')
 
@@ -65,6 +67,9 @@ class RelationHistoryDetailView(TemplateView):
                         relation_history.last_status_date = emp_rel_his.first().created
                 # Соискатель.
                 elif user.role_id == UserRole.WORKER:
+
+                    relation_history = RelationHistory.objects.filter(relation_id=relation.pk,
+                                                                      status__for_worker=True).order_by('-status__status_priority')
 
                     work_rel_his = relation_history.filter(status__for_worker=True).order_by('-status__status_priority')
                     if work_rel_his:
