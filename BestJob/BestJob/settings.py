@@ -167,7 +167,6 @@ NEWS_BODY_LEN_ON_NEWS_LIST = 297
 
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 4  # пагинация. кол-во на странице (HAYSTACK)
 
-
 # Константы ролей пользователей.
 class UserRole:
     # Модератор.
