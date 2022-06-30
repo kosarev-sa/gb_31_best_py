@@ -13,7 +13,7 @@
     "model": "users.RelationHistory",
     "pk": 2,
     "fields": {
-      "created": "2022-06-28T15:04:22",
+      "created": "2022-06-28T15:04:00",
       "relation": 1,
       "status": 1,
       "comment": "Резюме не просмотрено"
@@ -23,7 +23,7 @@
     "model": "users.RelationHistory",
     "pk": 3,
     "fields": {
-      "created": "2022-06-28T15:04:22",
+      "created": "2022-06-29T16:05:11",
       "relation": 1,
       "status": 6,
       "comment": "Встреча согласована"

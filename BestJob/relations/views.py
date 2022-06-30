@@ -65,6 +65,9 @@ class RelationHistoryDetailView(TemplateView):
                     if emp_rel_his:
                         relation_history.last_status = emp_rel_his.first().status.name
                         relation_history.last_status_date = emp_rel_his.first().created
+                        relation_history.cv = emp_rel_his.first().relation.cv
+                        relation_history.vacancy = emp_rel_his.first().relation.vacancy
+
                 # Соискатель.
                 elif user.role_id == UserRole.WORKER:
 
@@ -75,7 +78,8 @@ class RelationHistoryDetailView(TemplateView):
                     if work_rel_his:
                         relation_history.last_status = work_rel_his.first().status.name
                         relation_history.last_status_date = work_rel_his.first().created
-
+                        relation_history.cv = work_rel_his.first().relation.cv
+                        relation_history.vacancy = work_rel_his.first().relation.vacancy
 
                 history_lists.append(relation_history)
 
