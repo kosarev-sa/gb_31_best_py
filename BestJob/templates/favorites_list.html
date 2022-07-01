@@ -1,10 +1,181 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    {% include 'inc_header.html' %}
+{% endblock %}
+
+{% block content %}
+
+    <section class="search-jobs ptb80" id="version4">
+        <div class="container">
+
+            {% for item in favorites_list %}
+
+                <div class="col-md-12 mt20">
+                    <div class="item-block shadow-hover">
+
+                        {% if is_employer %}
+
+                            <div class="job-post-header clearfix">
+                                <a href="{% url 'cv:detail_cv' item.cv.pk %}"><img
+                                        src="{{ item.cv.worker_profile.image.url }}" alt=""></a>
+                                <div>
+                                    <a href="{% url 'cv:detail_cv' item.cv.pk %}"><h4>{{ item.cv.post }}</h4></a>
+                                    <h5><small>{{ item.cv.worker_profile.name }}</small></h5>
+                                </div>
+
+                                <ul class="pull-right">
+                                    <li>
+                                        <a href="{% url 'favorites:delete' item.pk %}"
+                                           class="btn btn-blue btn-small btn-effect">Отправить приглашение</a>
+                                    </li>
+                                </ul>
+
+                                <ul class="pull-right">
+                                    <li>
+                                        <a href="{% url 'favorites:delete' item.pk %}"
+                                           class="btn btn-blue btn-small btn-effect">Убрать из избранного</a>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                            <div class="job-post-body">
+                                <p>Краткая информация:</p>
+                                <ul class="list mt10">
+                                    {% if item.cv.speciality.name %}
+                                        <li>{{ item.cv.speciality.name }}</li>
+                                    {% endif %}
+
+                                    {% if item.cv.skills %}
+                                        <li>{{ item.cv.skills }}</li>
+                                    {% endif %}
+
+                                    {% if item.cv.education_level >= 4 %}
+                                        <li>Высшее</li>
+                                    {% endif %}
+
+                                    {% if item.cv.is_active %}
+                                        <li>Резюме активно</li>
+                                    {% else %}
+                                        <li>Резюме неактивно</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+
+                            <div class="job-post-footer row">
+
+                                {% if item.cv.worker_profile.city %}
+
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <i class="fa fa-map-marker"></i>
+                                        <span>{{ item.cv.worker_profile.city }}</span>
+                                    </div>
+
+                                {% endif %}
+
+                                {% if item.cv.salary %}
+
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <i class="fa fa-money"></i>
+                                        <span>{{ item.cv.salary }}</span>
+                                    </div>
+
+                                {% endif %}
+                            </div>
+
+                        {% elif is_worker %}
+
+                            <div class="job-post-header clearfix">
+                                <a href="{% url 'vacancies:detail_vacancy' item.vacancy.pk %}"><img
+                                        src="{{ item.vacancy.employer_profile.image.url }}" alt=""></a>
+                                <div>
+                                    <a href="{% url 'vacancies:detail_vacancy' item.vacancy.pk %}">
+                                        <h4>{{ item.vacancy.name }}</h4>
+                                    </a>
+                                    <h5><small>{{ item.vacancy.employer_profile.name }}</small></h5>
+                                </div>
+
+
+                                <ul class="pull-right">
+                                    <li>
+                                        <a href="{% url 'favorites:delete' item.pk %}"
+                                           class="btn btn-blue btn-small btn-effect">Отправить отклик</a>
+                                    </li>
+                                </ul>
+
+                                <ul class="pull-right">
+                                    <li>
+                                        <a href="{% url 'favorites:delete' item.pk %}"
+                                           class="btn btn-blue btn-small btn-effect">Убрать из избранного</a>
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                            <div class="job-post-body">
+                                <p>Краткая информация:</p>
+                                <ul class="list mt10">
+
+                                    {% if item.vacancy.specialization.name %}
+                                        <li>{{ item.vacancy.specialization.name }}</li>
+                                    {% endif %}
+
+                                    {% if item.vacancy.description %}
+                                        <li>{{ item.vacancy.description }}</li>
+                                    {% endif %}
+
+                                    {% if item.vacancy.is_active %}
+                                        <li>Вакансия активна</li>
+                                    {% else %}
+                                        <li>Вакансия неактивна</li>
+                                    {% endif %}
+
+                                </ul>
+                            </div>
+
+                            <div class="job-post-footer row">
+
+                                {% if item.vacancy.city %}
+
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <i class="fa fa-map-marker"></i>
+                                        <span>{{ item.vacancy.city }}</span>
+                                    </div>
+
+                                {% endif %}
+
+                                {% if item.salary_from and item.salary_to %}
+
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <i class="fa fa-money"></i>
+                                        <span>{{ item.salary_from }} - {{ item.salary_to }}</span>
+                                    </div>
+
+                                {% elif item.salary_on_hand %}
+
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <i class="fa fa-money"></i>
+                                        <span>{{ item.salary_on_hand }}</span>
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

@@ -1,0 +1,10 @@
+[
+  {
+    "model": "favorites.WorkerFavorites",
+    "pk": 1,
+    "fields": {
+      "worker_profile": 11,
+      "vacancy": 1
+    }
+  }
+]

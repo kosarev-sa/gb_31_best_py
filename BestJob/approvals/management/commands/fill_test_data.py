@@ -4,6 +4,7 @@ from django.core.management import BaseCommand
 import json
 
 from approvals.models import ApprovalStatus
+from favorites.models import EmployerFavorites, WorkerFavorites
 from news.models import News
 from relations.models import Relations, RelationHistory, RelationStatus
 from users.models import User, EmployerProfile, WorkerProfile, ModeratorProfile
@@ -18,6 +19,7 @@ JSON_PATH_USERS = 'users/fixtures/'
 JSON_PATH_VACANCIES = 'vacancies/fixtures/'
 JSON_PATH_CV = 'cvs/fixtures/'
 JSON_PATH_RELATIONS = 'relations/fixtures/'
+JSON_PATH_FAVORITES = 'favorites/fixtures/'
 
 
 def load_from_json(file_name):
@@ -286,3 +288,21 @@ class Command(BaseCommand):
             new_rh = RelationHistory(**rh_row)
             new_rh.save()
 
+        # JSON_PATH_FAVORITES
+        employer_favorites = load_from_json(JSON_PATH_FAVORITES + 'employerfavorites.json')
+        EmployerFavorites.objects.all().delete()
+        for emp_fav in employer_favorites:
+            emp_fav_row = emp_fav.get('fields')
+            emp_fav_row['id'] = emp_fav.get('pk')
+            emp_fav_row['cv'] = CV.objects.get(id=emp_fav_row['cv'])
+            emp_fav_row['employer_profile'] = EmployerProfile.objects.get(id=emp_fav_row['employer_profile'])
+            EmployerFavorites(**emp_fav_row).save()
+
+        worker_favorites = load_from_json(JSON_PATH_FAVORITES + 'workerfavorites.json')
+        WorkerFavorites.objects.all().delete()
+        for work_fav in worker_favorites:
+            work_fav_row = work_fav.get('fields')
+            work_fav_row['id'] = work_fav.get('pk')
+            work_fav_row['vacancy'] = Vacancy.objects.get(id=work_fav_row['vacancy'])
+            work_fav_row['worker_profile'] = WorkerProfile.objects.get(id=work_fav_row['worker_profile'])
+            WorkerFavorites(**work_fav_row).save()

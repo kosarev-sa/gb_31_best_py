@@ -35,7 +35,7 @@
                                     <li><a href="{% url 'cvs:create_cv' %}">создать резюме</a></li>
                                     <li><a href="{% url 'cvs:cv_list' %}">мои резюме</a></li>
                                     <li><a href="{% url 'search_vacancy' %}">поиск вакансий</a></li>
-                                    <li><a href="#">избранное</a></li>
+                                    <li><a href="{% url 'favorites:worker_list' %}">избранное</a></li>
                                     <li><a href="{% url 'relations:list' %}">отклики и приглашения</a></li>
                                 </ul>
                             </li>
@@ -49,9 +49,9 @@
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="#">создать вакансию</a></li>
                                     <li><a href="{% url 'users:employer_profile' user.id %}">профиль работодателя</a></li>
-                                    <li><a href="#">вакансии</a></li>
+                                    <li><a href="#">мои вакансии</a></li>
                                     <li><a href="{% url 'search_cv' %}">поиск резюме</a></li>
-                                    <li><a href="#">избранное</a></li>
+                                    <li><a href="{% url 'favorites:employer_list' %}">избранное</a></li>
                                     <li><a href="{% url 'relations:list' %}">отклики и приглашения</a></li>
                                 </ul>
                             </li>
