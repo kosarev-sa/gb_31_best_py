@@ -33,13 +33,13 @@
                             <div>
                                 <div class="col-md-9 text-right mt-4 mb-4" style="background: #ffffff;">
                                     <a class="btn btn-blue btn-effect mt15 mb15"
-                                       href="{% url 'relations:relation_status' relation_id=custom_relation_model.relation_id status_id=custom_relation_model.cancel_status_id %}">{{ custom_relation_model.button_cancel_text }}</a>
+                                       href="{% url 'relations:change' relation_id=custom_relation_model.relation_id status_id=custom_relation_model.cancel_status_id %}">{{ custom_relation_model.button_cancel_text }}</a>
                                 </div>
                             </div>
                             <div>
                                 <div class="col-md-3 text-right mt-4 mb-4" style="background: #ffffff;">
                                     <a class="btn btn-blue btn-effect mt15 mb15"
-                                       href="{% url 'relations:relation_status' relation_id=custom_relation_model.relation_id status_id=custom_relation_model.accept_status_id %}">{{ custom_relation_model.button_accept_text }}</a>
+                                       href="{% url 'relations:change' relation_id=custom_relation_model.relation_id status_id=custom_relation_model.accept_status_id %}">{{ custom_relation_model.button_accept_text }}</a>
                                 </div>
                             </div>
                         {% endif %}

@@ -2,14 +2,13 @@ from django.db.models import Max
 from django.shortcuts import render
 
 # Create your views here.
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, TemplateView, CreateView
 
 from BestJob.settings import UserRole
 from cvs.models import CV
 from users.models import EmployerProfile, WorkerProfile
 from vacancies.models import Vacancy
 from .models import Relations, RelationHistory, RelationStatus
-
 
 WORKER_RS_ACCEPT_COMMENT = 'Встреча согласована'
 WORKER_RS_CANCEL_COMMENT = 'Я не хочу у вас работать'
@@ -24,7 +23,6 @@ class CustomRelationModel:
 
 
 def get_custom_relation_model(user, status_id, relation_id):
-
     custom_relation_model = CustomRelationModel()
 
     # Работодатель.
@@ -101,7 +99,8 @@ class LastListView(ListView):
 
             for relation in relations:
 
-                relation_history = RelationHistory.objects.filter(relation_id=relation.pk).order_by('-status__status_priority')
+                relation_history = RelationHistory.objects.filter(relation_id=relation.pk).order_by(
+                    '-status__status_priority')
 
                 if relation_history:
                     custom_relation_model = CustomRelationModel()
@@ -136,7 +135,7 @@ class RelationDetailView(TemplateView):
         context = super(RelationDetailView, self).get_context_data(**kwargs)
         context['title'] = "Отклики и приглашения"
         context['heading'] = "Отклики и приглашения"
-        context['link'] = "/relations/last_list/"
+        context['link'] = "/relations/list/"
         context['heading_link'] = "Назад"
         return context
 
@@ -171,7 +170,8 @@ class RelationDetailView(TemplateView):
             user = request.user
             relation_id = kwargs.get('relation_id')
 
-            relation_history = RelationHistory.objects.filter(relation_id=relation_id).order_by('-status__status_priority')
+            relation_history = RelationHistory.objects.filter(relation_id=relation_id).order_by(
+                '-status__status_priority')
 
             if relation_history:
                 work_his = relation_history.first()
@@ -195,21 +195,21 @@ class RelationDetailView(TemplateView):
         return self.render_to_response(context)
 
 
-class RelationStatusView(TemplateView):
+class RelationChangeStatusView(TemplateView):
     model = RelationHistory
     template_name = 'relations_detail.html'
 
     def get_context_data(self, **kwargs):
-        context = super(RelationStatusView, self).get_context_data(**kwargs)
+        context = super(RelationChangeStatusView, self).get_context_data(**kwargs)
         context['title'] = "Отклики и приглашения"
         context['heading'] = "Отклики и приглашения"
-        context['link'] = "/relations/last_list/"
+        context['link'] = "/relations/list/"
         context['heading_link'] = "Назад"
         return context
 
     def get(self, request, *args, **kwargs):
         global relation_history
-        super(RelationStatusView, self).get(request, *args, **kwargs)
+        super(RelationChangeStatusView, self).get(request, *args, **kwargs)
         context = self.get_context_data()
         if request.user.is_authenticated:
             user = request.user
@@ -236,7 +236,6 @@ class RelationStatusView(TemplateView):
 
             new_rel_history.save()
 
-
             relation_history = RelationHistory.objects.filter(relation_id=relation_id).order_by(
                 '-status__status_priority')
 
@@ -260,3 +259,7 @@ class RelationStatusView(TemplateView):
             print(error_message)
 
         return self.render_to_response(context)
+
+
+class RelationCreateView(CreateView):
+    pass
