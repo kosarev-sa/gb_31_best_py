@@ -4,8 +4,11 @@ from django.shortcuts import render
 from django.views.generic import CreateView, DeleteView, ListView
 
 from BestJob.settings import UserRole
-from favorites.models import EmployerFavorites, WorkerFavorites
+from cvs.models import CV
+from .models import EmployerFavorites, WorkerFavorites
+from relations.models import Relations
 from users.models import WorkerProfile, EmployerProfile
+from vacancies.models import Vacancy
 
 
 class FavoritesCreateView(CreateView):
@@ -37,8 +40,26 @@ class FavoritesWorkerListView(ListView):
             if user.role_id == UserRole.WORKER:
                 worker_profiles = WorkerProfile.objects.filter(user_id=user.pk)
                 if worker_profiles:
-                    context['favorites_list'] = WorkerFavorites.objects.filter(
-                        worker_profile=worker_profiles.first()).order_by('-created')
+                    profiler = worker_profiles.first()
+                    worker_favorites = WorkerFavorites.objects.filter(
+                        worker_profile=profiler).order_by('-created')
+
+                    # Я ищу работу и у меня есть резюме. Мои резюме.
+                    cvs = CV.objects.filter(worker_profile=profiler)
+
+                    # Вычисление оправлялся ли отклик на вакансию из избранного.
+                    for favorit in worker_favorites:
+                        # Отправлял ли я отклик на вакансии из избранного?
+                        for cv in cvs:
+                            relations = Relations.objects.filter(cv=cv, vacancy=favorit.vacancy)
+                            # Если relation, то отправлял.
+                            if relations:
+                                favorit.has_relaton = True
+                                favorit.relations_id = relations.first().pk
+                            else:
+                                favorit.has_relaton = False
+
+                    context['favorites_list'] = worker_favorites
 
         else:
             error_message = f'user is not authenticated'
@@ -71,9 +92,28 @@ class FavoritesEmployerListView(ListView):
             if user.role_id == UserRole.EMPLOYER:
                 employer_profiles = EmployerProfile.objects.filter(user_id=user.pk)
                 if employer_profiles:
-                    context['favorites_list'] = EmployerFavorites.objects.filter(
-                        employer_profile=employer_profiles.first()).order_by('-created')
+                    profiler = employer_profiles.first()
 
+                    employer_favorites = EmployerFavorites.objects.filter(
+                        employer_profile=profiler).order_by('-created')
+
+                    # Я ищу сотрудников и у меня есть вакансии. Мои вакансии.
+                    vacancies = Vacancy.objects.filter(employer_profile=profiler)
+
+                    # Вычисление оправлялось ли приглашение на резюме из избранного.
+                    for favorit in employer_favorites:
+
+                        # Отправлял ли я отклик на вакансии из избранного?
+                        for vacancy in vacancies:
+                            relations = Relations.objects.filter(cv=favorit.cv, vacancy=vacancy)
+                            # Если relations, то отправлял.
+                            if relations:
+                                favorit.has_relaton = True
+                                favorit.relations_id = relations.first().pk
+                            else:
+                                favorit.has_relaton = False
+
+                    context['favorites_list'] = employer_favorites
         else:
             error_message = f'user is not authenticated'
             context['error_message'] = error_message
