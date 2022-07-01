@@ -31,10 +31,11 @@
 
                                 <ul class="pull-right">
                                     <li>
-                                        <a href="{% url 'favorites:delete' item.pk %}"
+                                        <a href="{% url 'favorites:employer_delete' item.pk %}"
                                            class="btn btn-blue btn-small btn-effect">Убрать из избранного</a>
+
                                         {% if not item.has_relaton %}
-                                            <a href="{% url 'favorites:delete' item.pk %}"
+                                            <a href="#"
                                                class="btn btn-blue btn-small btn-effect">Отправить приглашение</a>
                                         {% endif %}
                                     </li>
@@ -104,11 +105,11 @@
 
                                 <ul class="pull-right">
                                     <li>
-                                        <a href="{% url 'favorites:delete' item.pk %}"
+                                        <a href="{% url 'favorites:worker_delete' item.pk %}"
                                            class="btn btn-blue btn-small btn-effect">Убрать из избранного</a>
                                         {% if not item.has_relaton %}
-                                            <a href="{% url 'favorites:delete' item.pk %}"
-                                               class="btn btn-blue btn-small btn-effect">Отправить отклик</a>
+                                            <a href="#"
+                                                class="btn btn-blue btn-small btn-effect">Отправить отклик</a>
                                         {% endif %}
                                     </li>
                                     {% if item.has_relaton %}

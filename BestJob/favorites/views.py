@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render
 
 # Create your views here.
@@ -14,8 +15,39 @@ from vacancies.models import Vacancy
 class FavoritesCreateView(CreateView):
     pass
 
-class FavoritesDeleteView(DeleteView):
-    pass
+class FavoritesEmployerDeleteView(DeleteView):
+    """view удаление избранного работадателя"""
+    model = EmployerFavorites
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            user = request.user
+            if user.role_id == UserRole.EMPLOYER:
+                self.object = self.get_object()
+                self.object.delete()
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        return HttpResponseForbidden()
+
+class FavoritesWorkerDeleteView(DeleteView):
+    """view удаление избранного соискателя"""
+    model = WorkerFavorites
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            user = request.user
+            if user.role_id == UserRole.WORKER:
+                self.object = self.get_object()
+                self.object.delete()
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        return HttpResponseForbidden()
 
 class FavoritesWorkerListView(ListView):
     template_name = 'favorites_list.html'
