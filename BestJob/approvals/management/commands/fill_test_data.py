@@ -46,6 +46,12 @@ class Command(BaseCommand):
         return self.user_pk
 
     def handle(self, *args, **options):
+
+        RelationHistory.objects.all().delete()
+        Relations.objects.all().delete()
+        EmployerFavorites.objects.all().delete()
+        WorkerFavorites.objects.all().delete()
+
         moderators = load_from_json(JSON_PATH_USERS + 'moderator.json')
         ModeratorProfile.objects.all().delete()
 
@@ -255,8 +261,6 @@ class Command(BaseCommand):
 
         # RELATIONS
         relations = load_from_json(JSON_PATH_RELATIONS + 'relation.json')
-        RelationHistory.objects.all().delete()
-        Relations.objects.all().delete()
 
         for relation in relations:
             relation_row = relation.get('fields')
@@ -290,7 +294,7 @@ class Command(BaseCommand):
 
         # JSON_PATH_FAVORITES
         employer_favorites = load_from_json(JSON_PATH_FAVORITES + 'employerfavorites.json')
-        EmployerFavorites.objects.all().delete()
+
         for emp_fav in employer_favorites:
             emp_fav_row = emp_fav.get('fields')
             emp_fav_row['id'] = emp_fav.get('pk')
@@ -299,7 +303,7 @@ class Command(BaseCommand):
             EmployerFavorites(**emp_fav_row).save()
 
         worker_favorites = load_from_json(JSON_PATH_FAVORITES + 'workerfavorites.json')
-        WorkerFavorites.objects.all().delete()
+
         for work_fav in worker_favorites:
             work_fav_row = work_fav.get('fields')
             work_fav_row['id'] = work_fav.get('pk')

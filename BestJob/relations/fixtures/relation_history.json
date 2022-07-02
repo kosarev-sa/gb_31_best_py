@@ -128,15 +128,5 @@
       "status": 6,
       "comment": "Встреча согласована"
     }
-  },
-  {
-    "model": "users.RelationHistory",
-    "pk": 14,
-    "fields": {
-      "created": "2022-06-28T15:04:22",
-      "relation": 7,
-      "status": 5,
-      "comment": "Здравствуйте. Меня заинтересовала ваша вакансия. 2"
-    }
   }
 ]

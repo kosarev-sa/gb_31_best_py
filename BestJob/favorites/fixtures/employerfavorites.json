@@ -14,5 +14,21 @@
       "employer_profile": 3,
       "cv": 2
     }
+  },
+  {
+    "model": "favorites.EmployerFavorites",
+    "pk": 3,
+    "fields": {
+      "employer_profile": 3,
+      "cv": 3
+    }
+  },
+  {
+    "model": "favorites.EmployerFavorites",
+    "pk": 4,
+    "fields": {
+      "employer_profile": 3,
+      "cv": 4
+    }
   }
 ]
