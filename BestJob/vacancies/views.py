@@ -1,6 +1,9 @@
+
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DeleteView, DetailView
 
@@ -40,10 +43,11 @@ class ModeratorVacancyList(TemplateView):
 
     def get(self, request, *args, **kwargs):
         super(ModeratorVacancyList, self).get(request, *args, **kwargs)
-        # user_id = request.user.pk
-        # employer_id = EmployerProfile.objects.get(user=user_id)
+
         context = self.get_context_data()
-        context['vacancies_list'] = Vacancy.objects.all()
+        context['title'] = 'Вакансии'
+        context['vacancies_list'] = Vacancy.objects.exclude(status__status="NPB")
+
         return self.render_to_response(context)
 
 
@@ -251,3 +255,25 @@ class VacancyDetail(DetailView):
         context['employments'] = Employments.objects.all()
 
         return self.render_to_response(context)
+
+
+def edit_vacancy_list(request, stat):
+    """Обновление списка вакансий соглано статусу на странице список акансий у модератора"""
+    vacancies_list = Vacancy.objects.exclude(status__status="NPB")
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest': # вместо отмершего if request.is_ajax()
+        if stat == 'frv':
+            vacancies_list = Vacancy.objects.filter(status__status="FRV")
+        elif stat == 'all':
+            vacancies_list = Vacancy.objects.exclude(status__status="NPB")
+        elif stat == 'pub':
+            vacancies_list = Vacancy.objects.filter(status__status="PUB")
+        elif stat == 'rjc':
+            vacancies_list = Vacancy.objects.filter(status__status="RJC")
+        elif stat == 'apv':
+            vacancies_list = Vacancy.objects.filter(status__status="APV")
+        else:
+            vacancies_list = Vacancy.objects.exclude(status__status="NPB")
+    context = { 'vacancies_list': vacancies_list }
+    result = render_to_string('vac_list.html', context)
+
+    return JsonResponse({'result':result})

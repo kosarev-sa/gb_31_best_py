@@ -45,7 +45,7 @@ class ModeratorCVList(TemplateView):
     def get(self, request, *args, **kwargs):
         super(ModeratorCVList, self).get(request, *args, **kwargs)
         context = self.get_context_data()
-        context['cvs_list'] = CV.objects.all()
+        context['cvs_list'] = CV.objects.exclude(status__status="NPB")
         return self.render_to_response(context)
 
 
@@ -540,3 +540,26 @@ class CVLanguageDelete(DeleteView):
         self.object = self.get_object()
         self.object.delete()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def edit_cv_list(request, stat):
+    """Обновление списка резюме соглано статусу на странице список резюме у модератора"""
+    cvs_list = CV.objects.exclude(status__status="NPB")
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest': # вместо отмершего if request.is_ajax()
+        if stat == 'frv':
+            cvs_list = CV.objects.filter(status__status="FRV")
+        elif stat == 'all':
+            cvs_list = CV.objects.exclude(status__status="NPB")
+        elif stat == 'pub':
+            cvs_list = CV.objects.filter(status__status="PUB")
+        elif stat == 'rjc':
+            cvs_list = CV.objects.filter(status__status="RJC")
+        elif stat == 'apv':
+            cvs_list = CV.objects.filter(status__status="APV")
+        else:
+            cvs_list = CV.objects.exclude(status__status="NPB")
+    context = { 'cvs_list': cvs_list }
+    result = render_to_string('cvs_list.html', context)
+
+    return JsonResponse({'result':result})
