@@ -30,13 +30,14 @@
                                 </div>
 
                                 <ul class="pull-right">
-                                    <li>
+                                    <li id="employer-relation-btn">
                                         <a href="{% url 'favorites:employer_delete' item.pk %}"
                                            class="btn btn-blue btn-small btn-effect">Убрать из избранного</a>
 
                                         {% if not item.has_relaton %}
-                                            <a href="#"
-                                               class="btn btn-blue btn-small btn-effect">Отправить приглашение</a>
+{#                                            <a href="#"#}
+{#                                               class="btn btn-blue btn-small btn-effect">Отправить приглашение</a>#}
+                                            <a id="employer_modal_trigger" href="javascript:void(0)" class="btn btn-blue btn-small btn-effect" role="button">Отправить приглашение</a>
                                         {% endif %}
                                     </li>
                                     {% if item.has_relaton %}
@@ -103,13 +104,14 @@
                                     <h5><small>{{ item.vacancy.employer_profile.name }}</small></h5>
                                 </div>
 
-                                <ul class="pull-right">
+                                <ul class="pull-right" id="worker-relation-btn">
                                     <li>
                                         <a href="{% url 'favorites:worker_delete' item.pk %}"
                                            class="btn btn-blue btn-small btn-effect">Убрать из избранного</a>
                                         {% if not item.has_relaton %}
-                                            <a href="#"
-                                                class="btn btn-blue btn-small btn-effect">Отправить отклик</a>
+{#                                            <a href="#"#}
+{#                                                class="btn btn-blue btn-small btn-effect">Отправить отклик</a>#}
+                                            <a id="worker_modal_trigger" href="javascript:void(0)" class="btn btn-blue btn-small btn-effect" role="button">Отправить отклик</a>
                                         {% endif %}
                                     </li>
                                     {% if item.has_relaton %}
@@ -177,8 +179,88 @@
         </div>
     </section>
 
+    <div class="cd-user-modal">
+        <!-- this is the entire modal form, including the background -->
+        <div class="cd-user-modal-container">
+
+            <div class="modal-header" style="background: #29b1fd;">
+                <p style="width: 100%; text-align: center; font-size: xx-large; color: white;">Выбрать что-то</p>
+            </div>
+
+            <div id="cd-relation">
+                <!-- relation form -->
+                <form class="cd-form">
+                    <p class="fieldset">
+                        <label class="image-replace cd-email" for="signin-email">E-mail</label>
+                        <input class="full-width has-padding has-border" id="signin-email" type="email" placeholder="E-mail">
+                    </p>
+                    <p class="fieldset">
+                        <label class="image-replace cd-password" for="signin-password">Password</label>
+                        <input class="full-width has-padding has-border" id="signin-password" type="password" placeholder="Password">
+                    </p>
+                    <p class="fieldset">
+                        <input type="checkbox" id="remember-me" checked>
+                        <label for="remember-me">Remember me</label>
+                    </p>
+                    <p class="fieldset">
+                        <button type="submit" value="Login" class="btn btn-blue btn-effect">Login</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block footer %}
     {% include 'inc_footer.html' %}
+{% endblock %}
+
+{% block additional_script %}
+    <script>
+        let $custom_form_modal = $('.cd-user-modal'),
+            $form_relation = $custom_form_modal.find('#cd-relation'),
+            $emp_rel_btn = $("#employer-relation-btn");
+            $work_rel_btn = $("#worker-relation-btn");
+
+         function custom_selected() {
+            $custom_form_modal.addClass('is-selected');
+            $form_relation.addClass('is-selected');
+         }
+
+         function custom_unselected() {
+            $custom_form_modal.removeClass('is-selected');
+            $form_relation.removeClass('is-selected');
+         }
+
+         //open modal
+        $emp_rel_btn.on('click', function (event) {
+            if ($(event.target).is($emp_rel_btn)) {
+                // on mobile open the submenu
+                $(this).children('').addClass('is-visible');
+            } else {
+                // on mobile close submenu
+                $emp_rel_btn.children('').removeClass('is-visible');
+                //show modal layer
+                $custom_form_modal.addClass('is-visible');
+                //show the selected form
+                ($(event.target).is('#employer_modal_trigger')) ? custom_selected(): login_page();
+            }
+        });
+
+         //close modal
+        $custom_form_modal.on('click', function (event) {
+            if ($(event.target).is($custom_form_modal) || $(event.target).is('.cd-close-form')) {
+                $custom_form_modal.removeClass('is-visible');
+            }
+        });
+
+        //close modal when clicking the esc keyboard button
+        $(document).on('keyup', function (event) {
+            if (event.which == '27') {
+                $custom_form_modal.removeClass('is-visible');
+            }
+        });
+
+    </script>
 {% endblock %}
