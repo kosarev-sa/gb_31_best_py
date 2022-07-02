@@ -65,8 +65,8 @@
                                 <ul class="dropdown-menu" role="menu">
                                     <li><a href="#">профиль модератора</a></li>
                                     <li><a href="#">модерация новостей</a></li>
-                                    <li><a href="#">модерация резюме</a></li>
-                                    <li><a href="#">модерация вакансий</a></li>
+                                    <li><a href="{% url 'cv:moderator_cvs_list' %}">модерация резюме</a></li>
+                                    <li><a href="{% url 'vacancies:moderator_vacancy_list' %}">модерация вакансий</a></li>
                                 </ul>
                             </li>
                         {% endif %}
