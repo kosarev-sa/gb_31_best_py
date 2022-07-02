@@ -25,7 +25,7 @@
                         <li><a href="{% url 'index' %}">На главную</a></li>
                         <li><a href="{% url 'haystack_search' %}">Поиск</a></li>
                         <li class="active">расширенный поиск вакансий</li>
-                        <li ><a href="{% url 'search_cv' %}">расширенный поиск резюме</a></li>
+                        <li><a href="{% url 'search_cv' %}">расширенный поиск резюме</a></li>
 
                     </ul>
                 </div>
@@ -37,6 +37,12 @@
 {% endblock %}
 
 {% block content %}
+    {% if message_of_denied %}
+        <script>alert('Пожалуйста, войдите или зарегистрируйтесь как соискатель.');</script>
+        <div class="text-center" style="color:red">
+            <h5>{{ message_of_denied }}</h5>
+        </div>
+    {% endif %}
     <!-- ===== Start of Main Wrapper Section ===== -->
     <section class="search-jobs ptb80">
         <div class="container">
@@ -49,7 +55,17 @@
 
                 <!-- Start of submit input -->
                 <div class="col-md-4 col-sm-12 search-submit">
-                    <button type="submit" class="btn btn-blue btn-effect"><i class="fa fa-search"></i>Найти</button>
+                    {% if message_of_denied %}
+                        <button type="submit" class="btn btn-blue btn-effect"
+                                formaction={% url 'users:login' %}><i
+                                class="fa fa-search"></i>Найти
+                        </button>
+
+                    {% else %}
+                        <button type="submit" class="btn btn-blue btn-effect"><i
+                                class="fa fa-search"></i>Найти
+                        </button>
+                    {% endif %}
                 </div>
                 <div class="col-md-12 text-center">
                     <h5 class="pb40"><br><br>Фильтры поиска</h5>
@@ -59,7 +75,8 @@
 
 
                         <div class="col-md-6 mx-auto">
-                            <label for="{{ form.specialization.id_for_label }}" style="visibility: visible; display: block"><br>Специальность</label>
+                            <label for="{{ form.specialization.id_for_label }}"
+                                   style="visibility: visible; display: block"><br>Специальность</label>
                             {{ form.specialization }}
                         </div>
                         <div class="col-md-6 mx-auto">
@@ -78,28 +95,30 @@
                         <br>
                         {#                        <label for="{{ form.salary.id_for_label }}"><br>Оклад & дислокация</label>#}
                         <div class="col-md-6 mx-auto" style="background-color: transparent">
-                            <label for="{{ form.salary_from.id_for_label }}" style="visibility: visible; display: block"><br>Оклад от</label>
+                            <label for="{{ form.salary_from.id_for_label }}"
+                                   style="visibility: visible; display: block"><br>Оклад от</label>
                             {{ form.salary_from }}
                         </div>
                         <div class="col-md-6 mx-auto">
-                            <label for="{{ form.salary_to.id_for_label }}" style="visibility: visible; display: block"><br>Оклад до</label>
+                            <label for="{{ form.salary_to.id_for_label }}"
+                                   style="visibility: visible; display: block"><br>Оклад до</label>
                             {{ form.salary_to }}
                         </div>
 
                     </div>
                 </div>
-{#                <div class="col-md-12">#}
-{#                    <div class="form-group">#}
-{##}
-{#                        <br>#}
-                        {#                        <label for="{{ form.salary.id_for_label }}"><br>Оклад & дислокация</label>#}
-{#                        <div class="col-md-6 mx-auto" style="background-color: transparent">#}
-{#                            <label for="{{ form.salary_from.id_for_label }}" class="form-check-label" style="visibility: visible; display: block; type: checkbox;"><br>Оклад на руки</label>#}
-{#                            {{ form.salary_on_hand }}#}
-{#                        </div>#}
-{##}
-{#                    </div>#}
-{#                </div>#}
+                {#                <div class="col-md-12">#}
+                {#                    <div class="form-group">#}
+                {##}
+                {#                        <br>#}
+                {#                        <label for="{{ form.salary.id_for_label }}"><br>Оклад & дислокация</label>#}
+                {#                        <div class="col-md-6 mx-auto" style="background-color: transparent">#}
+                {#                            <label for="{{ form.salary_from.id_for_label }}" class="form-check-label" style="visibility: visible; display: block; type: checkbox;"><br>Оклад на руки</label>#}
+                {#                            {{ form.salary_on_hand }}#}
+                {#                        </div>#}
+                {##}
+                {#                    </div>#}
+                {#                </div>#}
 
 
             </form>
@@ -148,7 +167,7 @@
                                             <ul class="list-inline">
                                                 <li>
                                                     <span><i
-                                                            class="fa fa-money"></i>{{ result.object.salary_from }} - {{ result.object.salary_to}} RUB</span>
+                                                            class="fa fa-money"></i>{{ result.object.salary_from }} - {{ result.object.salary_to }} RUB</span>
                                                 </li>
 
                                                 <li>
@@ -179,13 +198,15 @@
                             {% empty %}
                                 <p>Ничего не найдено...</p>
                             {% endfor %}
-                            <div class="single-candidate row nomargin" style="height: 1px; padding: 0px">
+                            <div class="single-candidate row nomargin"
+                                 style="height: 1px; padding: 0px">
                             </div>
                             {#                    {% if page.has_previous or page.has_next %}#}
                             <div class="col-md-12 mt10">
                                 <ul class="pagination list-inline text-center">
                                     {% if page_obj.has_previous %}
-                                        <li><a href="?q={{ query }}&amp;page={{ page_obj.previous_page_number }}"><<</a>
+                                        <li>
+                                            <a href="?q={{ query }}&amp;page={{ page_obj.previous_page_number }}"><<</a>
                                         </li>
                                     {% endif %}
                                     {% if page_obj.has_other_pages %}
@@ -194,7 +215,9 @@
                                         </li>
                                     {% endif %}
                                     {% if page_obj.has_next %}
-                                        <li><a href="?q={{ query }}&amp;page={{ page_obj.next_page_number }}">>></a></li>
+                                        <li>
+                                            <a href="?q={{ query }}&amp;page={{ page_obj.next_page_number }}">>></a>
+                                        </li>
                                     {% endif %}
                                 </ul>
                             </div>
@@ -330,7 +353,7 @@
 {#                    </div>#}
 {#                {% endif %}#}
 {#            {% else %}#}
-                {# Show some example queries to run, maybe query syntax, something else? #}
+{# Show some example queries to run, maybe query syntax, something else? #}
 {#            {% endif %}#}
 {#            <br>#}
 {#        </div>#}
