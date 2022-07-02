@@ -81,6 +81,9 @@ class FavoritesWorkerListView(ListView):
 
                     # Вычисление оправлялся ли отклик на вакансию из избранного.
                     for favorit in worker_favorites:
+
+                        favorit.has_relaton = False
+
                         # Отправлял ли я отклик на вакансии из избранного?
                         for cv in cvs:
                             relations = Relations.objects.filter(cv=cv, vacancy=favorit.vacancy)
@@ -88,8 +91,7 @@ class FavoritesWorkerListView(ListView):
                             if relations:
                                 favorit.has_relaton = True
                                 favorit.relations_id = relations.first().pk
-                            else:
-                                favorit.has_relaton = False
+                                break
 
                     context['favorites_list'] = worker_favorites
 
@@ -135,6 +137,8 @@ class FavoritesEmployerListView(ListView):
                     # Вычисление оправлялось ли приглашение на резюме из избранного.
                     for favorit in employer_favorites:
 
+                        favorit.has_relaton = False
+
                         # Отправлял ли я отклик на вакансии из избранного?
                         for vacancy in vacancies:
                             relations = Relations.objects.filter(cv=favorit.cv, vacancy=vacancy)
@@ -142,8 +146,7 @@ class FavoritesEmployerListView(ListView):
                             if relations:
                                 favorit.has_relaton = True
                                 favorit.relations_id = relations.first().pk
-                            else:
-                                favorit.has_relaton = False
+                                break
 
                     context['favorites_list'] = employer_favorites
         else:

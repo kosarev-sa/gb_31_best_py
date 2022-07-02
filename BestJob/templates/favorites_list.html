@@ -40,7 +40,7 @@
                                             <a id="employer_modal_trigger" href="javascript:void(0)" class="btn btn-blue btn-small btn-effect" role="button">Отправить приглашение</a>
                                         {% endif %}
                                     </li>
-                                    {% if item.has_relaton %}
+                                    {% if item.has_relaton == 1 %}
                                         <li>
                                             <a href="{% url 'relations:detail' item.relations_id %}">
                                                 <h6 class="time">Вы отправляли приглашение на это резюме</h6></a>
@@ -223,17 +223,9 @@
             $emp_rel_btn = $("#employer-relation-btn");
             $work_rel_btn = $("#worker-relation-btn");
 
-         function custom_selected() {
-            $custom_form_modal.addClass('is-selected');
-            $form_relation.addClass('is-selected');
-         }
-
-         function custom_unselected() {
-            $custom_form_modal.removeClass('is-selected');
-            $form_relation.removeClass('is-selected');
-         }
-
-         //open modal
+        /**
+         * Emp open modal.
+         */
         $emp_rel_btn.on('click', function (event) {
             if ($(event.target).is($emp_rel_btn)) {
                 // on mobile open the submenu
@@ -243,19 +235,36 @@
                 $emp_rel_btn.children('').removeClass('is-visible');
                 //show modal layer
                 $custom_form_modal.addClass('is-visible');
-                //show the selected form
-                ($(event.target).is('#employer_modal_trigger')) ? custom_selected(): login_page();
             }
         });
 
-         //close modal
+        /**
+         * Work open modal.
+         */
+        $work_rel_btn.on('click', function (event) {
+            if ($(event.target).is($work_rel_btn)) {
+                // on mobile open the submenu
+                $(this).children('').addClass('is-visible');
+            } else {
+                // on mobile close submenu
+                $work_rel_btn.children('').removeClass('is-visible');
+                //show modal layer
+                $custom_form_modal.addClass('is-visible');
+            }
+        });
+
+        /**
+         * Close modal.
+         */
         $custom_form_modal.on('click', function (event) {
             if ($(event.target).is($custom_form_modal) || $(event.target).is('.cd-close-form')) {
                 $custom_form_modal.removeClass('is-visible');
             }
         });
 
-        //close modal when clicking the esc keyboard button
+        /**
+         * Close modal when clicking the esc keyboard button.
+         */
         $(document).on('keyup', function (event) {
             if (event.which == '27') {
                 $custom_form_modal.removeClass('is-visible');
