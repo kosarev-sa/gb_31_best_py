@@ -37,6 +37,13 @@
 {% endblock %}
 
 {% block content %}
+        {% if message_of_denied %}
+        <script>alert('Пожалуйста, войдите или зарегистрируйтесь как работодатель.');
+        </script>
+        <div class="text-center" style="color:red">
+            <h5>{{ message_of_denied }}</h5>
+        </div>
+    {% endif %}
     <!-- ===== Start of Main Wrapper Section ===== -->
     <section class="search-jobs ptb80">
         <div class="container">
@@ -49,7 +56,16 @@
 
                 <!-- Start of submit input -->
                 <div class="col-md-4 col-sm-12 search-submit">
-                    <button type="submit" class="btn btn-blue btn-effect"><i class="fa fa-search"></i>Найти</button>
+                    {% if message_of_denied %}
+                        <button type="submit" class="btn btn-blue btn-effect"
+                                formaction={% url 'users:login' %}><i
+                                class="fa fa-search"></i>Найти
+                        </button>
+                    {% else %}
+                        <button type="submit" class="btn btn-blue btn-effect"><i
+                                class="fa fa-search"></i>Найти
+                        </button>
+                    {% endif %}
                 </div>
                 <div class="col-md-12 text-center">
                     <h5 class="pb40"><br><br>Фильтры поиска</h5>
