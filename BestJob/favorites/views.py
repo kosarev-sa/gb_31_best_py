@@ -60,7 +60,6 @@ class FavoritesWorkerListView(ListView):
         context['link'] = "/"
         context['heading_link'] = "На главную"
         context['is_worker'] = True
-        context['is_employer'] = False
         return context
 
     def get(self, request, *args, **kwargs):
@@ -78,6 +77,10 @@ class FavoritesWorkerListView(ListView):
 
                     # Я ищу работу и у меня есть резюме. Мои резюме.
                     cvs = CV.objects.filter(worker_profile=profiler)
+
+                    context['modal_header'] = 'Выбор резюме'
+                    context['modal_combo'] = cvs
+                    context['modal_combo_empty'] = 'Выберите резюме'
 
                     # Вычисление оправлялся ли отклик на вакансию из избранного.
                     for favorit in worker_favorites:
@@ -114,7 +117,6 @@ class FavoritesEmployerListView(ListView):
         context['link'] = "/"
         context['heading_link'] = "На главную"
         context['is_employer'] = True
-        context['is_worker'] = False
         return context
 
     def get(self, request, *args, **kwargs):
@@ -133,6 +135,10 @@ class FavoritesEmployerListView(ListView):
 
                     # Я ищу сотрудников и у меня есть вакансии. Мои вакансии.
                     vacancies = Vacancy.objects.filter(employer_profile=profiler)
+
+                    context['modal_header'] = 'Выбор вакансии'
+                    context['modal_combo'] = vacancies
+                    context['modal_combo_empty'] = 'Выберите вакансию'
 
                     # Вычисление оправлялось ли приглашение на резюме из избранного.
                     for favorit in employer_favorites:

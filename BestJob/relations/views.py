@@ -1,7 +1,8 @@
 from django.db.models import Max
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView, CreateView
 
 from BestJob.settings import UserRole
@@ -262,4 +263,47 @@ class RelationChangeStatusView(TemplateView):
 
 
 class RelationCreateView(CreateView):
-    pass
+    model = Relations
+    success_url = reverse_lazy('relations:list')
+
+    def post(self, request, *args, **kwargs):
+        global status
+        user = request.user
+        if request.POST:
+            form_data = request.POST
+            magic_field = form_data.get('magic_field')
+            relation_select_picker = form_data.get('relation_select_picker')
+            transmittal_letter = form_data.get('transmittal_letter')
+
+            if magic_field and relation_select_picker and transmittal_letter:
+                magic_field = int(magic_field)
+                relation_select_picker = int(relation_select_picker)
+
+                new_relation = Relations()
+
+                # Работодатель.
+                if user.role_id == UserRole.EMPLOYER:
+                    self.success_url = reverse_lazy('favorites:employer_list')
+                    new_relation.vacancy = Vacancy.objects.get(pk=relation_select_picker)
+                    new_relation.cv = CV.objects.get(pk=magic_field)
+                    # Приглашение.
+                    status = 4
+
+                # Соискатель.
+                elif user.role_id == UserRole.WORKER:
+                    self.success_url = reverse_lazy('favorites:worker_list')
+                    new_relation.cv = CV.objects.get(pk=relation_select_picker)
+                    new_relation.vacancy = Vacancy.objects.get(pk=magic_field)
+                    # Отклик.
+                    status = 5
+
+                new_relation.save()
+
+                new_relation_history = RelationHistory()
+                new_relation_history.relation = new_relation
+                new_relation_history.status = RelationStatus.objects.get(pk=status)
+                new_relation_history.comment = transmittal_letter
+                new_relation_history.save()
+
+        return redirect(self.success_url)
+
