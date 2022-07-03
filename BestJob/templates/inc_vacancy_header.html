@@ -1,0 +1,26 @@
+<section class="page-header">
+    <div class="container">
+
+        <!-- Start of Page Title -->
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{{ heading }}</h2>
+            </div>
+        </div>
+        <!-- End of Page Title -->
+
+        <!-- Start of Breadcrumb -->
+        {% if link %}
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="breadcrumb">
+                        <li><a href="{{ link }}">{{ heading_link }}</a></li>
+                        <li class="active">{{ heading }}</li>
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+        <!-- End of Breadcrumb -->
+
+    </div>
+</section>

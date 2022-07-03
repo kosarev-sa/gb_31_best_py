@@ -18,6 +18,9 @@ class VacancyCreateForm(forms.ModelForm):
         self.fields['city'].widget.attrs['placeholder'] = 'Москва'
         self.fields['description'].widget.attrs['placeholder'] = 'Описание вакансии'
 
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
 
 class VacancyUpdateForm(forms.ModelForm):
     """форма просмотра\редактирования вакансии"""
