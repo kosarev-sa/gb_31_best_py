@@ -65,7 +65,7 @@
                             <div class="col-md-8 blog-desc">
                                 <h5><a href="{% url 'news:detail_news' item.pk %}">{{ item.title }}</a></h5>
                                 <div class="post-detail pt10 pb20">
-                                    <span><i class="fa fa-user"></i>{{ item.author.first_name }}</span>
+                                    <span><i class="fa fa-user"></i>{{ item.author.username }}</span>
                                     <span><i class="fa fa-clock-o"></i>{{ item.created|date:"H:i" }}</span>
                                 </div>
 

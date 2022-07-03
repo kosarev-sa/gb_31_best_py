@@ -1,12 +1,13 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.datetime_safe import datetime
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DeleteView, DetailView
 
 from BestJob.settings import NEWS_BODY_LEN_ON_NEWS_LIST
+from users.models import ModeratorProfile, User
 from news.forms import NewsCreateForm, NewsUpdateForm#, NewsDeleteForm
 from news.models import News
 from search.models import Category
@@ -87,9 +88,24 @@ class NewsCreate(CreateView):
     success_url = reverse_lazy('news:moderate_news')
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
         form.save()
         return super(NewsCreate, self).form_valid(form)
+
+    def post(self, request, *args, **kwargs):
+        author_id = request.user.pk
+        form = self.form_class(data=request.POST, files=request.FILES)
+        if form.is_valid():
+            # сохраняем новую новость
+            news = form.save(commit=False)
+            news.author = User.objects.get(id=author_id)
+            news.title = form.data['title']
+            news.body = form.data['body']
+            news.image = form.instance.image
+            news.save()
+            return redirect(self.success_url)
+        else:
+            print(form.errors)
+        return self.form_invalid(form)
 
 
 class NewsUpdate(UpdateView):
@@ -103,6 +119,44 @@ class NewsUpdate(UpdateView):
         context = super(NewsUpdate, self).get_context_data(**kwargs)
         return context
 
+    def get(self, request, *args, **kwargs):
+        super(NewsUpdate, self).get(request, *args, **kwargs)
+        context = self.get_context_data()
+        try:
+            news_id = kwargs.get('pk')
+            news = News.objects.get(id=news_id)
+            context['news'] = news
+            context['title'] = news.title
+            context['body'] = news.body
+            context['image'] = news.image
+        except Exception:
+            print(f'News {request.news.pk} not exists')
+        context['news_list'] = News.objects.all()
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(data=request.POST, files=request.FILES)
+        news_id = self.kwargs['pk']
+
+        news = News.objects.filter(id=news_id)
+
+        if news:
+            news = news.first()
+
+            form.instance.pk = news.id
+            form.instance.title = news.title
+            form.instance.body = news.body
+
+            if form.instance.image.closed:
+                form.instance.image = news.image
+
+        else:
+            form.instance.news_id = news_id
+            form.instance.user = News.objects.get(pk=news_id)
+        news.save()
+        return redirect(self.success_url)
+
 
 class NewsDelete(DeleteView):
     """view для удаления новостей"""
@@ -110,10 +164,9 @@ class NewsDelete(DeleteView):
     template_name = 'news_confirm_delete.html'
     success_url = reverse_lazy('news:moderate_news')
 
-    # def form_valid(self, form):
-    #     """Новость не удаляется, а делается не активной"""
-    #     success_url = self.get_success_url()
-    #     self.object.is_active = False
-    #     self.object.save()
-    #     return HttpResponseRedirect(success_url)
+    def form_valid(self, form):
+        """Новость удаляется"""
+        success_url = self.get_success_url()
+        self.object.delete()
+        return HttpResponseRedirect(success_url)
 
