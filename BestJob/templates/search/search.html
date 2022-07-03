@@ -131,7 +131,7 @@
                                         <!-- CTA -->
                                         <div class="col-md-2 col-xs-3">
                                             <div class="candidate-cta ptb30">
-                                                <a href="#" style="color: lightgray">
+                                                <a href="{% url 'favorites:employer_add_remove' cv_id=result.object.id %}" style="color: lightgray">
                                                     <div class="pull-right"><h3>★</h3></div>
                                                 </a>
                                             </div>
@@ -197,7 +197,7 @@
                                         <!-- CTA -->
                                         <div class="col-md-2 col-xs-3">
                                             <div class="candidate-cta ptb30">
-                                                <a href="#" style="color: lightgray">
+                                                <a href="{% url 'favorites:worker_add_remove' vacancy_id=result.object.id %}" style="color: lightgray">
                                                     <div class="pull-right"><h3>★</h3></div>
                                                 </a>
                                             </div>
