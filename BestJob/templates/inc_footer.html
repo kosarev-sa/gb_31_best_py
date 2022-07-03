@@ -35,7 +35,7 @@
                 <!-- Links -->
                 <ul class="nopadding">
                     {% if user.role_id == 2 or user.is_superuser %}
-                        <li><a href="post-job.html"><i class="fa fa-angle-double-right"></i>добавить вакансию</a></li>
+                        <li><a href="{% url 'vacancy:create_vacancy' %}"><i class="fa fa-angle-double-right"></i>добавить вакансию</a></li>
                     {% endif %}
                     <li><a href="{% url 'news:list_news' %}"><i class="fa fa-angle-double-right"></i>новости</a></li>
                     <li><a href="{% url 'haystack_search' %}"><i class="fa fa-angle-double-right"></i>поиск</a></li>

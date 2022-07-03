@@ -135,7 +135,10 @@ class VacancyCreate(CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyCreate, self).get_context_data(**kwargs)
-        context['title'] = 'Новая вакансия'
+        context['title'] = 'Ваша вакансия'
+        context['heading'] = "Ваша вакансия"
+        context['link'] = "/vacancies/all/"
+        context['heading_link'] = "Список вакансий"
         return context
 
     def get(self, request, *args, **kwargs):
@@ -149,13 +152,17 @@ class VacancyCreate(CreateView):
         employer = EmployerProfile.objects.get(user=request.user.pk)
         start_status = ApprovalStatus.objects.get(status='NPB')
         form = self.form_class(data=request.POST)
+        salary_on_hand = request.POST.get('id_salary_on_hand', False)
+        is_active = request.POST.get('id_is_active', False)
+
         if form.is_valid():
             # сохраняем новую вакансию
             vacancy = form.save(commit=False)
             vacancy.employer_profile = employer
             vacancy.status = start_status
+            vacancy.salary_on_hand = salary_on_hand
+            vacancy.is_active = is_active
             vacancy.save()
-
             return redirect(self.success_url)
         else:
             print(form.errors)
