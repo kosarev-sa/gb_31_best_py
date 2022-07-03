@@ -1,5 +1,5 @@
-
-from django.http import JsonResponse
+from django.contrib import messages
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -191,15 +191,20 @@ class VacancyUpdate(UpdateView):
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
+        super(VacancyUpdate, self).post(request, *args, **kwargs)
         self.object = self.get_object()
-        form = self.form_class(request.POST, instance=self.object)
-
+        form = self.form_class(data=request.POST)
+        salary_on_hand = request.POST.get('id_salary_on_hand', False)
+        is_active = request.POST.get('id_is_active', False)
         if form.is_valid():
+            self.object.is_active = is_active
+            self.object.salary_on_hand = salary_on_hand
             self.object.save()
             return redirect(self.success_url)
         else:
-            print(form.errors)
-        return self.form_invalid(form)
+            messages.error(request, form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 
 class VacancyDelete(DeleteView):
