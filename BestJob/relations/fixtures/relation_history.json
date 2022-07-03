@@ -1,0 +1,132 @@
+[
+  {
+    "model": "users.RelationHistory",
+    "pk": 1,
+    "fields": {
+      "created": "2022-06-28T14:04:22",
+      "relation": 1,
+      "status": 5,
+      "comment": "Здравствуйте. Меня заинтересовала ваша вакансия. 1"
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 2,
+    "fields": {
+      "created": "2022-06-28T15:04:00",
+      "relation": 1,
+      "status": 1,
+      "comment": "Резюме не просмотрено"
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 3,
+    "fields": {
+      "created": "2022-06-29T16:05:11",
+      "relation": 1,
+      "status": 6,
+      "comment": "Встреча согласована"
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 4,
+    "fields": {
+      "created": "2022-06-28T15:04:22",
+      "relation": 2,
+      "status": 5,
+      "comment": "Здравствуйте. Меня заинтересовала ваша вакансия. 2"
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 5,
+    "fields": {
+      "created": "2022-06-28T16:04:22",
+      "relation": 2,
+      "status": 3,
+      "comment": "К сожалению, вы нам не подходите."
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 6,
+    "fields": {
+      "created": "2022-06-29T16:07:00",
+      "relation": 3,
+      "status": 4,
+      "comment": "Компания приглашает Вас на интервью в свой офис. 0"
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 7,
+    "fields": {
+      "created": "2022-06-28T17:04:22",
+      "relation": 4,
+      "status": 4,
+      "comment": "Компания приглашает Вас на интервью в свой офис. 1"
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 8,
+    "fields": {
+      "created": "2022-06-28T17:04:22",
+      "relation": 4,
+      "status": 2,
+      "comment": "Приглашение не просмотрено"
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 9,
+    "fields": {
+      "created": "2022-06-28T18:04:22",
+      "relation": 5,
+      "status": 4,
+      "comment": "Компания приглашает Вас на интервью в свой офис. 2"
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 10,
+    "fields": {
+      "created": "2022-06-29T18:04:22",
+      "relation": 5,
+      "status": 3,
+      "comment": "Я не хочу у вас работать."
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 11,
+    "fields": {
+      "created": "2022-06-29T10:15:22",
+      "relation": 6,
+      "status": 4,
+      "comment": "Компания приглашает Вас на интервью в свой офис. 3"
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 12,
+    "fields": {
+      "created": "2022-06-29T10:15:22",
+      "relation": 6,
+      "status": 2,
+      "comment": "Приглашение не просмотрено"
+    }
+  },
+  {
+    "model": "users.RelationHistory",
+    "pk": 13,
+    "fields": {
+      "created": "2022-06-30T10:15:22",
+      "relation": 6,
+      "status": 6,
+      "comment": "Встреча согласована"
+    }
+  }
+]

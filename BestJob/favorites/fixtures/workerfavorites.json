@@ -1,0 +1,42 @@
+[
+  {
+    "model": "favorites.WorkerFavorites",
+    "pk": 1,
+    "fields": {
+      "worker_profile": 11,
+      "vacancy": 1
+    }
+  },
+  {
+    "model": "favorites.WorkerFavorites",
+    "pk": 2,
+    "fields": {
+      "worker_profile": 11,
+      "vacancy": 2
+    }
+  },
+  {
+    "model": "favorites.WorkerFavorites",
+    "pk": 3,
+    "fields": {
+      "worker_profile": 11,
+      "vacancy": 3
+    }
+  },
+  {
+    "model": "favorites.WorkerFavorites",
+    "pk": 4,
+    "fields": {
+      "worker_profile": 11,
+      "vacancy": 4
+    }
+  },
+  {
+    "model": "favorites.WorkerFavorites",
+    "pk": 5,
+    "fields": {
+      "worker_profile": 11,
+      "vacancy": 5
+    }
+  }
+]

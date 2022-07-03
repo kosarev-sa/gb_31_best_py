@@ -1,5 +1,6 @@
 # Create your views here.
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
+from django.template.loader import render_to_string
 
 from BestJob.mixin import BaseClassContextMixin, UserDispatchMixin
 
@@ -28,7 +29,7 @@ class WorkerProfileView(UpdateView):
     template_name = 'worker_profile.html'
     form_class = WorkerProfileForm
     success_url = reverse_lazy('users:worker_profile')
-    title = 'BestJob | Профайл соискателя'
+    # title = 'BestJob | Профайл соискателя'
 
     def get_object(self, queryset=None):
         user_id = self.kwargs['pk']
@@ -41,6 +42,14 @@ class WorkerProfileView(UpdateView):
             worker_profile.user = User.objects.get(pk=user_id)
             return worker_profile
 
+    def get_context_data(self, **kwargs):
+        context = super(WorkerProfileView, self).get_context_data(**kwargs)
+
+        context['title'] = "Профиль соискателя"
+        context['heading'] = "Профиль соискателя"
+        context['link'] = "/cvs/all/"
+        context['heading_link'] = "Список резюме"
+        return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -74,7 +83,7 @@ class EmployersProfileView(ListView, BaseClassContextMixin):
     title = 'BestJob | Работодатели'
 
     def get_context_data(self, **kwargs):
-        context = super(EmployerProfileView, self).get_context_data(**kwargs)
+        context = super(EmployersProfileView, self).get_context_data(**kwargs)
         context.update({
             'employers': EmployerProfile.objects.all(),
         })
@@ -85,19 +94,7 @@ class EmployerDetailView(DetailView, BaseClassContextMixin):
     """view для просмотра выбранного работодателя"""
     model = EmployerProfile
     template_name = 'employers_detail.html'
-    title = 'BestJob | Работодатель'
-
-#
-# class EmployerProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
-#     """view для профиля работодателя"""
-#     model = EmployerProfile
-#     form_class = EmployerProfileForm
-#     template_name = 'employer_profile.html'
-#     success_url = reverse_lazy('users:employer_profile')
-#     title = 'BestJob | Профайл работодателя'
-#
-#     # def get_object(self, queryset=None):
-#     #     return get_object_or_404(User, pk=self.request.employer_profile.pk)
+    title = 'Карточка компании'
 
 
 class EmployerProfileView(UpdateView):
@@ -118,11 +115,20 @@ class EmployerProfileView(UpdateView):
             employer_profile = EmployerProfile()
             employer_profile.user = User.objects.get(pk=user_id)
             return employer_profile
-        
+
+    def get_context_data(self, **kwargs):
+        context = super(EmployerProfileView, self).get_context_data(**kwargs)
+
+        context['title'] = "Профиль работодателя"
+        context['heading'] = "Профиль работодателя"
+        context['link'] = "/vacancy/all/"
+        context['heading_link'] = "Список вакансий"
+        return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = self.form_class(data=request.POST, files=request.FILES)
+        # form = self.form_class(data=request.POST, files=request.FILES)
+        form = self.form_class(request.POST, instance=self.object, files=request.FILES)
         user_id = self.kwargs['pk']
 
         emploerProfile = EmployerProfile.objects.filter(user_id=user_id)
@@ -132,6 +138,7 @@ class EmployerProfileView(UpdateView):
             form.instance.pk = emploerProfile.id
             form.instance.user_id = emploerProfile.user.id
             form.instance.user = emploerProfile.user
+            form.instance.data = emploerProfile.data
             form.instance.date_create = emploerProfile.date_create
 
             if form.instance.image.closed:
@@ -140,8 +147,12 @@ class EmployerProfileView(UpdateView):
             form.instance.user_id = user_id
             form.instance.user = User.objects.get(pk=user_id)
 
-        form.save()
-        return redirect(reverse("users:employer_profile", args=(user_id,)))
+        if form.is_valid():
+            form.save()
+            return redirect(reverse("users:employer_profile", args=(user_id,)))
+        else:
+            print(form.errors)
+        return self.form_invalid(form)
 
 
 class ModeratorProfileView(UpdateView):
@@ -209,7 +220,6 @@ class UserRegisterView(FormView):
     form_class = UserRegisterForm
     success_url = reverse_lazy('users:email_verify')
     unsuccess_url = reverse_lazy('users:registration')
-
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(UserRegisterView, self).get_context_data(**kwargs)
@@ -356,3 +366,38 @@ class ModerationAwaiting(TemplateView):
     template_name = 'moderation_awaiting.html'
     success_url = reverse_lazy("users:moderation_awaiting")
     title = 'BestJob | Модерация'
+
+
+class ModeratorCompaniesList(TemplateView):
+    """view просмотра вакансий модератором"""
+    template_name = 'moderator_company_list.html'
+
+    def get(self, request, *args, **kwargs):
+        super(ModeratorCompaniesList, self).get(request, *args, **kwargs)
+        context = self.get_context_data()
+        context['companies_list'] = EmployerProfile.objects.exclude(status__status="NPB")
+        # EmployerProfile.objects.exclude(status__status="NPB")
+        return self.render_to_response(context)
+
+
+def edit_comp_list(request, stat):
+    """Обновление списка компаний соглано статусу на странице список компаний у модератора"""
+    companies_list = EmployerProfile.objects.exclude(status__status="NPB")
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # вместо отмершего if request.is_ajax()
+        if stat == 'frv':
+            companies_list = EmployerProfile.objects.filter(status__status="FRV")
+        elif stat == 'all':
+            companies_list = EmployerProfile.objects.exclude(status__status="NPB")
+        elif stat == 'pub':
+            companies_list = EmployerProfile.objects.filter(status__status="PUB")
+        elif stat == 'rjc':
+            companies_list = EmployerProfile.objects.filter(status__status="RJC")
+        elif stat == 'apv':
+            companies_list = EmployerProfile.objects.filter(status__status="APV")
+        else:
+            companies_list = EmployerProfile.objects.exclude(status__status="NPB")
+    context = {'companies_list': companies_list}
+    result = render_to_string('companies_list.html', context)
+
+    return JsonResponse({'result': result})

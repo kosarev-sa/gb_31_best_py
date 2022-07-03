@@ -27,6 +27,7 @@ class Vacancy(models.Model):
     currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB, verbose_name='валюта')
     salary_on_hand = models.BooleanField(default=True, blank=True, verbose_name='Зарплата на руки')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    moderators_comment = models.TextField(max_length=5000, blank=True, null=True)
 
     def __str__(self):
         return self.name

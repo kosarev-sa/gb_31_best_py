@@ -1,0 +1,68 @@
+<!-- Обновляемый список резюме (по статусам) в списке модератора -->
+
+{% load static %}
+
+<div class="cv_list">
+    <!-- Start of Candidate Main -->
+    <div class="col-md-12 candidate-main ptb80">
+        {% if cvs_list %}
+            {% for item in cvs_list %}
+                <!-- Start of Candidates Wrapper -->
+                <div class="candidate-wrapper">
+
+                    <!-- ===== Start of Single Candidate 1 ===== -->
+                    <div class="single-candidate row nomargin">
+
+                        <!-- Candidate Image -->
+                        <div class="col-md-2 col-xs-3">
+                            <div class="candidate-img">
+                                <img width="200" height="200"
+                                     src="{% if item.worker_profile.image %} {{ item.worker_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                                     class="img-responsive">
+                            </div>
+                        </div>
+
+                        <!-- Start of Candidate Name & Info -->
+                        <div class="col-md-8 col-xs-6 ptb20">
+                            <!-- Candidate Name -->
+                            <div class="candidate-name">
+                                <h5>{{ item.worker_profile.name }}</h5>
+                            </div>
+                            <div class="candidate-name">
+                                <p>{{ item.post }}</p>
+                            </div>
+
+                            <!-- Candidate Info -->
+                            <div class="candidate-info mt5">
+                                <ul class="list-inline">
+                                    <li>
+                                                    <span><i
+                                                            class="fa fa-map-marker"></i>{{ item.worker_profile.city }}</span>
+                                    </li>
+
+                                    <li>
+                                        <span><i class="fa fa-briefcase"></i>{{ item.speciality.name }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- End of Candidate Name & Info -->
+
+                        <!-- CTA -->
+                        <div class="col-md-2 col-xs-3">
+                            <div class="candidate-cta">
+                                {{ item.status }}
+                            </div>
+                            <div class="candidate-cta ptb30">
+                                <a href="{% url 'cv:moderator_cvs_approve' item.id %}"
+                                   class="btn btn-blue btn-small btn-effect">просмотр</a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- ===== End of Single Candidate 1 ===== -->
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>

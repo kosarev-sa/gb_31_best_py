@@ -1,0 +1,77 @@
+
+<!-- Обновляемый список вакансий (по статусам) в списке модератора -->
+
+{% load static %}
+<div class="vac_list">
+    <div class="col-md-12 candidate-main ptb80">
+        {% if vacancies_list %}
+            {% for item in vacancies_list %}
+                <!-- Start of Candidates Wrapper -->
+                <div class="candidate-wrapper">
+
+                    <!-- ===== Start of Single Candidate 1 ===== -->
+                    <div class="single-candidate row nomargin">
+
+                        <!-- Candidate Image -->
+                        <div class="col-md-2 col-xs-3">
+                            <div class="candidate-img">
+                                <img width="200" height="200"
+                                     src="{% if item.employer_profile.image %} {{ item.employer_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                                     class="img-responsive">
+                            </div>
+                        </div>
+
+                        <!-- Start of Candidate Name & Info -->
+                        <div class="col-md-8 col-xs-6 ptb20">
+                            <!-- Candidate Name -->
+                            <div class="candidate-name">
+                                <h5>{{ item.employer_profile.name }}</h5>
+                            </div>
+                            <div class="candidate-name">
+                                <p>{{ item.name }}</p>
+                            </div>
+
+                            <!-- Candidate Info -->
+                            <div class="candidate-info mt5">
+                                <ul class="list-inline">
+                                    {% if item.salary_from or item.salary_to %}
+                                        <li>
+                                                        <span><i class="fa fa-money"></i>
+                                                            {% if item.salary_from %}
+                                                                {{ item.salary_from }} - {% else %} До {% endif %}
+                                                            {% if item.salary_to %}{{ item.salary_to }} {% else %} и
+                                                                выше {% endif %} </span>
+                                        </li>
+                                    {% endif %}
+
+                                    <li>
+                                                    <span><i
+                                                            class="fa fa-map-marker"></i>{{ item.employer_profile.city }}</span>
+                                    </li>
+
+                                    <li>
+                                        <span><i class="fa fa-briefcase"></i>{{ item.specialization.name }}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- End of Candidate Name & Info -->
+
+                        <!-- CTA -->
+                        <div class="col-md-2 col-xs-3">
+                            <div class="candidate-cta">
+                                {{ item.status }}
+                            </div>
+                            <div class="candidate-cta ptb30">
+                                <a href="{% url 'vacancies:moderator_vacancy_approve' item.id %}"
+                                   class="btn btn-blue btn-small btn-effect">просмотр</a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- ===== End of Single Candidate 1 ===== -->
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>

@@ -1,6 +1,9 @@
+from django.contrib import messages
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 # Create your views here.
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DeleteView, DetailView
 
@@ -44,10 +47,11 @@ class ModeratorVacancyList(TemplateView):
 
     def get(self, request, *args, **kwargs):
         super(ModeratorVacancyList, self).get(request, *args, **kwargs)
-        # user_id = request.user.pk
-        # employer_id = EmployerProfile.objects.get(user=user_id)
+
         context = self.get_context_data()
-        context['vacancies_list'] = Vacancy.objects.all()
+        context['title'] = 'Вакансии'
+        context['vacancies_list'] = Vacancy.objects.exclude(status__status="NPB")
+
         return self.render_to_response(context)
 
 
@@ -174,6 +178,10 @@ class VacancyUpdate(UpdateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyUpdate, self).get_context_data(**kwargs)
+        context['title'] = "Изменение вакансии"
+        context['heading'] = "Ваша вакансия"
+        context['link'] = "/vacancies/all/"
+        context['heading_link'] = "Список вакансий"
         return context
 
     def get(self, request, *args, **kwargs):
@@ -183,10 +191,27 @@ class VacancyUpdate(UpdateView):
         try:
             employer = EmployerProfile.objects.get(user=request.user.pk)
             context['employer'] = employer
+
         except Exception:
             print(f'Employer {request.user.pk} not exists')
         context['employments'] = Employments.objects.all()
         return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        super(VacancyUpdate, self).post(request, *args, **kwargs)
+        self.object = self.get_object()
+        form = self.form_class(data=request.POST)
+        salary_on_hand = request.POST.get('id_salary_on_hand', False)
+        is_active = request.POST.get('id_is_active', False)
+        if form.is_valid():
+            self.object.is_active = is_active
+            self.object.salary_on_hand = salary_on_hand
+            self.object.save()
+            return redirect(self.success_url)
+        else:
+            messages.error(request, form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 
 class VacancyDelete(DeleteView):
@@ -253,12 +278,39 @@ class VacancyDetail(DetailView):
         context = self.get_context_data()
         vacancy_id = kwargs.get('pk')
         vacancy = Vacancy.objects.get(id=vacancy_id)
+
         try:
             employer = EmployerProfile.objects.get(id=vacancy_id)
             context['vacancy'] = vacancy
             context['employer'] = employer
+            context['title'] = "Вакансии"
+            context['heading'] = "Вакансия"
+            context['link'] = "/vacancies/all/"
+            context['heading_link'] = "Список вакансий"
         except Exception:
             print(f'Employer not exists')
         context['employments'] = Employments.objects.all()
 
         return self.render_to_response(context)
+
+
+def edit_vacancy_list(request, stat):
+    """Обновление списка вакансий соглано статусу на странице список акансий у модератора"""
+    vacancies_list = Vacancy.objects.exclude(status__status="NPB")
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest': # вместо отмершего if request.is_ajax()
+        if stat == 'frv':
+            vacancies_list = Vacancy.objects.filter(status__status="FRV")
+        elif stat == 'all':
+            vacancies_list = Vacancy.objects.exclude(status__status="NPB")
+        elif stat == 'pub':
+            vacancies_list = Vacancy.objects.filter(status__status="PUB")
+        elif stat == 'rjc':
+            vacancies_list = Vacancy.objects.filter(status__status="RJC")
+        elif stat == 'apv':
+            vacancies_list = Vacancy.objects.filter(status__status="APV")
+        else:
+            vacancies_list = Vacancy.objects.exclude(status__status="NPB")
+    context = { 'vacancies_list': vacancies_list }
+    result = render_to_string('vac_list.html', context)
+
+    return JsonResponse({'result':result})

@@ -31,6 +31,8 @@ urlpatterns = [
     path('search/', include('haystack.urls')),
     path('search_cv/', CVSearchView.as_view(), name='search_cv'),
     path('search_vacancy/', VacancySearchView.as_view(), name='search_vacancy'),
+    path('relations/', include('relations.urls', namespace='relations')),
+    path('favorites/', include('favorites.urls', namespace='favorites')),
 ]
 
 if settings.DEBUG:

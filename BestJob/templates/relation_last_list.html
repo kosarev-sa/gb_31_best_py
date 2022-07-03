@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    {% include 'inc_header.html' %}
+{% endblock %}
+
+{% block content %}
+    <section class="education ptb80" style="background: #f0f0f0;">
+        <div class="container">
+
+            {% if short_history_lists %}
+
+                {% for history_item in short_history_lists %}
+                    <div class="col-md-12" style="margin-bottom: 15px;">
+                        <div class="item-block shadow-hover" style="background: #ffffff;">
+
+                            <div class="education-header clearfix">
+
+                                <h5><small>Статус: </small> {{ history_item.last_status }} </h5>
+                                <h5><small>Дата: </small> {{ history_item.last_status_date }} </h5>
+                                <h5><small>Резюме: </small><a
+                                        href="{% url 'cv:detail_cv' history_item.cv.pk %}">{{ history_item.cv.post }}</a>
+                                </h5>
+                                <h5><small>Вакансия: </small><a
+                                        href="{% url 'vacancies:detail_vacancy' history_item.vacancy.pk %}">{{ history_item.vacancy.name }}</a>
+                                </h5>
+                            </div>
+
+                            <div>
+                                {% if history_item.status_info %}
+
+                                    <div>
+                                        <div class="col-md-6 text-right mt-4 mb-4" style="background: #ffffff;">
+                                            <a class="btn btn-blue btn-effect mt15 mb15"
+                                               href="{% url 'relations:change' relation_id=history_item.status_info.relation_id status_id=history_item.status_info.cancel_status_id %}">{{ history_item.status_info.button_cancel_text }}</a>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="col-md-3 text-right mt-4 mb-4" style="background: #ffffff;">
+                                            <a class="btn btn-blue btn-effect mt15 mb15"
+                                               href="{% url 'relations:change' relation_id=history_item.status_info.relation_id status_id=history_item.status_info.accept_status_id %}">{{ history_item.status_info.button_accept_text }}</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 text-right mt-4 mb-4" style="background: #ffffff;">
+                                        <a class="btn btn-blue btn-effect mt15 mb15"
+                                           href="{% url 'relations:detail' history_item.relation_id %}">Подробности</a>
+                                    </div>
+
+                                {% else %}
+
+                                    <div class="col-md-12 text-right mt-4 mb-4" style="background: #ffffff;">
+                                        <a class="btn btn-blue btn-effect mt15 mb15"
+                                           href="{% url 'relations:detail' history_item.relation_id %}">Подробности</a>
+                                    </div>
+
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

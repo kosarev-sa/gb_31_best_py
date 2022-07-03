@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block search %}
+    <section class="overlay-black">
+        <div class="container wrapper">
+            <br>
+            <h1 class="capitalize text-center text-white">Поиск</h1>
+            <form method="get" action="." class="job-search-form row pt40 center ">
+
+                <div class="col-md-5 col-sm-12 search-keywords">
+                    {{ form.q }}
+                </div>
+
+                <div class="col-md-3 col-sm-12 search-submit">
+                    <input type="submit" value="найти" class="btn btn-blue btn-effect btn-large">
+                </div>
+
+
+                <div class="col-md-4 col-sm-12 ">
+                    <a href="{% url 'search_vacancy' %}" class="capitalize text-white">расширенный поиск
+                        вакансий</a>
+                    <br>
+                    <a href="{% url 'search_cv' %}" class="capitalize  text-white">расширенный поиск резюме</a>
+                </div>
+            </form>
+
+        </div>
+        <br>
+    </section>
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}
+
+{% block content %}
+    <section class="education ptb80 " style="background-color: rgba(41, 177, 253, 0.25)">
+
+        <div class="container">
+            {% if query %}
+                {% for result in page.object_list %}
+                    {% if result.object.post %}
+
+                            <div class="col-md-12" style="margin-bottom: 15px;">
+                                <div class="item-block shadow-hover" style="background: #ffffff;">
+
+                                    <div class="education-header clearfix">
+                                        <div style="margin-bottom: 15px; border-bottom: 1px solid #e3e3e3; width: 100%">
+                                            Резюме
+                                        </div>
+                                        <br>
+                                        <a href="{% url 'cv:detail_cv' result.object.id %}"  >
+                                        <div style="margin-bottom: 15px;"><h4>{{ result.object.post }}</h4></div>
+                                        </a>
+                                            <br>
+                                        <div><h6>{{ result.object.salary }} RUB</h6></div>
+                                        <a href="#" style="color: lightgray">
+                                            <div class="pull-right"><h3>★</h3></div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+                    {% endif %}
+                    {% if result.object.name %}
+
+                        <div class="col-md-12" style="margin-bottom: 15px;">
+                            <div class="item-block shadow-hover " style="background: #ffffff;">
+
+                                <div class="education-header clearfix">
+                                    <div style="margin-bottom: 15px; border-bottom: 1px solid #e3e3e3; width: 100%">
+                                        Вакансия
+                                    </div>
+                                    <br>
+                                    <a href="{% url 'vacancy:detail_vacancy' result.object.id %}"
+                                       >
+                                        <div style="margin-bottom: 15px;"><h4>{{ result.object.name }}</h4></div>
+                                    </a>
+                                    <br>
+                                    <div><h6>{{ result.object.salary_from }} - {{ result.object.salary_to }}
+                                        RUB</h6></div>
+
+                                    <a href="#" style="color: lightgray">
+                                        <div class="pull-right"><h3>★</h3></div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+
+
+                {% empty %}
+                    <p>Ничего не найдено...</p>
+                {% endfor %}
+
+
+                {% if page.has_previous or page.has_next %}
+                    <div>
+                        {% if page.has_previous %}
+                            <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo;
+                        Previous
+                        {% if page.has_previous %}</a>{% endif %}
+                        |
+                        {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}
+                        Next
+                        &raquo;{% if page.has_next %}</a>{% endif %}
+                    </div>
+                {% endif %}
+            {% else %}
+                {# Show some example queries to run, maybe query syntax, something else? #}
+            {% endif %}
+
+            {##}
+            {#        <div class="container wrapper ">#}
+            {#            {% if query %}#}
+            {#                <br>#}
+            {#                <table width="100%">#}
+            {#                    <tr>#}
+            {#                        <th>Тип</th>#}
+            {#                        <th>Название</th>#}
+            {#                        <th>Оклад</th>#}
+            {#                    </tr>#}
+            {#                    {% for result in page.object_list %}#}
+            {#                        {% if result.object.post %}#}
+            {#                            <tr>#}
+            {#                                <td> Резюме</td>#}
+            {#                                <td><a href="{% url 'cv:update_cv' result.object.id %}">#}
+            {#                                    {{ result.object.post }}</a></td>#}
+            {#                                <td>{{ result.object.salary }}</td>#}
+            {#                            </tr>#}
+            {#                        {% endif %}#}
+            {#                        {% if result.object.name %}#}
+            {#                            <tr>#}
+            {#                                <td> Вакансия</td>#}
+            {#                                <td>#}
+            {#                                    <a href="{% url 'vacancy:detail_vacancy' result.object.id %} "#}
+            {#                                    >#}
+            {#                                        {{ result.object.name }}</a>#}
+            {#                                </td>#}
+            {#                                <td>{{ result.object.salary_from }} - {{ result.object.salary_to }}</td>#}
+            {#                            </tr>#}
+            {#                        {% endif %}#}
+            {##}
+            {##}
+            {##}
+            {#                    {% empty %}#}
+            {#                        <p>No results found.</p>#}
+            {#                    {% endfor %}#}
+            {#                </table>#}
+            {##}
+            {#                {% if page.has_previous or page.has_next %}#}
+            {#                    <div>#}
+            {#                        {% if page.has_previous %}#}
+            {#                            <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo;#}
+            {#                        Previous#}
+            {#                        {% if page.has_previous %}</a>{% endif %}#}
+            {#                        |#}
+            {#                        {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}#}
+            {#                        Next#}
+            {#                        &raquo;{% if page.has_next %}</a>{% endif %}#}
+            {#                    </div>#}
+            {#                {% endif %}#}
+            {#            {% else %}#}
+            {# Show some example queries to run, maybe query syntax, something else? #}
+            {#            {% endif %}#}
+            <br>
+        </div>
+    </section>
+{% endblock %}

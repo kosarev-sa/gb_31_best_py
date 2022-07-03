@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    <section class="page-header">
+        <div class="container">
+
+            <!-- Start of Page Title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Вакансии</h2>
+                </div>
+            </div>
+            <!-- End of Page Title -->
+
+            <!-- Start of Breadcrumb -->
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="breadcrumb">
+                        <li><a href="{% url 'users:moderator_companies_list' %}">Компании</a></li>
+                        <li class="active">Вакансии</li>
+                        <li><a href="{% url 'cv:moderator_cvs_list' %}">Резюме</a></li>
+                        <li><a href="{% url 'news:moderate_news' %}">Новости</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- End of Breadcrumb -->
+
+        </div>
+    </section>
+{% endblock %}
+
+{% block content %}
+
+    <section class="find-candidate ptb80">
+        <div class="container">
+            <!-- Start of Row -->
+            <div class="row mt60">
+                <p>Статус:</p>
+                <div class="radio radio-group-opt vac_status">
+                    <div class="col-md-2 col-sm-6">
+                        <label style="display: inline-block"><input style="display: inline-block" type="radio"
+                                                                    name="vac" value="all" checked>все</label>
+                    </div>
+                    <div class="col-md-2 col-sm-6">
+                        <label style="display: inline-block"><input style="display: inline-block" type="radio"
+                                                                    name="vac" value="pub">Опубликовано</label>
+                    </div>
+                    <div class="col-md-2 col-sm-6">
+                        <label style="display: inline-block"><input style="display: inline-block" type="radio"
+                                                                    name="vac" value="frv">На доработку</label>
+                    </div>
+                    <div class="col-md-2 col-sm-6">
+                        <label style="display: inline-block"><input style="display: inline-block" type="radio"
+                                                                    name="vac" value="rjc">Отклонено</label>
+                    </div>
+                    <div class="col-md-2 col-sm-6">
+                        <label style="display: inline-block"><input style="display: inline-block" type="radio"
+                                                                    name="vac" value="apv">Одобрено</label>
+                    </div>
+                </div>
+
+
+                {%  include 'vac_list.html' %}
+
+            </div>
+            </div>
+
+    </section>
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    {% include 'inc_page_header.html' %}
+{% endblock %}
+
+{% block content %}
+
+    <section class="shop ptb80">
+        <div class="container">
+
+            <!-- Start of Row -->
+            <div class="row">
+                <!-- Start of Product Wrapper -->
+                <div class="col-md-12 product-wrapper">
+
+                    <!-- ===== Start of Row ===== -->
+                    <div class="row">
+                        <!-- Start of First Column -->
+                        <div class="col-md-6">
+
+                            <img width="1440" height="1080"
+                                 src="{% if object.image %} {{ object.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                                 class="img-responsive">
+                        </div>
+                        <!-- Start of Second Column -->
+                        <div class="col-md-6">
+
+                            <!-- Start of Product Details -->
+                            <div class="product-details">
+                                <h2>{{ object.name }}</h2>
+                                <!-- Start of Product Price -->
+
+                                <div class="product-price">
+                                    <h5>c {{ object.date_create }} на BestJob</h5>
+
+                                </div>
+                                {{ object.data }}
+                                 <ul class="profile-info mt20 nopadding">
+                                <li>
+                                    <i class="fa fa-map-marker"></i>
+                                    <span>{{ object.city }}</span>
+                                </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

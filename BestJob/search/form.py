@@ -54,18 +54,19 @@ class CVSearchForm(SearchForm):
 
     def __init__(self, *args, **kwargs):
         super(CVSearchForm, self).__init__(*args, **kwargs)
-        self.fields['speciality'].widget.attrs.update({"class": "selectpicker"})
+        self.fields['speciality'].widget.attrs.update({"class": "form-control"})
         self.fields['education_level'].widget.attrs.update(
-            {"class": "selectpicker"})
-        self.fields['moving'].widget.attrs.update({"class": "selectpicker"})
+            {"class": "form-control"})
+        self.fields['moving'].widget.attrs.update({"class": "form-control"})
         self.fields['salary'].widget.attrs.update({"class": "form-control"})
-        self.fields['salary'].widget.attrs.update({"stryle": "background-color: grey;"})
 
 
 class VacancySearchForm(SearchForm):
     """форма детального поиска вакансий"""
     salary_from = forms.IntegerField(label='зарплата от', required=False)
     salary_to = forms.IntegerField(label='зарплата до', required=False)
+    # salary_on_hand = forms.CheckboxInput()
+
     salary_on_hand = forms.BooleanField(label='зарплата на руки', required=False)
     specialization = forms.ChoiceField(label='специальность',
                                        choices=categories_list,
@@ -106,9 +107,9 @@ class VacancySearchForm(SearchForm):
 
     def __init__(self, *args, **kwargs):
         super(VacancySearchForm, self).__init__(*args, **kwargs)
-        self.fields['specialization'].widget.attrs.update({"class": "selectpicker"})
+        self.fields['specialization'].widget.attrs.update({"class": "form-control"})
         self.fields['experience'].widget.attrs.update(
-            {"class": "selectpicker"})
+            {"class": "form-control"})
         self.fields['salary_from'].widget.attrs.update({"class": "form-control"})
         self.fields['salary_to'].widget.attrs.update({"class": "form-control"})
         self.fields['salary_on_hand'].widget.attrs.update({"class": "form-check-input"})
