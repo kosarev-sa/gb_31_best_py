@@ -30,17 +30,19 @@
                                 </div>
 
                                 <ul class="pull-right">
-                                    <li id="employer-relation-btn">
+                                    <li>
                                         <a href="{% url 'favorites:employer_delete' item.pk %}"
                                            class="btn btn-blue btn-small btn-effect">Убрать из избранного</a>
 
                                         {% if not item.has_relaton %}
-{#                                            <a href="#"#}
-{#                                               class="btn btn-blue btn-small btn-effect">Отправить приглашение</a>#}
-                                            <a id="employer_modal_trigger" href="javascript:void(0)" class="btn btn-blue btn-small btn-effect" role="button">Отправить приглашение</a>
+
+                                            <span id="employer_relation_btn">
+                                                <a id="employer_modal_trigger" href="#" onclick="openModalForm({{ item.cv.pk }})" class="btn btn-blue btn-small btn-effect" role="button">Отправить приглашение</a>
+                                            </span>
+
                                         {% endif %}
                                     </li>
-                                    {% if item.has_relaton %}
+                                    {% if item.has_relaton == 1 %}
                                         <li>
                                             <a href="{% url 'relations:detail' item.relations_id %}">
                                                 <h6 class="time">Вы отправляли приглашение на это резюме</h6></a>
@@ -104,14 +106,16 @@
                                     <h5><small>{{ item.vacancy.employer_profile.name }}</small></h5>
                                 </div>
 
-                                <ul class="pull-right" id="worker-relation-btn">
+                                <ul class="pull-right">
                                     <li>
                                         <a href="{% url 'favorites:worker_delete' item.pk %}"
                                            class="btn btn-blue btn-small btn-effect">Убрать из избранного</a>
                                         {% if not item.has_relaton %}
-{#                                            <a href="#"#}
-{#                                                class="btn btn-blue btn-small btn-effect">Отправить отклик</a>#}
-                                            <a id="worker_modal_trigger" href="javascript:void(0)" class="btn btn-blue btn-small btn-effect" role="button">Отправить отклик</a>
+
+                                            <span id="worker_relation_btn">
+                                                <a id="worker_modal_trigger" href="#" onclick="openModalForm({{ item.vacancy.pk }})" class="btn btn-blue btn-small btn-effect" role="button">Отправить отклик</a>
+                                            </span>
+
                                         {% endif %}
                                     </li>
                                     {% if item.has_relaton %}
@@ -184,27 +188,38 @@
         <div class="cd-user-modal-container">
 
             <div class="modal-header" style="background: #29b1fd;">
-                <p style="width: 100%; text-align: center; font-size: xx-large; color: white;">Выбрать что-то</p>
+                <p style="width: 100%; text-align: center; font-size: xx-large; color: white;">{{ modal_header }}</p>
             </div>
 
             <div id="cd-relation">
                 <!-- relation form -->
-                <form class="cd-form">
-                    <p class="fieldset">
-                        <label class="image-replace cd-email" for="signin-email">E-mail</label>
-                        <input class="full-width has-padding has-border" id="signin-email" type="email" placeholder="E-mail">
+                <form action="{% url 'relations:create' %}" method="post" class="cd-form">
+                    {% csrf_token %}
+                    <p class="fieldset hidden">
+                        <label for="magic_field">magic_field</label>
+                        <input id="magic_field" name="magic_field" type="number">
                     </p>
-                    <p class="fieldset">
-                        <label class="image-replace cd-password" for="signin-password">Password</label>
-                        <input class="full-width has-padding has-border" id="signin-password" type="password" placeholder="Password">
-                    </p>
-                    <p class="fieldset">
-                        <input type="checkbox" id="remember-me" checked>
-                        <label for="remember-me">Remember me</label>
-                    </p>
-                    <p class="fieldset">
-                        <button type="submit" value="Login" class="btn btn-blue btn-effect">Login</button>
-                    </p>
+
+                    <div class="form-group" style="border-style: groove; border-width: thin;">
+                        <label class="image-replace cd-email" for="relation_select_picker">Вакансии или резюме</label>
+                        <select id="relation_select_picker" name="relation_select_picker" class="selectpicker has-padding has-border" data-size="5" required>
+                            <option value="">{{ modal_combo_empty }}</option>
+                            {% for item in modal_combo %}
+                                <option value="{{ item.pk }}">
+                                    {% if item.name %} {{ item.name }} {% else %} {{ item.post }} {% endif %}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="" for="transmittal_letter">Сопроводительный текст</label>
+                        <textarea id="transmittal_letter" name="transmittal_letter" class="tinymce full-width has-padding has-border"></textarea>
+                    </div>
+
+                    <div class="fieldset">
+                        <button type="submit" id="send_data_for_modal_page" class="btn btn-blue btn-effect" style="background: #29b1fd;">Отправить</button>
+                    </div>
                 </form>
             </div>
         </div>
@@ -217,50 +232,5 @@
 {% endblock %}
 
 {% block additional_script %}
-    <script>
-        let $custom_form_modal = $('.cd-user-modal'),
-            $form_relation = $custom_form_modal.find('#cd-relation'),
-            $emp_rel_btn = $("#employer-relation-btn");
-            $work_rel_btn = $("#worker-relation-btn");
-
-         function custom_selected() {
-            $custom_form_modal.addClass('is-selected');
-            $form_relation.addClass('is-selected');
-         }
-
-         function custom_unselected() {
-            $custom_form_modal.removeClass('is-selected');
-            $form_relation.removeClass('is-selected');
-         }
-
-         //open modal
-        $emp_rel_btn.on('click', function (event) {
-            if ($(event.target).is($emp_rel_btn)) {
-                // on mobile open the submenu
-                $(this).children('').addClass('is-visible');
-            } else {
-                // on mobile close submenu
-                $emp_rel_btn.children('').removeClass('is-visible');
-                //show modal layer
-                $custom_form_modal.addClass('is-visible');
-                //show the selected form
-                ($(event.target).is('#employer_modal_trigger')) ? custom_selected(): login_page();
-            }
-        });
-
-         //close modal
-        $custom_form_modal.on('click', function (event) {
-            if ($(event.target).is($custom_form_modal) || $(event.target).is('.cd-close-form')) {
-                $custom_form_modal.removeClass('is-visible');
-            }
-        });
-
-        //close modal when clicking the esc keyboard button
-        $(document).on('keyup', function (event) {
-            if (event.which == '27') {
-                $custom_form_modal.removeClass('is-visible');
-            }
-        });
-
-    </script>
+    <script src="{% static 'js/favorites_list.js' %}"></script>
 {% endblock %}

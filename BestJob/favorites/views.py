@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render
 
 # Create your views here.
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView
 
 from BestJob.settings import UserRole
@@ -12,8 +13,54 @@ from users.models import WorkerProfile, EmployerProfile
 from vacancies.models import Vacancy
 
 
-class FavoritesCreateView(CreateView):
-    pass
+def fav_emp_add_remove(request, cv_id):
+    '''
+    Добавление/Удаление избранного из поиска.
+    :param request:
+    :param cv_id:
+    :return:
+    '''
+    if request.user.is_authenticated:
+        user = request.user
+        # Работодатель.
+        if user.role_id == UserRole.EMPLOYER:
+            employer_profile = EmployerProfile.objects.get(user=user)
+            cv = CV.objects.get(pk=cv_id)
+            ef = EmployerFavorites.objects.filter(employer_profile=employer_profile, cv=cv)
+            if ef:
+                ef.first().delete()
+            else:
+                new_fav = EmployerFavorites()
+                new_fav.cv = cv
+                new_fav.employer_profile = employer_profile
+                new_fav.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def fav_work_add_remove(request, vacancy_id):
+    '''
+    Добавление/Удаление избранного из поиска.
+    :param request:
+    :param vacancy_id:
+    :return:
+    '''
+    if request.user.is_authenticated:
+        user = request.user
+        # Соискатель.
+        if user.role_id == UserRole.WORKER:
+            worker_profile = WorkerProfile.objects.get(user=user)
+            vacancy = Vacancy.objects.get(pk=vacancy_id)
+
+            wf = WorkerFavorites.objects.filter(worker_profile=worker_profile, vacancy=vacancy)
+            if wf:
+                wf.first().delete()
+            else:
+                new_fav = WorkerFavorites()
+                new_fav.vacancy = vacancy
+                new_fav.worker_profile = worker_profile
+                new_fav.save()
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 class FavoritesEmployerDeleteView(DeleteView):
     """view удаление избранного работадателя"""
@@ -60,7 +107,6 @@ class FavoritesWorkerListView(ListView):
         context['link'] = "/"
         context['heading_link'] = "На главную"
         context['is_worker'] = True
-        context['is_employer'] = False
         return context
 
     def get(self, request, *args, **kwargs):
@@ -79,8 +125,15 @@ class FavoritesWorkerListView(ListView):
                     # Я ищу работу и у меня есть резюме. Мои резюме.
                     cvs = CV.objects.filter(worker_profile=profiler)
 
+                    context['modal_header'] = 'Выбор резюме'
+                    context['modal_combo'] = cvs
+                    context['modal_combo_empty'] = 'Выберите резюме'
+
                     # Вычисление оправлялся ли отклик на вакансию из избранного.
                     for favorit in worker_favorites:
+
+                        favorit.has_relaton = False
+
                         # Отправлял ли я отклик на вакансии из избранного?
                         for cv in cvs:
                             relations = Relations.objects.filter(cv=cv, vacancy=favorit.vacancy)
@@ -88,8 +141,7 @@ class FavoritesWorkerListView(ListView):
                             if relations:
                                 favorit.has_relaton = True
                                 favorit.relations_id = relations.first().pk
-                            else:
-                                favorit.has_relaton = False
+                                break
 
                     context['favorites_list'] = worker_favorites
 
@@ -112,7 +164,6 @@ class FavoritesEmployerListView(ListView):
         context['link'] = "/"
         context['heading_link'] = "На главную"
         context['is_employer'] = True
-        context['is_worker'] = False
         return context
 
     def get(self, request, *args, **kwargs):
@@ -132,8 +183,14 @@ class FavoritesEmployerListView(ListView):
                     # Я ищу сотрудников и у меня есть вакансии. Мои вакансии.
                     vacancies = Vacancy.objects.filter(employer_profile=profiler)
 
+                    context['modal_header'] = 'Выбор вакансии'
+                    context['modal_combo'] = vacancies
+                    context['modal_combo_empty'] = 'Выберите вакансию'
+
                     # Вычисление оправлялось ли приглашение на резюме из избранного.
                     for favorit in employer_favorites:
+
+                        favorit.has_relaton = False
 
                         # Отправлял ли я отклик на вакансии из избранного?
                         for vacancy in vacancies:
@@ -142,8 +199,7 @@ class FavoritesEmployerListView(ListView):
                             if relations:
                                 favorit.has_relaton = True
                                 favorit.relations_id = relations.first().pk
-                            else:
-                                favorit.has_relaton = False
+                                break
 
                     context['favorites_list'] = employer_favorites
         else:
