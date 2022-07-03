@@ -140,29 +140,6 @@ class RelationDetailView(TemplateView):
         context['heading_link'] = "Назад"
         return context
 
-    def get_custom_relation_model(self, user, status_id, relation_id):
-
-        custom_relation_model = CustomRelationModel()
-
-        # Работодатель.
-        if user.role_id == UserRole.EMPLOYER:
-            # Отклик
-            if status_id == 5:
-                custom_relation_model.accept_status_id = 6
-                custom_relation_model.cancel_status_id = 3
-
-            # Соискатель.
-        elif user.role_id == UserRole.WORKER:
-            # Приглашение
-            if status_id == 4:
-                custom_relation_model.accept_status_id = 6
-                custom_relation_model.cancel_status_id = 3
-
-        if custom_relation_model:
-            custom_relation_model.relation_id = relation_id
-
-        return custom_relation_model
-
     def get(self, request, *args, **kwargs):
         global relation_history
         super(RelationDetailView, self).get(request, *args, **kwargs)
