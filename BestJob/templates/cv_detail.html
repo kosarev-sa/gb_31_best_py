@@ -10,7 +10,7 @@
 {% endblock %}
 
 {% block content %}
-<!--    Начало секции Профиля соискателя-->
+    <!--    Начало секции Профиля соискателя-->
     <section class="ptb80" id="candidate-profile">
         <div class="container">
 
@@ -23,7 +23,8 @@
                 <div class="col-md-3 col-xs-12">
                     <div class="profile-photo">
 
-                         <img src="{% if object.worker_profile.image %} {{ object.worker_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}" class="img-thumbnail">
+                        <img src="{% if object.worker_profile.image %} {{ object.worker_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                             class="img-thumbnail">
                     </div>
                 </div>
 
@@ -31,17 +32,17 @@
                     <div class="profile-descr">
 
                         <div class="profile-title">
-<!--                            Имя соискателя-->
+                            <!--                            Имя соискателя-->
                             {% if object.worker_profile.name %}
                                 <h2 class="capitalize">{{ object.worker_profile.name }}</h2>
                             {% endif %}
 
-<!--                            Пол-->
+                            <!--                            Пол-->
                             {% if object.worker_profile.gender %}
                                 <h5 class="pt10">Пол: {{ object.worker_profile.gender }}</h5>
                             {% endif %}
 
-<!--                            Специализация-->
+                            <!--                            Специализация-->
                             {% if object.speciality %}
                                 <h5 class="pt10">{{ object.speciality }}</h5>
                             {% endif %}
@@ -64,7 +65,7 @@
                             {% if object.worker_profile.city %}
                                 <li>
                                     <i class="fa fa-map-marker"></i>
-    <!--                                Город проживания-->
+                                    <!--                                Город проживания-->
                                     <span>{{ object.worker_profile.city }}</span>
                                 </li>
                             {% endif %}
@@ -77,7 +78,7 @@
                             {% if object.salary %}
                                 <li>
                                     <i class="fa fa-money"></i>
-    <!--                                Желаемая зарплата-->
+                                    <!--                                Желаемая зарплата-->
                                     <span>{{ object.salary }} {{ object.get_currency_display }}</span>
                                 </li>
                             {% endif %}
@@ -85,7 +86,7 @@
                             {% if object.worker_profile.birth_date %}
                                 <li>
                                     <i class="fa fa-birthday-cake"></i>
-    <!--                                Возраст(Нужно в контроллере вычислить возраст и передовать года)-->
+                                    <!--                                Возраст(Нужно в контроллере вычислить возраст и передовать года)-->
                                     <span>{{ object.worker_profile.birth_date }}</span>
                                 </li>
                             {% endif %}
@@ -93,7 +94,7 @@
                             {% if object.worker_profile.phone_number %}
                                 <li>
                                     <i class="fa fa-phone"></i>
-    <!--                                Телефон соискателя-->
+                                    <!--                                Телефон соискателя-->
                                     <span>{{ object.worker_profile.phone_number }}</span>
                                 </li>
                             {% endif %}
@@ -101,7 +102,7 @@
                             {% if object.worker_profile.user.email %}
                                 <li>
                                     <i class="fa fa-envelope"></i>
-    <!--                                email соискателя-->
+                                    <!--                                email соискателя-->
                                     <a href="#">{{ object.worker_profile.user.email }}</a>
                                 </li>
                             {% endif %}
@@ -113,155 +114,157 @@
             </div>
 
             {% if skills %}
-            <div class="row skills mt40">
+                <div class="row skills mt40">
 
-                <div class="col-md-12 text-center">
-                    <h3 class="pb40">Мои навыки</h3>
-                </div>
+                    <div class="col-md-12 text-center">
+                        <h3 class="pb40">Мои навыки</h3>
+                    </div>
 
-                <div class="col-sm-12 text-center text-info">
-                    {% for el in skills %}
-                        <span style="margin-left: 20px;
+                    <div class="col-sm-12 text-center text-info">
+                        {% for el in skills %}
+                            <span style="margin-left: 20px;
                                  margin-right: 20px;
                                  font-weight: bold;
                                  font-size: 20px">{{ el }}</span>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
+                    </div>
 
-            </div>
+                </div>
             {% endif %}
 
             {% if object.post %}
-            <div class="row skills mt40">
+                <div class="row skills mt40">
 
-                <div class="col-md-12 text-center">
-                    <h3 class="pb40">Желаемая должность - {{ object.post }}</h3>
+                    <div class="col-md-12 text-center">
+                        <h3 class="pb40">Желаемая должность - {{ object.post }}</h3>
+                    </div>
+
                 </div>
-
-            </div>
             {% endif %}
 
         </div>
     </section>
-<!--    Конец секции Профиля соискателя-->
+    <!--    Конец секции Профиля соискателя-->
 
-<!--    Начало секции ОБРАЗОВАНИЕ-->
+    <!--    Начало секции ОБРАЗОВАНИЕ-->
     {% if educations %}
-    <section class="education ptb80" style="background: #f0f0f0;">
-        <div class="container">
+        <section class="education ptb80" style="background: #f0f0f0;">
+            <div class="container">
 
-            <div class="col-md-12 text-center">
-                <h3 class="pb60">Образование - {{ object.get_education_level_display }}</h3>
-            </div>
-
-            {% for education in educations %}
-            <div class="col-md-12" style="margin-bottom: 15px;">
-                <div class="item-block shadow-hover" style="background: #ffffff;">
-
-                    <div class="education-header clearfix">
-                        {% if education.name %}
-                            <h4><small>Учебное заведение -</small> {{ education.name }} </h4>
-                        {% endif %}
-
-                        {% if education.department %}
-                            <h5>{{ education.department }}</h5>
-                        {% endif %}
-
-                        {% if education.specialty %}
-                            <h5><small>Специализация -</small> {{ education.specialty }}</h5>
-                        {% endif %}
-
-                        {% if education.date_end %}
-                            <h5><small>Год окончания -</small> {{ education.date_end }}</h5>
-                        {% endif %}
-                    </div>
-
+                <div class="col-md-12 text-center">
+                    <h3 class="pb60">Образование - {{ object.get_education_level_display }}</h3>
                 </div>
-            </div>
-            {% endfor %}
 
-        </div>
-    </section>
-    {% endif %}
-<!--    Конец секции ОБРАЗОВАНИЕ-->
+                {% for education in educations %}
+                    <div class="col-md-12" style="margin-bottom: 15px;">
+                        <div class="item-block shadow-hover" style="background: #ffffff;">
 
-<!--    Начало секции ОПЫТ РАБОТЫ-->
-    {% if experience %}
-    <section class="work-experience ptb80" style="background: #ffffff;">
-        <div class="container">
+                            <div class="education-header clearfix">
+                                {% if education.name %}
+                                    <h4><small>Учебное заведение -</small> {{ education.name }} </h4>
+                                {% endif %}
 
-            <div class="col-md-12 text-center">
-                <h3 class="pb60">Опыт работы</h3>
-            </div>
+                                {% if education.department %}
+                                    <h5>{{ education.department }}</h5>
+                                {% endif %}
 
-            {% for exp in experience %}
-            <div class="col-md-12" style="margin-bottom: 15px;">
-                <div class="item-block shadow-hover" style="background: #f0f0f0;">
+                                {% if education.specialty %}
+                                    <h5><small>Специализация -</small> {{ education.specialty }}</h5>
+                                {% endif %}
 
-                    <div class="experience-header clearfix">
-                        <div>
-                            {% if exp.name %}
-                                <h4>{{ exp.name }}</h4>
-                            {% endif %}
+                                {% if education.date_end %}
+                                    <h5><small>Год окончания -</small> {{ education.date_end }}</h5>
+                                {% endif %}
+                            </div>
 
-                            {% if exp.post %}
-                                <h5><small>{{ exp.post }}</small></h5>
-                            {% endif %}
                         </div>
-                        <h6 class="time">{{ exp.get_month_begin_display }} {{ exp.year_begin }} - {% if exp.year_end %}{{ exp.get_month_end_display }} {{ exp.year_end }} {% else %} Настоящее время {% endif %}</h6>
                     </div>
+                {% endfor %}
 
-                    <div class="experience-body">
-                        {% if exp.stack %}
-                            <p>Навыки:</p>
-                            <p>{{ exp.stack }}</p>
-                        {% endif %}
-
-                        {% if exp.responsibilities %}
-                            <p>Обязанности:</p>
-                            <p>{{ exp.responsibilities }}</p>
-                        {% endif %}
-                    </div>
-                </div>
             </div>
-            {% endfor %}
-        </div>
-    </section>
+        </section>
     {% endif %}
-<!--    Конец секции ОПЫТ РАБОТЫ-->
+    <!--    Конец секции ОБРАЗОВАНИЕ-->
 
-<!--    Начало секции ВЛАДЕНИЕ ЯЗЫКАМИ-->
+    <!--    Начало секции ОПЫТ РАБОТЫ-->
+    {% if experience %}
+        <section class="work-experience ptb80" style="background: #ffffff;">
+            <div class="container">
+
+                <div class="col-md-12 text-center">
+                    <h3 class="pb60">Опыт работы</h3>
+                </div>
+
+                {% for exp in experience %}
+                    <div class="col-md-12" style="margin-bottom: 15px;">
+                        <div class="item-block shadow-hover" style="background: #f0f0f0;">
+
+                            <div class="experience-header clearfix">
+                                <div>
+                                    {% if exp.name %}
+                                        <h4>{{ exp.name }}</h4>
+                                    {% endif %}
+
+                                    {% if exp.post %}
+                                        <h5><small>{{ exp.post }}</small></h5>
+                                    {% endif %}
+                                </div>
+                                <h6 class="time">{{ exp.get_month_begin_display }} {{ exp.year_begin }} -
+                                    {% if exp.year_end %}{{ exp.get_month_end_display }} {{ exp.year_end }} {% else %}
+                                        Настоящее время {% endif %}</h6>
+                            </div>
+
+                            <div class="experience-body">
+                                {% if exp.stack %}
+                                    <p>Навыки:</p>
+                                    <p>{{ exp.stack }}</p>
+                                {% endif %}
+
+                                {% if exp.responsibilities %}
+                                    <p>Обязанности:</p>
+                                    <p>{{ exp.responsibilities }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+    <!--    Конец секции ОПЫТ РАБОТЫ-->
+
+    <!--    Начало секции ВЛАДЕНИЕ ЯЗЫКАМИ-->
     {% if langlevels %}
-     <section class="education ptb80" style="background: #f0f0f0;">
-        <div class="container">
+        <section class="education ptb80" style="background: #f0f0f0;">
+            <div class="container">
 
-            <div class="col-md-12 text-center">
-                <h3 class="pb60">Владение языками</h3>
-            </div>
-
-            {% for langl in langlevels %}
-            <div class="col-md-12" style="margin-bottom: 15px;">
-                <div class="item-block shadow-hover" style="background: #ffffff;">
-
-                    <div class="education-header clearfix">
-                        {% if langl.language %}
-                            <h4><small>Язык -</small> {{ langl.language }}</h4>
-                        {% endif %}
-                        {% if langl.level %}
-                            <h4><small>Уровень знания -</small> {{ langl.level }}</h4>
-                        {% endif %}
-                    </div>
-
+                <div class="col-md-12 text-center">
+                    <h3 class="pb60">Владение языками</h3>
                 </div>
+
+                {% for langl in langlevels %}
+                    <div class="col-md-12" style="margin-bottom: 15px;">
+                        <div class="item-block shadow-hover" style="background: #ffffff;">
+
+                            <div class="education-header clearfix">
+                                {% if langl.language %}
+                                    <h4><small>Язык -</small> {{ langl.language }}</h4>
+                                {% endif %}
+                                {% if langl.level %}
+                                    <h4><small>Уровень знания -</small> {{ langl.level }}</h4>
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+                {% endfor %}
+
             </div>
-            {% endfor %}
-
-        </div>
-    </section>
+        </section>
     {% endif %}
-<!--    Конец секции ВЛАДЕНИЕ ЯЗЫКАМИ-->
+    <!--    Конец секции ВЛАДЕНИЕ ЯЗЫКАМИ-->
 
-<!--    Начало секции УСЛОВИЯ РАБОТЫ-->
+    <!--    Начало секции УСЛОВИЯ РАБОТЫ-->
     <section class="work-experience ptb80" style="background: #ffffff;">
         <div class="container">
 
@@ -296,12 +299,38 @@
             </div>
 
             <div class="col-md-12 text-right mt30 mb-4">
-                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:cv_list' %}">Вернуться к списку</a>
+                {% if not is_moderating %}
+                    <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:cv_list' %}">Вернуться к списку</a>
+                {% endif %}
             </div>
 
         </div>
     </section>
-<!--    Конец секции УСЛОВИЯ РАБОТЫ-->
+    <!--    Конец секции УСЛОВИЯ РАБОТЫ-->
+
+<!-- СЕКЦИЯ РАБОТА МОДЕРАТОРА С РЕЗЮМЕ -->
+    {% if is_moderating %}
+        <form method="post" action="">
+        {% csrf_token %}
+        <section class="education ptb30" style="background: #f0f0f0;">
+            <div class="container">
+                <div class="col-md-12 text-center">
+                    <h3 class="pt30">Модерация резюме</h3>
+                </div>
+                <div class="form-group pt10">
+                    <label for="{{ form.education_level.id_for_label }}">Статус:</label>
+                    {{ form.status }}
+                </div>
+                <div class="form-group pt10">
+                <label for="{{ form.moderators_comment.id_for_label }}">Комментарий :</label>
+                    {{ form.moderators_comment }}
+                </div>
+                 <input class="btn btn-blue btn-effect mt15 mb15" type="submit" value="Сохранить">
+            </div>
+        </section>
+        </form>
+    {% endif %}
+<!-- КОНЕЦ СЕКЦИИ РАБОТА МОДЕРАТОРА С РЕЗЮМЕ -->
 {% endblock %}
 
 {% block footer %}
