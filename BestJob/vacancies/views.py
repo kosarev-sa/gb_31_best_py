@@ -32,7 +32,11 @@ class VacancyList(TemplateView):
         context = {
             'vacancies': Vacancy.objects.filter(employer_profile=employer_id, is_active=True),
             'employer': employer_id,
-            'status': ApprovalStatus.objects.get(status='APV')
+            'status': ApprovalStatus.objects.get(status='APV'),
+            'title': "Мои вакансии",
+            'heading': "Мои вакансии",
+            'link': "/vacancies/create/",
+            'heading_link': "Создать вакансию",
         }
         return self.render_to_response(context)
 
@@ -167,6 +171,10 @@ class VacancyUpdate(UpdateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyUpdate, self).get_context_data(**kwargs)
+        context['title'] = "Изменение вакансии"
+        context['heading'] = "Ваша вакансия"
+        context['link'] = "/vacancies/all/"
+        context['heading_link'] = "Список вакансий"
         return context
 
     def get(self, request, *args, **kwargs):
@@ -176,10 +184,22 @@ class VacancyUpdate(UpdateView):
         try:
             employer = EmployerProfile.objects.get(user=request.user.pk)
             context['employer'] = employer
+
         except Exception:
             print(f'Employer {request.user.pk} not exists')
         context['employments'] = Employments.objects.all()
         return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.form_class(request.POST, instance=self.object)
+
+        if form.is_valid():
+            self.object.save()
+            return redirect(self.success_url)
+        else:
+            print(form.errors)
+        return self.form_invalid(form)
 
 
 class VacancyDelete(DeleteView):
@@ -246,10 +266,15 @@ class VacancyDetail(DetailView):
         context = self.get_context_data()
         vacancy_id = kwargs.get('pk')
         vacancy = Vacancy.objects.get(id=vacancy_id)
+
         try:
             employer = EmployerProfile.objects.get(id=vacancy_id)
             context['vacancy'] = vacancy
             context['employer'] = employer
+            context['title'] = "Вакансии"
+            context['heading'] = "Вакансия"
+            context['link'] = "/vacancies/all/"
+            context['heading_link'] = "Список вакансий"
         except Exception:
             print(f'Employer not exists')
         context['employments'] = Employments.objects.all()
