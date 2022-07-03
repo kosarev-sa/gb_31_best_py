@@ -21,6 +21,7 @@ class CV(models.Model):
     salary = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, verbose_name='Зарплата')
     currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB, null=True)
     about = models.TextField(max_length=5000, blank=True, null=True)
+    moderators_comment = models.TextField(max_length=5000,blank=True, null=True)
 
 
 class CVSkills(models.Model):

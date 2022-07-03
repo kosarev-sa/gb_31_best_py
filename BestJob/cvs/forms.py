@@ -78,8 +78,10 @@ class ModeratorCVUpdateForm(CVUpdateForm):
 
     def __init__(self, *args, **kwargs):
         super(ModeratorCVUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['status'].widget.attrs['class'] = 'selectpicker'
         for field in self.disabled_fields:
             self.fields[field].disabled = True
+
 
 
 class CVDeleteForm(forms.ModelForm):

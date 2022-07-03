@@ -1,5 +1,6 @@
 # Create your views here.
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
+from django.template.loader import render_to_string
 
 from BestJob.mixin import BaseClassContextMixin, UserDispatchMixin
 
@@ -93,7 +94,7 @@ class EmployerDetailView(DetailView, BaseClassContextMixin):
     """view для просмотра выбранного работодателя"""
     model = EmployerProfile
     template_name = 'employers_detail.html'
-    title = 'BestJob | Работодатель'
+    title = 'Карточка компании'
 
 
 class EmployerProfileView(UpdateView):
@@ -102,7 +103,7 @@ class EmployerProfileView(UpdateView):
     template_name = 'employer_profile.html'
     form_class = EmployerProfileForm
     success_url = reverse_lazy('users:employer_profile')
-    # title = 'BestJob | Профайл работодателя'
+    title = 'BestJob | Профайл работодателя'
 
     def get_object(self, queryset=None):
         user_id = self.kwargs['pk']
@@ -365,3 +366,38 @@ class ModerationAwaiting(TemplateView):
     template_name = 'moderation_awaiting.html'
     success_url = reverse_lazy("users:moderation_awaiting")
     title = 'BestJob | Модерация'
+
+
+class ModeratorCompaniesList(TemplateView):
+    """view просмотра вакансий модератором"""
+    template_name = 'moderator_company_list.html'
+
+    def get(self, request, *args, **kwargs):
+        super(ModeratorCompaniesList, self).get(request, *args, **kwargs)
+        context = self.get_context_data()
+        context['companies_list'] = EmployerProfile.objects.exclude(status__status="NPB")
+        # EmployerProfile.objects.exclude(status__status="NPB")
+        return self.render_to_response(context)
+
+
+def edit_comp_list(request, stat):
+    """Обновление списка компаний соглано статусу на странице список компаний у модератора"""
+    companies_list = EmployerProfile.objects.exclude(status__status="NPB")
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # вместо отмершего if request.is_ajax()
+        if stat == 'frv':
+            companies_list = EmployerProfile.objects.filter(status__status="FRV")
+        elif stat == 'all':
+            companies_list = EmployerProfile.objects.exclude(status__status="NPB")
+        elif stat == 'pub':
+            companies_list = EmployerProfile.objects.filter(status__status="PUB")
+        elif stat == 'rjc':
+            companies_list = EmployerProfile.objects.filter(status__status="RJC")
+        elif stat == 'apv':
+            companies_list = EmployerProfile.objects.filter(status__status="APV")
+        else:
+            companies_list = EmployerProfile.objects.exclude(status__status="NPB")
+    context = {'companies_list': companies_list}
+    result = render_to_string('companies_list.html', context)
+
+    return JsonResponse({'result': result})
