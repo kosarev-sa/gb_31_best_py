@@ -3,6 +3,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.urls import reverse_lazy
+from django.utils.datetime_safe import datetime
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DeleteView, DetailView
 
 from BestJob.settings import NEWS_BODY_LEN_ON_NEWS_LIST
@@ -73,6 +74,8 @@ class NewsModerateList(TemplateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(NewsModerateList, self).get_context_data(**kwargs)
         context['news_list'] = News.objects.all().order_by('-created')
+        context['title'] = "Модерация новостей"
+        context['heading'] = "Модерация новостей"
         return context
 
 
