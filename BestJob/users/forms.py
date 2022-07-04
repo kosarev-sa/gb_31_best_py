@@ -54,6 +54,13 @@ class ModeratorProfileForm(forms.ModelForm):
         model = ModeratorProfile
         fields = ['image', 'name']
 
+    def __init__(self, *args, **kwargs):
+        super(ModeratorProfileForm, self).__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs['placeholder'] = 'Введите имя модератора'
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
 
 class UserLoginForm(AuthenticationForm):
     """форма для логина"""

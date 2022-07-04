@@ -2,50 +2,51 @@
 {% load static %}
 
 {% block menu %}
-    {% include 'inc_main_menu.html' %}
+{% include 'inc_main_menu.html' %}
 {% endblock %}
 
 {% block header %}
-    {% include 'inc_moderator_header.html' %}
+{% include 'inc_moderator_header.html' %}
 {% endblock %}
 
 {% block content %}
 
-    <div class="ptb80" id="post-job">
-        <div class="container">
+<div class="ptb80" id="post-job">
+    <div class="container">
 
-            <form action="{% url 'users:moderator_profile' object.user_id %}" method="post" enctype="multipart/form-data" class="post-job-resume mt50">
-                {% csrf_token %}
+        <form action="{% url 'users:moderator_profile' object.user_id %}" method="post" enctype="multipart/form-data"
+              class="post-job-resume mt50">
+            {% csrf_token %}
 
-                <div class="row">
-                    <div class="col-md-12">
-
-                        <div class="profile-photo text-center mb30">
-                                 <img width="400" height="400"
-                                      src="{% if object.image %} {{ object.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}" class="img-thumbnail">
-                        </div>
-                        <div class="form-group">
-                            <label>Имя модератора</label>
-                            {{ form.name }}
-                        </div>
-                        <div class="form-group">
-                            {{ form.image }}
-                            <label class="custom-file-label" for="image">Выберите изображение</label>
-                        </div>
-                    </div>
-                </div>
+            <div class="row">
                 <div class="col-md-12">
-                    <div class="form-group pt30 nomargin" id="last">
-                        <button class="btn btn-blue btn-effect">Сохранить</button>
+
+                    <div class="profile-photo text-center mb30">
+                        <img width="400" height="400"
+                             src="{% if object.image %} {{ object.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                             class="img-thumbnail">
+                    </div>
+                    <div class="form-group">
+                        {{ form.image }}
+                        <label class="custom-file-label" for="image">Выберите изображение</label>
+                    </div>
+                    <div class="form-group">
+                        <label>Имя модератора</label>
+                        {{ form.name }}
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+            <div class="form-group d-flex align-items-center justify-content-around mt-4 mb-0">
+                <a class="btn btn-blue btn-effect" href="{% url 'index' %}">Вернуться</a>
+                <input class="btn btn-blue btn-effect" type="submit" value="Сохранить">
+            </div>
+        </form>
     </div>
+</div>
 
 
 {% endblock %}
 
 {% block footer %}
-    {% include 'inc_footer.html' %}
+{% include 'inc_footer.html' %}
 {% endblock %}
