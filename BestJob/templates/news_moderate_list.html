@@ -22,9 +22,10 @@
             <div class="row">
                 <div class="col-md-12">
                     <ul class="breadcrumb">
-                        <li class="active">Новости</li>
-                        <li><a href="{% url 'cv:moderator_cvs_list' %}">Резюме</a></li>
+                        <li><a href="{% url 'users:moderator_companies_list' %}">Компании</a></li>
                         <li><a href="{% url 'vacancies:moderator_vacancy_list' %}">Вакансии</a></li>
+                        <li><a href="{% url 'cv:moderator_cvs_list' %}">Резюме</a></li>
+                        <li class="active">Новости</li>
                     </ul>
                 </div>
             </div>
@@ -65,7 +66,7 @@
                             <div class="col-md-8 blog-desc">
                                 <h5><a href="{% url 'news:detail_news' item.pk %}">{{ item.title }}</a></h5>
                                 <div class="post-detail pt10 pb20">
-                                    <span><i class="fa fa-user"></i>{{ item.author.username }}</span>
+                                    <span><i class="fa fa-user"></i>{{ item.author.name }}</span>
                                     <span><i class="fa fa-clock-o"></i>{{ item.created|date:"H:i" }}</span>
                                 </div>
 

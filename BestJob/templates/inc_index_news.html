@@ -13,7 +13,7 @@
                     <div class="post-info">
                         <!-- Post Title -->
                         <a href="{% url 'news:detail_news' news_list.0.pk %}" class="blog-post-link pb10"><h4>{{ news_list.0.title }}</h4></a>
-                        <span class="pt20">{{ news_list.0.author.first_name }}</span>
+                        <span class="pt20">{{ news_list.0.author.name }}</span>
                     </div>
                     <!-- Background Post Image -->
                     <a href="{% url 'news:detail_news' news_list.0.pk %}"><img src="{{ news_list.0.image.url }}" alt=""></a>
@@ -24,7 +24,7 @@
                     <div class="post-info">
                         <!-- Post Title -->
                         <a href="{% url 'news:detail_news' news_list.1.pk %}" class="blog-post-link pb10"><h4>{{ news_list.1.title }}</h4></a>
-                        <span class="pt20">{{ news_list.1.author.first_name }}</span>
+                        <span class="pt20">{{ news_list.1.author.name }}</span>
                     </div>
                     <!-- Background Post Image -->
                     <a href="{% url 'news:detail_news' news_list.1.pk %}"><img src="{{ news_list.1.image.url }}" alt=""></a>
@@ -38,7 +38,7 @@
                     <div class="post-info">
                         <!-- Post Title -->
                         <a href="{% url 'news:detail_news' news_list.2.pk %}" class="blog-post-link pb10"><h4>{{ news_list.2.title }}</h4></a>
-                        <span class="pt20">{{ news_list.2.author.first_name }}</span>
+                        <span class="pt20">{{ news_list.2.author.name }}</span>
                     </div>
                     <!-- Background Post Image -->
                     <a href="{% url 'news:detail_news' news_list.2.pk %}"><img src="{{ news_list.2.image.url }}" alt=""></a>
