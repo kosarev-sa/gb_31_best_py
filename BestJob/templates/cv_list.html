@@ -24,9 +24,10 @@
                             </h5>
                             <h5><small>Соискатель -</small>{{ cv.worker_profile.name }}</h5>
                             <h5><small>Дата создания -</small> {{ cv.date_create }} </h5>
-                            <h5><small>Статус резюме -</small>
-                                {{ cv.status }}
+
                                 {% if worker %}
+                                    <h5><small>Статус резюме -</small>
+                                    {{ cv.status }}
                                     {% if cv.status.code == 'FRV' %}
                                         <p style="color:#ff0000;">Внимание! Модератор отправил резюме на доработку!
                                             {% if cv.moderators_comment %}
@@ -73,8 +74,9 @@
                     </div>
                 </div>
             {% endfor %}
-
+            {% if worker %}
             <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_cv' %}">Создать резюме</a>
+            {% endif %}
         </div>
     </section>
     <!--    Конец секции МОИ РЕЗЮМЕ-->

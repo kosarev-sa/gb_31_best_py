@@ -125,7 +125,9 @@ class ModeratorVacancyUpdate(UpdateView):
         vac_id = self.kwargs['pk']
         if form.is_valid():
             Vacancy.objects.filter(pk=vac_id).update(status=form.instance.status,
-                                                     moderators_comment=form.instance.moderator_comment)
+                                                    moderators_comment=form.instance.moderators_comment)
+        else:
+            print(form.errors)
         return redirect(self.success_url)
 
 
@@ -189,6 +191,7 @@ class VacancyUpdate(UpdateView):
 
     def get(self, request, *args, **kwargs):
         super(VacancyUpdate, self).get(request, *args, **kwargs)
+        self.object = self.get_object()
         context = self.get_context_data()
         # Временное решение до реализации get view для вакансии
         try:
@@ -198,6 +201,8 @@ class VacancyUpdate(UpdateView):
         except Exception:
             print(f'Employer {request.user.pk} not exists')
         context['employments'] = Employments.objects.all()
+        if self.object.status.status in ('FRV','RJC'):
+            context['moderators_comment'] = self.object.moderators_comment
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):

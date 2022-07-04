@@ -42,4 +42,5 @@ urlpatterns = [
     path('detail/<int:pk>/', VacancyDetail.as_view(), name='detail_vacancy'),
     # обновление списка вакансий у модератора по статусу
     path('edit_vacancy_list/<str:stat>/', edit_vacancy_list, name='edit_vacancy_list' ),
+
 ]

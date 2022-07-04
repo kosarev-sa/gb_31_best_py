@@ -31,11 +31,12 @@ class WorkerProfileForm(forms.ModelForm):
 
 class EmployerProfileForm(forms.ModelForm):
     """формы для профиля работодателя"""
+    disabled_fields = ('moderators_comment',)
 
     class Meta:
         model = EmployerProfile
         # exclude = ['user']
-        fields = ('name', 'image', 'city', 'data')
+        fields = ('name', 'image', 'city', 'data', 'moderators_comment')
 
     def __init__(self, *args, **kwargs):
         super(EmployerProfileForm, self).__init__(*args, **kwargs)
@@ -46,6 +47,8 @@ class EmployerProfileForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 
+        for field in self.disabled_fields:
+            self.fields[field].disabled = True
 
 class ModeratorProfileForm(forms.ModelForm):
     """формы для профиля модератора"""

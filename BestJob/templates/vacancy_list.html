@@ -35,16 +35,17 @@
                                     {{ vacancy.salary_to }}
                                 {% endif %}</h5>
                             <h5><small>Дата создания -</small> {{ vacancy.created_at }} </h5>
+
                             {% if employer %}
                                 <h5><small>Статус вакансии -</small> {{ vacancy.status }} </h5>
                                 {% if vacancy.status.code == 'FRV' %}
-                                    <p style="color:#ff0000;">Внимание! Модератор отправил резюме на доработку!
+                                    <p style="color:#ff0000;">Внимание! Модератор отправил вакансию на доработку!
                                         {% if vacancy.moderators_comment %}
                                             <p style="color:#ff0000;">Прочесть комментарии модератора можно на форме
                                                 редактирования.</p>
                                         {% endif %}
                                 {% elif vacancy.status.code == 'RJC' %}
-                                    <p style="color:#ff0000;">Внимание! Резюме отклонено модератором!
+                                    <p style="color:#ff0000;">Внимание! Вакансия отклонена модератором!
                                         {% if vacancy.moderators_comment %}
                                             <p style="color:#ff0000;">Прочесть комментарии модератора можно на форме
                                                 редактирования.</p>

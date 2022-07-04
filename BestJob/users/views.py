@@ -15,6 +15,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import UpdateView, FormView, TemplateView, ListView, DetailView
 
 from BestJob import settings
+from approvals.models import ApprovalStatus
 from news.models import News
 from search.models import Category
 from users.forms import WorkerProfileForm, EmployerProfileForm, ModeratorProfileForm, UserLoginForm, UserRegisterForm, \
@@ -447,3 +448,10 @@ def edit_comp_list(request, stat):
     result = render_to_string('companies_list.html', context)
 
     return JsonResponse({'result': result})
+
+
+def set_public_status(request, pk):
+    empl = get_object_or_404(EmployerProfile, pk=pk)
+    empl.status = ApprovalStatus.objects.get(status='PUB')
+    empl.save()
+    return HttpResponseRedirect(reverse('users:employer_profile', args=(pk,)))
