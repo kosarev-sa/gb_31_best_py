@@ -24,6 +24,9 @@ function openModalForm(magic_id, item_pk) {
     $custom_form_modal.addClass('is-visible');
 }
 
+/**
+ * Send to create relation.
+ */
 function sendData() {
 
     let csrf_token = $('meta[name="csrf-token"]').attr('content');
@@ -70,6 +73,12 @@ function sendData() {
     }
 }
 
+/**
+ * Checking enter user fields.
+ * @param select_picker
+ * @param letter
+ * @returns {boolean}
+ */
 function checkValues(select_picker, letter) {
 
     if (select_picker === '0') {
@@ -85,12 +94,19 @@ function checkValues(select_picker, letter) {
     return true;
 }
 
+/**
+ * Create error message.
+ * @param text
+ */
 function createErrorMessage(text) {
     $error_message.addClass('alert');
     $error_message.addClass('alert-danger');
     $error_message.text(text);
 }
 
+/**
+ * Drop error message.
+ */
 function dropErrorMessage() {
     $error_message.removeClass('alert');
     $error_message.removeClass('alert-danger');
