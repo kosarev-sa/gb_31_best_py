@@ -259,54 +259,54 @@ class Command(BaseCommand):
             resp['vacancy'] = Vacancy.objects.get(id=resp['vacancy'])
             ConnectVacancyCv(**resp).save()
 
-        # RELATIONS
-        relations = load_from_json(JSON_PATH_RELATIONS + 'relation.json')
-
-        for relation in relations:
-            relation_row = relation.get('fields')
-            relation_row['id'] = relation.get('pk')
-
-            date_create = datetime.datetime.strptime(relation_row.get('created'), '%Y-%m-%dT%H:%M:%S')
-            date_create = date_create.replace(tzinfo=datetime.timezone.utc)
-            relation_row['created'] = date_create
-
-            relation_row['cv'] = CV.objects.get(id=relation_row['cv'])
-            relation_row['vacancy'] = Vacancy.objects.get(id=relation_row['vacancy'])
-
-            new_relation = Relations(**relation_row)
-            new_relation.save()
-
-        relations_history = load_from_json(JSON_PATH_RELATIONS + 'relation_history.json')
-
-        for rh in relations_history:
-            rh_row = rh.get('fields')
-            rh_row['id'] = rh.get('pk')
-
-            date_create = datetime.datetime.strptime(rh_row.get('created'), '%Y-%m-%dT%H:%M:%S')
-            date_create = date_create.replace(tzinfo=datetime.timezone.utc)
-            rh_row['created'] = date_create
-
-            rh_row['relation'] = Relations.objects.get(pk=rh_row['relation'])
-            rh_row['status'] = RelationStatus.objects.get(pk=rh_row['status'])
-
-            new_rh = RelationHistory(**rh_row)
-            new_rh.save()
-
-        # JSON_PATH_FAVORITES
-        employer_favorites = load_from_json(JSON_PATH_FAVORITES + 'employerfavorites.json')
-
-        for emp_fav in employer_favorites:
-            emp_fav_row = emp_fav.get('fields')
-            emp_fav_row['id'] = emp_fav.get('pk')
-            emp_fav_row['cv'] = CV.objects.get(id=emp_fav_row['cv'])
-            emp_fav_row['employer_profile'] = EmployerProfile.objects.get(id=emp_fav_row['employer_profile'])
-            EmployerFavorites(**emp_fav_row).save()
-
-        worker_favorites = load_from_json(JSON_PATH_FAVORITES + 'workerfavorites.json')
-
-        for work_fav in worker_favorites:
-            work_fav_row = work_fav.get('fields')
-            work_fav_row['id'] = work_fav.get('pk')
-            work_fav_row['vacancy'] = Vacancy.objects.get(id=work_fav_row['vacancy'])
-            work_fav_row['worker_profile'] = WorkerProfile.objects.get(id=work_fav_row['worker_profile'])
-            WorkerFavorites(**work_fav_row).save()
+        # # RELATIONS
+        # relations = load_from_json(JSON_PATH_RELATIONS + 'relation.json')
+        #
+        # for relation in relations:
+        #     relation_row = relation.get('fields')
+        #     relation_row['id'] = relation.get('pk')
+        #
+        #     date_create = datetime.datetime.strptime(relation_row.get('created'), '%Y-%m-%dT%H:%M:%S')
+        #     date_create = date_create.replace(tzinfo=datetime.timezone.utc)
+        #     relation_row['created'] = date_create
+        #
+        #     relation_row['cv'] = CV.objects.get(id=relation_row['cv'])
+        #     relation_row['vacancy'] = Vacancy.objects.get(id=relation_row['vacancy'])
+        #
+        #     new_relation = Relations(**relation_row)
+        #     new_relation.save()
+        #
+        # relations_history = load_from_json(JSON_PATH_RELATIONS + 'relation_history.json')
+        #
+        # for rh in relations_history:
+        #     rh_row = rh.get('fields')
+        #     rh_row['id'] = rh.get('pk')
+        #
+        #     date_create = datetime.datetime.strptime(rh_row.get('created'), '%Y-%m-%dT%H:%M:%S')
+        #     date_create = date_create.replace(tzinfo=datetime.timezone.utc)
+        #     rh_row['created'] = date_create
+        #
+        #     rh_row['relation'] = Relations.objects.get(pk=rh_row['relation'])
+        #     rh_row['status'] = RelationStatus.objects.get(pk=rh_row['status'])
+        #
+        #     new_rh = RelationHistory(**rh_row)
+        #     new_rh.save()
+        #
+        # # JSON_PATH_FAVORITES
+        # employer_favorites = load_from_json(JSON_PATH_FAVORITES + 'employerfavorites.json')
+        #
+        # for emp_fav in employer_favorites:
+        #     emp_fav_row = emp_fav.get('fields')
+        #     emp_fav_row['id'] = emp_fav.get('pk')
+        #     emp_fav_row['cv'] = CV.objects.get(id=emp_fav_row['cv'])
+        #     emp_fav_row['employer_profile'] = EmployerProfile.objects.get(id=emp_fav_row['employer_profile'])
+        #     EmployerFavorites(**emp_fav_row).save()
+        #
+        # worker_favorites = load_from_json(JSON_PATH_FAVORITES + 'workerfavorites.json')
+        #
+        # for work_fav in worker_favorites:
+        #     work_fav_row = work_fav.get('fields')
+        #     work_fav_row['id'] = work_fav.get('pk')
+        #     work_fav_row['vacancy'] = Vacancy.objects.get(id=work_fav_row['vacancy'])
+        #     work_fav_row['worker_profile'] = WorkerProfile.objects.get(id=work_fav_row['worker_profile'])
+        #     WorkerFavorites(**work_fav_row).save()
