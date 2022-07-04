@@ -47,9 +47,9 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Работодателю<i
                                         class="fa fa-angle-down"></i></a>
                                 <ul class="dropdown-menu" role="menu">
-                                    <li><a href="#">создать вакансию</a></li>
+                                    <li><a href="{% url 'vacancies:create_vacancy' %}">создать вакансию</a></li>
                                     <li><a href="{% url 'users:employer_profile' user.id %}">профиль работодателя</a></li>
-                                    <li><a href="#">мои вакансии</a></li>
+                                    <li><a href="{% url 'vacancies:vacancy_list' %}">мои вакансии</a></li>
                                     <li><a href="{% url 'search_cv' %}">поиск резюме</a></li>
                                     <li><a href="{% url 'favorites:employer_list' %}">избранное</a></li>
                                     <li><a href="{% url 'relations:list' %}">отклики и приглашения</a></li>
@@ -63,9 +63,11 @@
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Модератору<i
                                         class="fa fa-angle-down"></i></a>
                                 <ul class="dropdown-menu" role="menu">
+
                                     <li><a href="{% url 'users:moderator_profile' user.id %}">профиль модератора</a></li>
                                     <li><a href="{% url 'news:moderate_news' %}">модерация новостей</a></li>
                                     <li><a href="{% url 'cv:moderator_cvs_list' %}">модерация резюме</a></li>
+                                    <li><a href="{% url 'users:moderator_companies_list' %}">модерация компаний</a></li>
                                     <li><a href="{% url 'vacancies:moderator_vacancy_list' %}">модерация вакансий</a></li>
                                 </ul>
                             </li>

@@ -35,7 +35,7 @@ def get_custom_relation_model(user, status_id, relation_id):
             custom_relation_model.button_accept_text = 'Принять отклик'
             custom_relation_model.button_cancel_text = 'Отправить отказ'
 
-        # Соискатель.
+    # Соискатель.
     elif user.role_id == UserRole.WORKER:
         # Приглашение
         if status_id == 4:

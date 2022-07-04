@@ -18,6 +18,9 @@ class VacancyCreateForm(forms.ModelForm):
         self.fields['city'].widget.attrs['placeholder'] = 'Москва'
         self.fields['description'].widget.attrs['placeholder'] = 'Описание вакансии'
 
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
 
 class VacancyUpdateForm(forms.ModelForm):
     """форма просмотра\редактирования вакансии"""
@@ -31,6 +34,14 @@ class VacancyUpdateForm(forms.ModelForm):
         self.fields['name'].widget.attrs['placeholder'] = 'Backend разработчик'
         self.fields['city'].widget.attrs['placeholder'] = 'Москва'
         self.fields['description'].widget.attrs['placeholder'] = 'Описание вакансии'
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+            if field_name in ['specialization', 'currency']:
+                field.widget.attrs['class'] = 'selectpicker'
+                field.widget.attrs['data-size'] = '5'
+                field.widget.attrs['data-container'] = 'body'
 
 
 class ModeratorVacancyUpdateForm(VacancyUpdateForm):

@@ -1,5 +1,5 @@
-
-from django.http import JsonResponse
+from django.contrib import messages
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 
 # Create your views here.
@@ -32,7 +32,11 @@ class VacancyList(TemplateView):
         context = {
             'vacancies': Vacancy.objects.filter(employer_profile=employer_id, is_active=True),
             'employer': employer_id,
-            'status': ApprovalStatus.objects.get(status='APV')
+            'status': ApprovalStatus.objects.get(status='APV'),
+            'title': "Мои вакансии",
+            'heading': "Мои вакансии",
+            'link': "/vacancies/create/",
+            'heading_link': "Создать вакансию",
         }
         return self.render_to_response(context)
 
@@ -131,7 +135,10 @@ class VacancyCreate(CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyCreate, self).get_context_data(**kwargs)
-        context['title'] = 'Новая вакансия'
+        context['title'] = 'Ваша вакансия'
+        context['heading'] = "Ваша вакансия"
+        context['link'] = "/vacancies/all/"
+        context['heading_link'] = "Список вакансий"
         return context
 
     def get(self, request, *args, **kwargs):
@@ -145,13 +152,17 @@ class VacancyCreate(CreateView):
         employer = EmployerProfile.objects.get(user=request.user.pk)
         start_status = ApprovalStatus.objects.get(status='NPB')
         form = self.form_class(data=request.POST)
+        salary_on_hand = request.POST.get('id_salary_on_hand', False)
+        is_active = request.POST.get('id_is_active', False)
+
         if form.is_valid():
             # сохраняем новую вакансию
             vacancy = form.save(commit=False)
             vacancy.employer_profile = employer
             vacancy.status = start_status
+            vacancy.salary_on_hand = salary_on_hand
+            vacancy.is_active = is_active
             vacancy.save()
-
             return redirect(self.success_url)
         else:
             print(form.errors)
@@ -167,6 +178,10 @@ class VacancyUpdate(UpdateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyUpdate, self).get_context_data(**kwargs)
+        context['title'] = "Изменение вакансии"
+        context['heading'] = "Ваша вакансия"
+        context['link'] = "/vacancies/all/"
+        context['heading_link'] = "Список вакансий"
         return context
 
     def get(self, request, *args, **kwargs):
@@ -176,10 +191,27 @@ class VacancyUpdate(UpdateView):
         try:
             employer = EmployerProfile.objects.get(user=request.user.pk)
             context['employer'] = employer
+
         except Exception:
             print(f'Employer {request.user.pk} not exists')
         context['employments'] = Employments.objects.all()
         return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        super(VacancyUpdate, self).post(request, *args, **kwargs)
+        self.object = self.get_object()
+        form = self.form_class(data=request.POST)
+        salary_on_hand = request.POST.get('id_salary_on_hand', False)
+        is_active = request.POST.get('id_is_active', False)
+        if form.is_valid():
+            self.object.is_active = is_active
+            self.object.salary_on_hand = salary_on_hand
+            self.object.save()
+            return redirect(self.success_url)
+        else:
+            messages.error(request, form.errors)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 
 class VacancyDelete(DeleteView):
@@ -246,10 +278,15 @@ class VacancyDetail(DetailView):
         context = self.get_context_data()
         vacancy_id = kwargs.get('pk')
         vacancy = Vacancy.objects.get(id=vacancy_id)
+
         try:
             employer = EmployerProfile.objects.get(id=vacancy_id)
             context['vacancy'] = vacancy
             context['employer'] = employer
+            context['title'] = "Вакансии"
+            context['heading'] = "Вакансия"
+            context['link'] = "/vacancies/all/"
+            context['heading_link'] = "Список вакансий"
         except Exception:
             print(f'Employer not exists')
         context['employments'] = Employments.objects.all()

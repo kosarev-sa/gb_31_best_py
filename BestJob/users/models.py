@@ -56,6 +56,7 @@ class EmployerProfile(models.Model):
     is_active = models.BooleanField(default=True, db_index=True)
     city = models.CharField('Город местонахождения', max_length=80, blank=True)
     data = models.TextField('Описание компании', blank=True)
+    moderators_comment = models.TextField(max_length=5000, blank=True, null=True)
 
     #  формат вывода
     def __str__(self):

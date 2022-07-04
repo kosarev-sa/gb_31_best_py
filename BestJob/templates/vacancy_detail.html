@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    {% include 'inc_cv_header.html' %}
+{% endblock %}
+
+{% block content %}
+<!--    Начало секции Профиля работодателя-->
+    <section class="ptb80" id="candidate-profile">
+        <div class="container">
+
+            <div class="row candidate-profile nomargin">
+
+                <div class="col-md-12 text-center">
+                    <h3 class="pb40">{{ object.name }}</h3>
+                </div>
+
+                <div class="col-md-3 col-xs-12">
+                    <div class="profile-photo">
+
+                         <img src="{% if object.employer_profile.image %} {{ object.employer_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}" class="img-thumbnail">
+                    </div>
+                </div>
+
+                <div class="col-md-9 col-xs-12">
+                    <div class="profile-descr">
+
+                        <div class="profile-title">
+<!--                            Название компании-->
+                            {% if object.employer_profile.name %}
+                                <h2 class="capitalize">{{ object.employer_profile.name }}</h2>
+                            {% endif %}
+
+<!--                            Специализация-->
+                            {% if object.specialization %}
+                                <h5 class="pt10">{{ object.specialization }}</h5>
+                            {% endif %}
+
+<!--                            Опыт работы-->
+                            {% if object.experience %}
+                                <h5 class="pt10">Опыт работы:
+                                    {% if object.experience == 'BIG' %}
+                                        Более 6 лет
+                                    {% elif object.experience == 'EXP' %}
+                                        От 3 до 6 лет
+                                    {% elif object.experience == 'NO' %}
+                                        От 1 года до 3 лет
+                                    {% endif %}
+                                </h5>
+                            {% endif %}
+<!--                            Описание-->
+
+                            {% if object.description %}
+                                <h5 class="pt10">{{ object.description }}</h5>
+                            {% endif %}
+
+ <!--                            Город-->
+                            {% if object.city %}
+                                <h5 class="pt10">Город: {{ object.city }}</h5>
+                            {% endif %}
+
+                        </div>
+
+
+<!--                            Информация о компании-->
+                        <div class="profile-details mt20">
+                            {% if object.employer_profile.data %}
+                                {{ object.employer_profile.data }}
+                            {% endif %}
+                        </div>
+
+                        <ul class=" profile-info mt20 nopadding">
+                            {% if object.employer_profile.city %}
+                                <li>
+                                    <i class="fa fa-map-marker"></i>
+    <!--                                Город-->
+                                    <span>{{ object.employer_profile.city }}</span>
+                                </li>
+                            {% endif %}
+
+                            <li>
+                                <i class="fa fa-globe"></i>
+                                <a href="#">best_job.com</a>
+                            </li>
+
+                            {% if object.salary_from or object.salary_to %}
+                                <li>
+                                    <i class="fa fa-money"></i>
+    <!--                                Зарплата-->
+                                    {% if object.salary_from and object.salary_to %}
+                                        <span>
+                                                {{ object.salary_from }} - {{ object.salary_to }} {{ object.get_currency_display }} |
+                                                {% if object.salary_on_hand %}
+                                                    с учётом налогов
+                                                {% else %}
+                                                    без учёта налогов
+                                                {% endif %}
+                                        </span>
+                                    {% elif object.salary_from %}
+                                        <span>
+                                            {{ object.salary_from }} {{ object.get_currency_display }} |
+                                            {% if object.salary_on_hand %}
+                                                с учётом налогов
+                                            {% else %}
+                                                без учёта налогов
+                                            {% endif %}
+                                        </span>
+                                    {% elif object.salary_to %}
+                                        <span>
+                                            {{ object.salary_to }} {{ object.get_currency_display }} |
+                                            {% if object.salary_on_hand %}
+                                                с учётом налогов
+                                            {% else %}
+                                                без учёта налогов
+                                            {% endif %}
+                                        </span>
+                                    {% endif %}
+                                </li>
+                            {% endif %}
+
+                        </ul>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div>
+                <div class="col-md-12 text-right mt30 mb-4">
+                        <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'vacancies:vacancy_list' %}">Вернуться к списку</a>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}
