@@ -1,5 +1,7 @@
 from django import forms
 
+from approvals.models import ApprovalStatus
+from search.models import Category
 from vacancies.models import Vacancy
 from cvs.models import ConnectVacancyCv
 
@@ -24,6 +26,9 @@ class VacancyCreateForm(forms.ModelForm):
 
 class VacancyUpdateForm(forms.ModelForm):
     """форма просмотра\редактирования вакансии"""
+    specialization = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'),
+                                            required=False)
+    disabled_fields = ('moderators_comment',)
 
     class Meta:
         model = Vacancy
@@ -43,12 +48,18 @@ class VacancyUpdateForm(forms.ModelForm):
                 field.widget.attrs['data-size'] = '5'
                 field.widget.attrs['data-container'] = 'body'
 
+        for field in self.disabled_fields:
+            self.fields[field].disabled = True
+
 
 class ModeratorVacancyUpdateForm(VacancyUpdateForm):
     """форма просмотра\редактирования вакансии"""
     disabled_fields = ('specialization', 'is_active', 'name', 'experience',
                        'description', 'city', 'description', 'salary_from',
                        'salary_to', 'currency', 'salary_on_hand',)
+    status = forms.ModelChoiceField(widget=forms.Select(),
+                                    queryset=ApprovalStatus.objects.exclude(status='NPV'),  # почему-то exclude не отрабатываеит
+                                    required=False)
 
     class Meta:
         model = Vacancy
@@ -56,6 +67,7 @@ class ModeratorVacancyUpdateForm(VacancyUpdateForm):
 
     def __init__(self, *args, **kwargs):
         super(ModeratorVacancyUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['status'].widget.attrs['class'] = 'selectpicker'
         for field in self.disabled_fields:
             self.fields[field].disabled = True
 

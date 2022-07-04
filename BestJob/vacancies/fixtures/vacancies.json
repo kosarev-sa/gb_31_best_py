@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "employer_profile": 3,
-      "status": 1,
+      "status": 2,
       "specialization": "TEST",
       "is_active": true,
       "name": "Разработчик тестов",
@@ -40,7 +40,7 @@
     "pk": 3,
     "fields": {
       "employer_profile": 3,
-      "status": 1,
+      "status": 3,
       "specialization": "BACKD",
       "is_active": true,
       "name": "Python-developer",
@@ -58,7 +58,7 @@
     "pk": 4,
     "fields": {
       "employer_profile": 2,
-      "status": 1,
+      "status": 4,
       "specialization": "BACKD",
       "is_active": true,
       "name": "Python-dev Senior",
@@ -76,7 +76,7 @@
     "pk": 5,
     "fields": {
       "employer_profile": 3,
-      "status": 1,
+      "status": 5,
       "specialization": "TEST",
       "is_active": true,
       "name": "fullstack",
@@ -94,7 +94,7 @@
     "pk": 6,
     "fields": {
       "employer_profile": 2,
-      "status": 1,
+      "status": 5,
       "specialization": "TEST",
       "is_active": true,
       "name": "Pytester",
@@ -112,7 +112,7 @@
     "pk": 7,
     "fields": {
       "employer_profile": 3,
-      "status": 1,
+      "status": 2,
       "specialization": "FRONTD",
       "is_active": true,
       "name": "Frontend React dev",
@@ -130,7 +130,7 @@
     "pk": 8,
     "fields": {
       "employer_profile": 2,
-      "status": 1,
+      "status": 5,
       "specialization": "PM",
       "is_active": true,
       "name": "superProj analyst",

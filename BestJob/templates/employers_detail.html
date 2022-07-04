@@ -42,11 +42,11 @@
 
                                 </div>
                                 {{ object.data }}
-                                 <ul class="profile-info mt20 nopadding">
-                                <li>
-                                    <i class="fa fa-map-marker"></i>
-                                    <span>{{ object.city }}</span>
-                                </li>
+                                <ul class="profile-info mt20 nopadding">
+                                    <li>
+                                        <i class="fa fa-map-marker"></i>
+                                        <span>{{ object.city }}</span>
+                                    </li>
 
                                 </ul>
                             </div>
@@ -56,6 +56,29 @@
             </div>
         </div>
     </section>
+    <!-- СЕКЦИЯ РАБОТА МОДЕРАТОРА С РЕЗЮМЕ -->
+    {% if is_moderating %}
+        <form method="post" action="">
+            {% csrf_token %}
+            <section class="education ptb30" style="background: #ffffff;">
+                <div class="container">
+                    <div class="col-md-12 text-center">
+                        <h3 class="pt30">Модерация карточки компании</h3>
+                    </div>
+                    <div class="form-group pt10">
+                        <label for="{{ form.status.id_for_label }}">Статус:</label>
+                        {{ form.status }}
+                    </div>
+                    <div class="form-group pt10">
+                        <label for="{{ form.moderators_comment.id_for_label }}">Комментарий :</label>
+                        {{ form.moderators_comment }}
+                    </div>
+                    <input class="btn btn-blue btn-effect mt15 mb15" type="submit" value="Сохранить">
+                </div>
+            </section>
+        </form>
+    {% endif %}
+    <!-- КОНЕЦ СЕКЦИИ РАБОТА МОДЕРАТОРА С РЕЗЮМЕ -->
 
 {% endblock %}
 

@@ -1,3 +1,5 @@
+from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -50,7 +52,7 @@ class ModeratorVacancyList(TemplateView):
 
         context = self.get_context_data()
         context['title'] = 'Вакансии'
-        context['vacancies_list'] = Vacancy.objects.exclude(status__status="NPB")
+        context['vacancies_list'] = Vacancy.objects.filter(status__status="PUB")
 
         return self.render_to_response(context)
 
@@ -102,7 +104,7 @@ class ResponseVacancyCVs(TemplateView):
 class ModeratorVacancyUpdate(UpdateView):
     """view изменения вакансий"""
     model = Vacancy
-    template_name = 'moderator_vacancy_approve.html'
+    template_name = 'vacancy_detail.html'
     form_class = ModeratorVacancyUpdateForm
     success_url = reverse_lazy('vacancy:moderator_vacancy_list')
 
@@ -115,14 +117,17 @@ class ModeratorVacancyUpdate(UpdateView):
         employer = EmployerProfile.objects.filter(user_id=vac_user_id)
         if employer:
             context['employer'] = employer.first()
-
+        context['is_moderating'] = True
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(data=request.POST)
         vac_id = self.kwargs['pk']
         if form.is_valid():
-            Vacancy.objects.filter(pk=vac_id).update(status=form.instance.status)
+            Vacancy.objects.filter(pk=vac_id).update(status=form.instance.status,
+                                                    moderators_comment=form.instance.moderators_comment)
+        else:
+            print(form.errors)
         return redirect(self.success_url)
 
 
@@ -186,6 +191,7 @@ class VacancyUpdate(UpdateView):
 
     def get(self, request, *args, **kwargs):
         super(VacancyUpdate, self).get(request, *args, **kwargs)
+        self.object = self.get_object()
         context = self.get_context_data()
         # Временное решение до реализации get view для вакансии
         try:
@@ -195,6 +201,8 @@ class VacancyUpdate(UpdateView):
         except Exception:
             print(f'Employer {request.user.pk} not exists')
         context['employments'] = Employments.objects.all()
+        if self.object.status.status in ('FRV','RJC'):
+            context['moderators_comment'] = self.object.moderators_comment
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
@@ -211,7 +219,6 @@ class VacancyUpdate(UpdateView):
         else:
             messages.error(request, form.errors)
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
 
 
 class VacancyDelete(DeleteView):
@@ -231,6 +238,13 @@ class VacancyDistribute(UpdateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyDistribute, self).get_context_data(**kwargs)
         return context
+
+
+def set_public_status(request, pk):
+    vacancy = get_object_or_404(Vacancy, pk=pk)
+    vacancy.status = ApprovalStatus.objects.get(status='PUB')
+    vacancy.save()
+    return HttpResponseRedirect(reverse('vacancy:vacancy_list'))
 
 
 class VacancyOpenList(TemplateView, BaseClassContextMixin):
@@ -266,7 +280,7 @@ class RecommendedVacancyList(ListView, BaseClassContextMixin):
         }
 
         return self.render_to_response(context)
-        
+
 
 class VacancyDetail(DetailView):
     """Просмотр одной вакансии независимо от регистрации"""
@@ -297,7 +311,7 @@ class VacancyDetail(DetailView):
 def edit_vacancy_list(request, stat):
     """Обновление списка вакансий соглано статусу на странице список акансий у модератора"""
     vacancies_list = Vacancy.objects.exclude(status__status="NPB")
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest': # вместо отмершего if request.is_ajax()
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # вместо отмершего if request.is_ajax()
         if stat == 'frv':
             vacancies_list = Vacancy.objects.filter(status__status="FRV")
         elif stat == 'all':
@@ -310,7 +324,7 @@ def edit_vacancy_list(request, stat):
             vacancies_list = Vacancy.objects.filter(status__status="APV")
         else:
             vacancies_list = Vacancy.objects.exclude(status__status="NPB")
-    context = { 'vacancies_list': vacancies_list }
+    context = {'vacancies_list': vacancies_list}
     result = render_to_string('vac_list.html', context)
 
-    return JsonResponse({'result':result})
+    return JsonResponse({'result': result})

@@ -2,7 +2,7 @@
   {
     "name": "ООО КОМВИД",
     "image": "company_images/komvid.png",
-    "status": 1,
+    "status": 5,
     "date_create": "2022-06-03T14:29:22.699Z",
     "is_active": true,
     "city": "Москва",
@@ -11,7 +11,7 @@
   {
     "name": "Банк ВТБ (ПАО)",
     "image": "company_images/vtb.png",
-    "status": 1,
+    "status": 2,
     "date_create": "2022-06-03T14:29:22.699Z",
     "is_active": true,
     "city": "Москва",
@@ -29,7 +29,7 @@
   {
     "name": "Норникель",
     "image": "company_images/nornikel.png",
-    "status": 1,
+    "status": 2,
     "date_create": "2022-06-03T14:29:22.699Z",
     "is_active": true,
     "city": "Норильск",
@@ -38,7 +38,7 @@
   {
     "name": "Haier",
     "image": "company_images/haier.png",
-    "status": 1,
+    "status": 5,
     "date_create": "2022-06-03T14:29:22.699Z",
     "is_active": true,
     "city": "Пекин",
@@ -56,7 +56,7 @@
   {
     "name": "ООО OFT Group",
     "image": "company_images/oft.png",
-    "status": 1,
+    "status": 5,
     "date_create": "2022-06-03T14:29:22.699Z",
     "is_active": false,
     "city": "Ростов-на-Дону",
@@ -65,7 +65,7 @@
   {
     "name": "Новые метры",
     "image": "company_images/Логотип_НМ_Белый_фон_Oypv5Dq.jpg",
-    "status": 1,
+    "status": 2,
     "date_create": "2022-06-03T14:04:22.185Z",
     "is_active": true,
     "city": "Нижний Новгород",
