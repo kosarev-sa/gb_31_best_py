@@ -20,7 +20,7 @@ class NewsCreateForm(forms.ModelForm):
 class NewsUpdateForm(forms.ModelForm):
 
     title = forms.CharField(widget=forms.TextInput, required=True)
-    body = forms.CharField(widget=forms.TextInput, required=True)
+    body = forms.CharField(widget=forms.Textarea, required=True)
 
     class Meta:
         model = News

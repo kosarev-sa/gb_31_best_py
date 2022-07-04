@@ -149,7 +149,7 @@ class NewsUpdate(UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = self.form_class(data=request.POST ,files=request.FILES)
+        form = self.form_class(request.POST, instance=self.object, files=request.FILES)
         news_id = self.kwargs['pk']
 
         news = News.objects.filter(id=news_id)
@@ -167,7 +167,7 @@ class NewsUpdate(UpdateView):
         else:
             form.instance.news_id = news_id
             form.instance.user = News.objects.get(pk=news_id)
-        news.save()
+        form.save()
         return redirect(self.success_url)
 
 
