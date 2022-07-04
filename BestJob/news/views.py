@@ -115,8 +115,21 @@ class NewsUpdate(UpdateView):
     form_class = NewsUpdateForm
     success_url = reverse_lazy('news:moderate_news')
 
+    def get_object(self, queryset=None):
+        news_id = self.kwargs['pk']
+        news = News.objects.filter(id=news_id)
+
+        if news:
+            return news.first()
+        else:
+            news = News()
+            News.id = news.objects.get(pk=news_id)
+            return news
+
     def get_context_data(self, **kwargs):
         context = super(NewsUpdate, self).get_context_data(**kwargs)
+        context['title'] = "Редактирование новости"
+        context['heading'] = "Редактирование новости"
         return context
 
     def get(self, request, *args, **kwargs):
@@ -136,7 +149,7 @@ class NewsUpdate(UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = self.form_class(data=request.POST, files=request.FILES)
+        form = self.form_class(data=request.POST ,files=request.FILES)
         news_id = self.kwargs['pk']
 
         news = News.objects.filter(id=news_id)
@@ -169,4 +182,3 @@ class NewsDelete(DeleteView):
         success_url = self.get_success_url()
         self.object.delete()
         return HttpResponseRedirect(success_url)
-
