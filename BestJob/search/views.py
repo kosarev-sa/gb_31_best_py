@@ -5,6 +5,7 @@ from haystack.query import SearchQuerySet
 from cvs.models import CV
 from search.form import CVSearchForm, VacancySearchForm
 from vacancies.models import Vacancy
+from BestJob.settings import UserRole
 
 
 class CVSearchView(SearchView):
@@ -17,7 +18,7 @@ class CVSearchView(SearchView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(CVSearchView, self).get_context_data(**kwargs)
-        if self.request.user.id is None or self.request.user.role.id == 3:
+        if self.request.user.id is None or self.request.user.role.id == UserRole.WORKER:
             context['message_of_denied'] = 'Просматривать резюме могут только авторизованные ' \
                                            'работодатели!'
         return context
@@ -33,7 +34,7 @@ class VacancySearchView(SearchView):
 
     def get_context_data(self, *args, **kwargs):
         context = super(VacancySearchView, self).get_context_data(**kwargs)
-        if self.request.user.id is None or self.request.user.role.id == 2:
+        if self.request.user.id is None or self.request.user.role.id == UserRole.EMPLOYER:
             context['message_of_denied'] = 'Просматривать вакансии могут только авторизованные ' \
                                            'соискатели!'
         return context

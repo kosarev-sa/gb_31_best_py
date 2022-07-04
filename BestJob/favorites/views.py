@@ -62,6 +62,67 @@ def fav_work_add_remove(request, vacancy_id):
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+def get_worker_favorites_data_for_context(user, context):
+    worker_profiles = WorkerProfile.objects.filter(user_id=user.pk)
+    if worker_profiles:
+        profiler = worker_profiles.first()
+        worker_favorites = WorkerFavorites.objects.filter(
+            worker_profile=profiler).order_by('-created')
+
+        # Я ищу работу и у меня есть резюме. Мои резюме.
+        cvs = CV.objects.filter(worker_profile=profiler)
+
+        context['modal_header'] = 'Выбор резюме'
+        context['modal_combo'] = cvs
+        context['modal_combo_empty'] = 'Выберите резюме'
+
+        # Вычисление оправлялся ли отклик на вакансию из избранного.
+        for favorit in worker_favorites:
+
+            favorit.has_relaton = False
+
+            # Отправлял ли я отклик на вакансии из избранного?
+            for cv in cvs:
+                relations = Relations.objects.filter(cv=cv, vacancy=favorit.vacancy)
+                # Если relation, то отправлял.
+                if relations:
+                    favorit.has_relaton = True
+                    favorit.relations_id = relations.first().pk
+                    break
+
+        context['favorites_list'] = worker_favorites
+
+def get_employer_favorites_data_for_context(user, context):
+    employer_profiles = EmployerProfile.objects.filter(user_id=user.pk)
+    if employer_profiles:
+        profiler = employer_profiles.first()
+
+        employer_favorites = EmployerFavorites.objects.filter(
+            employer_profile=profiler).order_by('-created')
+
+        # Я ищу сотрудников и у меня есть вакансии. Мои вакансии.
+        vacancies = Vacancy.objects.filter(employer_profile=profiler)
+
+        context['modal_header'] = 'Выбор вакансии'
+        context['modal_combo'] = vacancies
+        context['modal_combo_empty'] = 'Выберите вакансию'
+
+        # Вычисление оправлялось ли приглашение на резюме из избранного.
+        for favorit in employer_favorites:
+
+            favorit.has_relaton = False
+
+            # Отправлял ли я отклик на вакансии из избранного?
+            for vacancy in vacancies:
+                relations = Relations.objects.filter(cv=favorit.cv, vacancy=vacancy)
+                # Если relations, то отправлял.
+                if relations:
+                    favorit.has_relaton = True
+                    favorit.relations_id = relations.first().pk
+                    break
+
+        context['favorites_list'] = employer_favorites
+
 class FavoritesEmployerDeleteView(DeleteView):
     """view удаление избранного работадателя"""
     model = EmployerFavorites
@@ -116,34 +177,7 @@ class FavoritesWorkerListView(ListView):
             user = request.user
 
             if user.role_id == UserRole.WORKER:
-                worker_profiles = WorkerProfile.objects.filter(user_id=user.pk)
-                if worker_profiles:
-                    profiler = worker_profiles.first()
-                    worker_favorites = WorkerFavorites.objects.filter(
-                        worker_profile=profiler).order_by('-created')
-
-                    # Я ищу работу и у меня есть резюме. Мои резюме.
-                    cvs = CV.objects.filter(worker_profile=profiler)
-
-                    context['modal_header'] = 'Выбор резюме'
-                    context['modal_combo'] = cvs
-                    context['modal_combo_empty'] = 'Выберите резюме'
-
-                    # Вычисление оправлялся ли отклик на вакансию из избранного.
-                    for favorit in worker_favorites:
-
-                        favorit.has_relaton = False
-
-                        # Отправлял ли я отклик на вакансии из избранного?
-                        for cv in cvs:
-                            relations = Relations.objects.filter(cv=cv, vacancy=favorit.vacancy)
-                            # Если relation, то отправлял.
-                            if relations:
-                                favorit.has_relaton = True
-                                favorit.relations_id = relations.first().pk
-                                break
-
-                    context['favorites_list'] = worker_favorites
+                get_worker_favorites_data_for_context(user, context)
 
         else:
             error_message = f'user is not authenticated'
@@ -173,35 +207,7 @@ class FavoritesEmployerListView(ListView):
             user = request.user
 
             if user.role_id == UserRole.EMPLOYER:
-                employer_profiles = EmployerProfile.objects.filter(user_id=user.pk)
-                if employer_profiles:
-                    profiler = employer_profiles.first()
-
-                    employer_favorites = EmployerFavorites.objects.filter(
-                        employer_profile=profiler).order_by('-created')
-
-                    # Я ищу сотрудников и у меня есть вакансии. Мои вакансии.
-                    vacancies = Vacancy.objects.filter(employer_profile=profiler)
-
-                    context['modal_header'] = 'Выбор вакансии'
-                    context['modal_combo'] = vacancies
-                    context['modal_combo_empty'] = 'Выберите вакансию'
-
-                    # Вычисление оправлялось ли приглашение на резюме из избранного.
-                    for favorit in employer_favorites:
-
-                        favorit.has_relaton = False
-
-                        # Отправлял ли я отклик на вакансии из избранного?
-                        for vacancy in vacancies:
-                            relations = Relations.objects.filter(cv=favorit.cv, vacancy=vacancy)
-                            # Если relations, то отправлял.
-                            if relations:
-                                favorit.has_relaton = True
-                                favorit.relations_id = relations.first().pk
-                                break
-
-                    context['favorites_list'] = employer_favorites
+                get_employer_favorites_data_for_context(user, context)
         else:
             error_message = f'user is not authenticated'
             context['error_message'] = error_message

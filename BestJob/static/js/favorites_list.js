@@ -1,18 +1,100 @@
 let $custom_form_modal = $('.cd-user-modal');
-    //$form_relation = $custom_form_modal.find('#cd-relation'),
-    //$emp_rel_btn = $('#version4 [id^="employer_relation_btn"]'),
-    //$work_rel_btn = $('#version4 [id^="worker_relation_btn"]');
+$form_relation = $custom_form_modal.find('#cd-relation');
+let $error_message = $("#error_message");
+dropErrorMessage();
+let $li_element;
+let $relation_btn;
+
 
 /**
  * Open modal.
  */
-function openModalForm(val) {
+function openModalForm(magic_id, item_pk) {
+
+    let li_element_str = "#has_relaton_" + magic_id + '_' + item_pk;
+    $li_element = $(li_element_str);
+
+    let relation_btn_str = "#relation_btn_" + magic_id + '_' + item_pk;
+    $relation_btn = $(relation_btn_str);
 
     // set magic
-    $("#magic_field").val(val);
+    $("#magic_field").val(magic_id);
 
     //show modal layer
     $custom_form_modal.addClass('is-visible');
+}
+
+function sendData() {
+
+    let csrf_token = $('meta[name="csrf-token"]').attr('content');
+
+    let magic_field = $("#magic_field").val();
+    let select_picker = $("#relation_select_picker").val();
+    let letter = $("#transmittal_letter").val();
+
+    dropErrorMessage();
+
+    if (!checkValues(select_picker, letter)) {
+        return;
+    }
+
+    if (magic_field && select_picker && letter) {
+
+        $.ajaxSetup({
+            headers: {
+                "X-CSRFToken": csrf_token
+            }
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: '/relations/create_from_val/' + magic_field + '/' + select_picker + '/' + letter + '/',
+            data: {},
+            success: (data) => {
+                if (data) {
+                    $li_element.append(data.result);
+                    $relation_btn.remove();
+                    $("#magic_field").val('');
+                    $('#relation_select_picker').val(0);
+                    $("#relation_select_picker").selectpicker('refresh')
+                    $("#transmittal_letter").val('');
+                }
+                dropErrorMessage();
+                $custom_form_modal.removeClass('is-visible');
+            },
+            error: function (data)
+            {
+                createErrorMessage('Ошибка 500!');
+            }
+        });
+    }
+}
+
+function checkValues(select_picker, letter) {
+
+    if (select_picker === '0') {
+        createErrorMessage('Ошибка. Выберите значение из выпадающего списка!')
+        return false;
+    }
+
+    if (!letter) {
+        createErrorMessage('Ошибка. Заполните сопроводительное сообщение!');
+        return false;
+    }
+
+    return true;
+}
+
+function createErrorMessage(text) {
+    $error_message.addClass('alert');
+    $error_message.addClass('alert-danger');
+    $error_message.text(text);
+}
+
+function dropErrorMessage() {
+    $error_message.removeClass('alert');
+    $error_message.removeClass('alert-danger');
+    $error_message.text('');
 }
 
 /**
@@ -21,6 +103,10 @@ function openModalForm(val) {
 $custom_form_modal.on('click', function (event) {
     if ($(event.target).is($custom_form_modal) || $(event.target).is('.cd-close-form')) {
         $custom_form_modal.removeClass('is-visible');
+        $('#relation_select_picker').val(0);
+        $("#relation_select_picker").selectpicker('refresh')
+        $("#transmittal_letter").val('');
+        dropErrorMessage();
     }
 });
 
@@ -30,5 +116,9 @@ $custom_form_modal.on('click', function (event) {
 $(document).on('keyup', function (event) {
     if (event.which == '27') {
         $custom_form_modal.removeClass('is-visible');
+        $('#relation_select_picker').val(0);
+        $("#relation_select_picker").selectpicker('refresh')
+        $("#transmittal_letter").val('');
+        dropErrorMessage();
     }
 });
