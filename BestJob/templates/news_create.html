@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    {% include 'inc_news_create_header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="ptb80" id="blog-post">
+        <div class="container">
+            <form action="{% url 'news:create_news' %}" method="post" enctype="multipart/form-data" class="post-job-resume mt50">
+                        {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="{{ form.title.id_for_label }}">Заголовок</label>
+                            {{ form.title }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="{{ form.body.id_for_label }}">Текст новости</label>
+                            {{ form.body }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        {{ form.image }}
+                        <label class="custom-file-label" for="image">Выберите изображение</label>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group pt30 nomargin" id="last">
+                        <button class="btn btn-blue btn-effect">Сохранить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

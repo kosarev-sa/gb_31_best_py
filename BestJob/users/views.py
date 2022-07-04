@@ -174,6 +174,15 @@ class ModeratorProfileView(UpdateView):
             moderator_profile.user = User.objects.get(pk=user_id)
             return moderator_profile
 
+    def get_context_data(self, **kwargs):
+        context = super(ModeratorProfileView, self).get_context_data(**kwargs)
+
+        context['title'] = "Профиль модератора"
+        context['heading'] = "Профиль модератора"
+        context['link'] = "/news/all/"
+        context['heading_link'] = "Список новостей"
+        return context
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
