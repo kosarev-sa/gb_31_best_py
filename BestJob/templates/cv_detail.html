@@ -300,7 +300,11 @@
 
             <div class="col-md-12 text-right mt30 mb-4">
                 {% if not is_moderating %}
+                    {% if employer %}
+                    <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'favorites:employer_add_remove' cv_id=object.id %}">Добавить в избранное</a>
+                    {% elif worker %}
                     <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:cv_list' %}">Вернуться к списку</a>
+                    {% endif %}
                 {% endif %}
             </div>
 
@@ -318,7 +322,7 @@
                     <h3 class="pt30">Модерация резюме</h3>
                 </div>
                 <div class="form-group pt10">
-                    <label for="{{ form.education_level.id_for_label }}">Статус:</label>
+                    <label for="{{ form.status.id_for_label }}">Статус:</label>
                     {{ form.status }}
                 </div>
                 <div class="form-group pt10">

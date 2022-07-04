@@ -120,3 +120,15 @@ class PassResetConfirmForm(SetPasswordForm):
         self.fields['new_password1'].widget.attrs.update({"placeholder": "пароль", "class":"form-control"})
         self.fields['new_password2'].widget.attrs.update({"placeholder": "подтверждение пароля", "class":"form-control"})
 
+
+class ModeratorCompanyUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = EmployerProfile
+        fields = ( 'status', 'moderators_comment')
+
+    def __init__(self, *args, **kwargs):
+        super(ModeratorCompanyUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['status'].widget.attrs.update({ "class": "form-control "})
+        self.fields['moderators_comment'].widget.attrs.update({"class": "form-control"})
+

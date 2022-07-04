@@ -18,7 +18,7 @@ from BestJob import settings
 from news.models import News
 from search.models import Category
 from users.forms import WorkerProfileForm, EmployerProfileForm, ModeratorProfileForm, UserLoginForm, UserRegisterForm, \
-    PassResetForm, PassResetConfirmForm
+    PassResetForm, PassResetConfirmForm, ModeratorCompanyUpdateForm
 
 from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User
 
@@ -95,6 +95,43 @@ class EmployerDetailView(DetailView, BaseClassContextMixin):
     model = EmployerProfile
     template_name = 'employers_detail.html'
     title = 'Карточка компании'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(EmployerDetailView, self).get_context_data(**kwargs)
+        comp_id = self.kwargs['pk']
+        company = EmployerProfile.objects.get(id=comp_id)
+        context['object'] = company
+        context['title'] = company.name
+        context['is_moderating'] = False
+        return context
+
+
+class ModeratorCompanyUpdate(UpdateView):
+    """view модерации выбранного работодателя"""
+    model = EmployerProfile
+    template_name = 'employers_detail.html'
+    form_class = ModeratorCompanyUpdateForm
+    success_url = reverse_lazy('users:moderator_companies_list')
+
+    def get(self, request, *args, **kwargs):
+        super(ModeratorCompanyUpdate, self).get(request, *args, **kwargs)
+        context = self.get_context_data()
+        comp_id = self.kwargs['pk']
+        company = EmployerProfile.objects.get(id=comp_id)
+        context['object'] = company
+        context['title'] = company.name
+        context['is_moderating'] = True
+        return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(data=request.POST)
+        comp_id = self.kwargs['pk']
+        if form.is_valid():
+            EmployerProfile.objects.filter(pk=comp_id).update(status=form.instance.status,
+                                               moderators_comment=form.instance.moderators_comment)
+        else:
+            print(form.errors)
+        return redirect(self.success_url)
 
 
 class EmployerProfileView(UpdateView):
@@ -384,7 +421,7 @@ class ModeratorCompaniesList(TemplateView):
     def get(self, request, *args, **kwargs):
         super(ModeratorCompaniesList, self).get(request, *args, **kwargs)
         context = self.get_context_data()
-        context['companies_list'] = EmployerProfile.objects.exclude(status__status="NPB")
+        context['companies_list'] = EmployerProfile.objects.filter(status__status="PUB")
         # EmployerProfile.objects.exclude(status__status="NPB")
         return self.render_to_response(context)
 

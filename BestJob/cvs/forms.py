@@ -44,10 +44,11 @@ class CVUpdateForm(forms.ModelForm):
     post = forms.CharField(widget=forms.TextInput, required=False)
     skills = forms.CharField(widget=forms.TextInput, required=False)
     about = forms.CharField(widget=forms.Textarea, required=False)
+    disabled_fields = ('moderators_comment',)
 
     class Meta:
         model = CV
-        fields = ('post', 'speciality', 'salary', 'currency', 'education_level', 'moving', 'skills', 'about')
+        fields = ('post', 'speciality', 'salary', 'currency', 'education_level', 'moving', 'skills', 'about', 'moderators_comment')
 
     def __init__(self, *args, **kwargs):
         super(CVUpdateForm, self).__init__(*args, **kwargs)
@@ -64,6 +65,9 @@ class CVUpdateForm(forms.ModelForm):
                 field.widget.attrs['class'] = 'selectpicker'
                 field.widget.attrs['data-size'] = '5'
                 field.widget.attrs['data-container'] = 'body'
+
+        for field in self.disabled_fields:
+            self.fields[field].disabled = True
 
         # self.fields['about'].widget.attrs['class'] = "tinymce"
 

@@ -21,7 +21,7 @@ from users.views import WorkerProfileView, EmployerProfileView, ModeratorProfile
     UserLogoutView, EmployersProfileView, EmployerDetailView, UserEmailVarifyView, UserVarifyStatusView, \
     PassResetView, \
     PassResetDoneView, PassResetConfirmView, PassResetCompletedView, ModerationAwaiting, ModeratorCompaniesList, \
-    edit_comp_list
+    edit_comp_list, ModeratorCompanyUpdate
 
 app_name = 'users'
 
@@ -46,6 +46,7 @@ urlpatterns = [
 
     path('moderation_awaiting/', ModerationAwaiting.as_view(), name='moderation_awaiting'),
 
+    path('moderator_company_approve/<int:pk>/', ModeratorCompanyUpdate.as_view(), name='moderator_company_approve'),
     path('moderator_companies_list/', ModeratorCompaniesList.as_view(), name='moderator_companies_list'),
     path('edit_comp_list/<str:stat>/', edit_comp_list, name='edit_comp_list') ,
 

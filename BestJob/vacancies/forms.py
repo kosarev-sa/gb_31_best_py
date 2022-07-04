@@ -56,6 +56,7 @@ class ModeratorVacancyUpdateForm(VacancyUpdateForm):
 
     def __init__(self, *args, **kwargs):
         super(ModeratorVacancyUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['status'].widget.attrs['class'] = 'selectpicker'
         for field in self.disabled_fields:
             self.fields[field].disabled = True
 
