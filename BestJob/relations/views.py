@@ -138,7 +138,7 @@ class LastListView(ListView):
 
 
 class RelationDetailView(TemplateView):
-    """view для удаления Откликов и приглашений"""
+    """view для показа детализации Откликов и приглашений"""
     model = RelationHistory
     template_name = 'relations_detail.html'
 
