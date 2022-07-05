@@ -29,13 +29,13 @@ function openModalForm(magic_id, item_pk) {
  */
 function sendData() {
 
+    dropErrorMessage();
+
     let csrf_token = $('meta[name="csrf-token"]').attr('content');
 
     let magic_field = $("#magic_field").val();
     let select_picker = $("#relation_select_picker").val();
     let letter = $("#transmittal_letter").val();
-
-    dropErrorMessage();
 
     if (!checkValues(select_picker, letter)) {
         return;
@@ -57,13 +57,15 @@ function sendData() {
                 if (data) {
                     $li_element.append(data.result);
                     $relation_btn.remove();
+                    // Hide modal form.
+                    $custom_form_modal.removeClass('is-visible');
+                    // Clear modal form.
                     $("#magic_field").val('');
                     $('#relation_select_picker').val(0);
                     $("#relation_select_picker").selectpicker('refresh')
                     $("#transmittal_letter").val('');
                 }
-                dropErrorMessage();
-                $custom_form_modal.removeClass('is-visible');
+
             },
             error: function (data)
             {
