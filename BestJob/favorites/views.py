@@ -37,6 +37,7 @@ def fav_emp_add_remove(request, cv_id):
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 def fav_work_add_remove(request, vacancy_id):
     '''
     Добавление/Удаление избранного из поиска.
@@ -61,6 +62,7 @@ def fav_work_add_remove(request, vacancy_id):
                 new_fav.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 def get_worker_favorites_data_for_context(user, context):
     '''
@@ -97,6 +99,7 @@ def get_worker_favorites_data_for_context(user, context):
                     break
 
         context['favorites_list'] = worker_favorites
+
 
 def get_employer_favorites_data_for_context(user, context):
     '''
@@ -135,6 +138,7 @@ def get_employer_favorites_data_for_context(user, context):
 
         context['favorites_list'] = employer_favorites
 
+
 class FavoritesEmployerDeleteView(DeleteView):
     """view удаление избранного работадателя"""
     model = EmployerFavorites
@@ -152,6 +156,7 @@ class FavoritesEmployerDeleteView(DeleteView):
 
         return HttpResponseForbidden()
 
+
 class FavoritesWorkerDeleteView(DeleteView):
     """view удаление избранного соискателя"""
     model = WorkerFavorites
@@ -168,6 +173,7 @@ class FavoritesWorkerDeleteView(DeleteView):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
         return HttpResponseForbidden()
+
 
 class FavoritesWorkerListView(ListView):
     """view отображения избранного для работадателя"""
@@ -199,6 +205,7 @@ class FavoritesWorkerListView(ListView):
 
         return self.render_to_response(context)
 
+
 class FavoritesEmployerListView(ListView):
     """view отображения избранного для соискателя"""
     template_name = 'favorites_list.html'
@@ -228,4 +235,3 @@ class FavoritesEmployerListView(ListView):
             print(error_message)
 
         return self.render_to_response(context)
-

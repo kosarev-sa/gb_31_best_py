@@ -19,6 +19,7 @@ EMPLOYER_RS_CANCEL_COMMENT = 'Мы свяжемся с вами позже'
 
 class CustomRelationModel:
     """Вспомогательный класс для формирования модели"""
+
     def __bool__(self):
         return any([self.__dict__[attr] for attr in self.__dict__.keys()])
 
@@ -295,6 +296,7 @@ class RelationCreateView(CreateView):
 
         return redirect(self.success_url)
 
+
 class RelationCreateFromValueView(CreateView):
     """view для создания Отклика или приглашения из модальной формы"""
     model = Relations
@@ -345,7 +347,6 @@ class RelationCreateFromValueView(CreateView):
             # Соискатель.
             elif user.role_id == UserRole.WORKER:
                 relation_link = f'<a href="/relations/detail/{new_relation.pk}/"><h6 class="time">У вас есть взаимодействия по этой вакансии</h6></a>'
-
 
             return JsonResponse({'result': relation_link})
 
