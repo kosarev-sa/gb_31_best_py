@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<div class="cd-user-modal">
+    <!-- this is the entire modal form, including the background -->
+    <div class="cd-user-modal-container">
+
+        <div class="modal-header text-center" style="background: #29b1fd;">
+            <span class="h2 text-white">{{ modal_header }}</span>
+        </div>
+
+        {% block content %}
+        {% endblock %}
+
+    </div>
+</div>

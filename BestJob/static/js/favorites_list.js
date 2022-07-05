@@ -87,7 +87,7 @@ function checkValues(select_picker, letter) {
     }
 
     if (!letter) {
-        createErrorMessage('Ошибка. Заполните сопроводительное сообщение!');
+        createErrorMessage('Ошибка. Заполните сопроводительный текст!');
         return false;
     }
 
