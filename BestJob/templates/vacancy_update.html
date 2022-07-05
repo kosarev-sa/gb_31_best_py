@@ -1,34 +1,161 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
 {% load static %}
 
 {% block menu %}
-    <ul>
-        <li>
-            <a href="{% url 'vacancies:vacancy_list' %}">вернуться к списку</a>
-        </li>
-    </ul>
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
 
+{% block header %}
+    {% include 'inc_cv_header.html' %}
 {% endblock %}
 
 {% block content %}
-    <form method="post" action="">
-        {% csrf_token %}
-        <h2>Компания: {{ employer.name }}</h2>
-        {% if employer.image %}
-            <div style="width: 300px"><img class="card-img-top" src="{{ employer.image.url }}" alt="Нет фото"></div>
-        {% else %}
-            <p>Нет фото</p>
-        {% endif %}
-        <h3>Контактная информация: </h3><br>
-        <h5>Место нахождения: {{ employer.city }}</h5>
-        <h5>Род деятельности: {{ employer.data }}</h5>
-        <h5>Электронная почта: {{ employer.user.email }}</h5>
-        <br>
-        <h3>Основная информация:</h3><br>
-        {{ form.as_p }}
+    <!-- ===== Start of Main Wrapper Section ===== -->
+    <div class="ptb80" id="post-job">
+        <div class="container">
+            <!-- Start of Post Resume Form -->
+            <div class="row candidate-profile nomargin">
 
-        <br>
-        <input type="submit" value="изменить">
-    </form>
+                <!-- Start of Profile Picture -->
+                <div class="col-md-3 col-xs-12">
+                    <div class="profile-photo">
+                        {% if employer.image %}
+                            <img src="{{ employer.image.url }}" class="img-responsive" alt="Нет фото">
+                        {% else %}
+                            <p>Нет фото</p>
+                        {% endif %}
+                    </div>
 
+                </div>
+                <!-- End of Profile Picture -->
+
+                <!-- Start of Profile Description -->
+                <div class="col-md-9 col-xs-12">
+                    <div class="profile-descr">
+
+                        <!-- Profile Title -->
+                        <div class="profile-title">
+                            <h2 class="capitalize">{{ employer.name }}</h2>
+                        </div>
+
+                        <!-- Profile Details -->
+                        <ul class="profile-info mt20 nopadding">
+                            <li>
+                                <i class="fa fa-map-marker"></i>
+                                <span>{{ employer.city }}</span>
+                            </li>
+                        </ul>
+
+                        <div class="profile-info mt20 nopadding">
+                            {{ employer.data }}
+                        </div>
+
+                    </div>
+                </div>
+                <!-- End of Profile Description -->
+
+            </div>
+            <!-- End of Row -->
+
+
+            <form action="{% url 'vacancy:update_vacancy' object.pk %}" method="post" class="post-job-resume mt50">
+                {% csrf_token %}
+
+                <!-- Start of Resume Details -->
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="{{ form.name.id_for_label }}">Должность</label>
+                            {{ form.name }}
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group">
+                            <label for="{{ form.description.id_for_label }}">Описание</label>
+                            {{ form.description }}
+                        </div>
+                        <!-- Form Group -->
+                        <div class="form-group">
+                            <label for="{{ form.specialization.id_for_label }}">Специализация</label>
+                            {{ form.specialization }}
+                        </div>
+                        <!-- Form Group -->
+                        <div class="form-group">
+                            <label for="{{ form.city.id_for_label }}">Город</label>
+                            {{ form.city }}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.salary_from.id_for_label }}">Зарплата от</label>
+                            <div>
+                                {{ form.salary_from }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.salary_from.id_for_label }}">до</label>
+                            <div>
+                                {{ form.salary_to }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ form.currency.id_for_label }}">Валюта</label>
+                            <div>
+                                {{ form.currency }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox"
+                                       name="{{ form.salary_on_hand.id_for_label }}" value=1
+                                       id="{{ form.salary_on_hand.id_for_label }}"
+                                        {% if vacancy.salary_on_hand is True %} checked {% endif %}>
+                                <label class="form-check-label" for="{{ form.salary_on_hand.id_for_label }}">
+                                    Зарплата на руки
+                                </label>
+                            </div>
+                        </div>
+
+                        {#                        <div class="form-group">#}
+                        {#                            <div class="form-check">#}
+                        {#                                <input class="form-check-input" type="checkbox" name="{{ form.is_active.id_for_label }}" value=1#}
+                        {#                                       id="{{ form.is_active.id_for_label }}" {% if vacancy.is_active is True %} checked {% endif %}>#}
+                        {#                                <label class="form-check-label" for="{{ form.is_active.id_for_label }}">#}
+                        {#                                    Вакансия опубликована#}
+                        {#                                </label>#}
+                        {#                            </div>#}
+                        {#                            <div class="col-md-6 mx-auto"></div>#}
+                        {#                        </div>#}
+                    </div>
+
+                </div>
+
+                <div class="col-md-12">
+                    <div class="form-group pt30 nomargin" id="last">
+                        <button class="btn btn-blue btn-effect">Сохранить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Комментарий модератора BEGIN -->
+    {% if moderators_comment %}
+        <section class="education ptb30" style="background: #f0f0f0;">
+            <div class="container">
+                <div class="form-group pt10">
+                    <label for="{{ form.moderators_comment.id_for_label }}">Комментарий модератора:</label>
+                    {{ form.moderators_comment }}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+    <!-- Комментарий модератора END -->
+{% endblock %}
+{% block footer %}
+    {% include 'inc_footer.html' %}
 {% endblock %}

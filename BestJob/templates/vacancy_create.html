@@ -1,34 +1,184 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
 {% load static %}
 
 {% block menu %}
-    <ul>
-        <li>
-            <a href="{% url 'vacancies:vacancy_list' %}">вернуться к списку</a>
-        </li>
-    </ul>
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
 
+{% block header %}
+    {% include 'inc_vacancy_header.html' %}
 {% endblock %}
 
 {% block content %}
-<h2>Компания: {{ employer.name }}</h2>
-{% if employer.image %}
-    <div style="width: 300px"><img class="card-img-top" src="{{ employer.image.url }}" alt="Нет фото"></div>
-{% else %}
-    <p>Нет фото</p>
-{% endif %}
-    <h3>Контактная информация: </h3><br>
-<h5>Место нахождения: {{ employer.city }}</h5>
-<h5>Род деятельности: {{ employer.data }}</h5>
-    <h5>Электронная почта: {{ employer.user.email }}</h5>
-<br>
-    <h3>Основная информация:</h3><br>
-    <form method="post" action="">
-        {% csrf_token %}
-        {{ form.as_p }}
 
-        <br>
-        <input type="submit" value="создать">
-    </form>
+    <!-- ===== Start of Main Wrapper Job Section ===== -->
+    <section class="ptb80" id="job-page" style="padding: 60px">
+        <div class="container">
 
+            <div class="row">
+
+                <!-- ===== Start of Job Details ===== -->
+                <div class="col-md-8 col-xs-12">
+
+                    <!-- Start of Company Info -->
+                    <div class="row company-info" style="border: 0">
+
+                        <!-- Job Company Image -->
+                        <div class="col-md-3" style="padding-bottom: 7%">
+                            <div class="job-company" style="background: white; border: 0">
+                                <img src="{{ employer.image.url }}" style="background: white" alt="">
+                            </div>
+                        </div>
+
+
+                        <!-- Job Company Info -->
+
+                    </div>
+                        <form action="" method="post" class="post-job-resume mt50">
+                        {% csrf_token %}
+
+                            <div class="form-group">
+                                   <input class="form-check-input" name="{{ form.is_active.id_for_label }}" type="checkbox" value=1
+                                       id="{{ form.is_active.id_for_label }}">
+                                <label for="{{ form.is_active.id_for_label }}">Сделать вакансию активной</label>
+                                    {{ form.is_active }}
+                            </div>
+
+                            <div class="form-group">
+                                <label for="{{ form.name.id_for_label }}">Название вакансии</label>
+                                {{ form.name }}
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="{{ form.specialization.id_for_label }}">Специализация</label>
+                                {{ form.specialization }}
+                            </div>
+                            <div class="form-group">
+                                <label for="{{ form.city.id_for_label }}">Город</label>
+                                {{ form.city }}
+                            </div>
+                            <div class="form-group">
+                                    <label for="{{ form.description.id_for_label }}">Описание вакансии</label>
+                                    {{ form.description }}
+                            </div>
+                            <div class="form-group">
+                                    <label for="{{ form.experience.id_for_label }}">Опыт</label>
+                                    {{ form.experience }}
+                            </div>
+                            <div class="form-group">
+                                    <label for="{{ form.salary_from.id_for_label }}">Доход от</label>
+                                    {{ form.salary_from }}
+                            </div>
+                            <div class="form-group">
+                                    <label for="{{ form.salary_to.id_for_label }}">Доход до</label>
+                                    {{ form.salary_to }}
+                            </div>
+                            <div class="form-group">
+                                    <label for="{{ form.currency.id_for_label }}">Валюта</label>
+                                    {{ form.currency }}
+                            </div>
+                            <div class="form-group">
+                                   <input class="form-check-input" name="{{ form.salary_on_hand.id_for_label }}" type="checkbox" value=1
+                                       id="{{ form.salary_on_hand.id_for_label }}">
+                                <label for="{{ form.salary_on_hand.id_for_label }}">Зарплата на руки</label>
+                                    {{ form.salary_on_hand }}
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="form-group pt30 nomargin" id="last">
+                                    <button class="btn btn-blue btn-effect">Сохранить</button>
+                                </div>
+                            </div>
+                        </form>
+
+
+
+
+                </div>
+
+                <!-- ===== Start of Job Sidebar ===== -->
+                <div class="col-md-4 col-xs-12">
+
+                    <!-- Start of Job Sidebar -->
+                    <div class="job-sidebar">
+
+                        <h4 class="uppercase">{{ employer.name }}</h4>
+
+                        <!-- Start of Social Media ul -->
+                        <ul class="social-btns list-inline mt20">
+                            <!-- Social Media -->
+                            <li>
+                                <a href="#" class="social-btn-roll facebook transparent">
+                                    <div class="social-btn-roll-icons">
+                                        <i class="social-btn-roll-icon fa fa-facebook"></i>
+                                        <i class="social-btn-roll-icon fa fa-facebook"></i>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <!-- Social Media -->
+                            <li>
+                                <a href="#" class="social-btn-roll twitter transparent">
+                                    <div class="social-btn-roll-icons">
+                                        <i class="social-btn-roll-icon fa fa-twitter"></i>
+                                        <i class="social-btn-roll-icon fa fa-twitter"></i>
+                                    </div>
+                                </a>
+                            </li>
+
+                            <!-- Social Media -->
+                            <li>
+                                <a href="#" class="social-btn-roll google-plus transparent">
+                                    <div class="social-btn-roll-icons">
+                                        <i class="social-btn-roll-icon fa fa-google-plus"></i>
+                                        <i class="social-btn-roll-icon fa fa-google-plus"></i>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- End of Social Media ul -->
+
+
+
+                        <ul class="job-overview nopadding mt40">
+                            <li>
+                                <h5><i class="fa fa-address-book"></i> Род деятельности:</h5>
+                                <span> {{ employer.data }} </span>
+                            </li>
+
+                            <li>
+                                <h5><i class="fa fa-map-marker"></i> Место нахождения:</h5>
+                                <span> {{ employer.city }} </span>
+                            </li>
+
+                            <li>
+                                <h5><i class="fa fa-envelope"></i> Электронная почта:</h5>
+                                <span> {{ employer.user.email }} </span>
+                            </li>
+                            <li>
+                                <h5><i class="fa fa-calendar"></i> Дата создания профиля:</h5>
+                                <span> {{ employer.date_create }} </span>
+                            </li>
+
+                        </ul>
+
+
+                    </div>
+                    <!-- Start of Job Sidebar -->
+
+
+                </div>
+                <!-- ===== End of Job Sidebar ===== -->
+
+            </div>
+
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
 {% endblock %}

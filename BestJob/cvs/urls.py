@@ -17,7 +17,7 @@ from django.urls import path
 
 from cvs.views import CVList, CVCreate, CVUpdate, CVDelete, set_public_status, CVExperienceCreate, CVExperienceUpdate, \
     CVExperienceDelete, CVEducationCreate, CVEducationUpdate, CVEducationDelete, CVLanguageCreate, CVLanguageUpdate, \
-    CVLanguageDelete, ModeratorCVList, ModeratorCVUpdate, ResponseCVList
+    CVLanguageDelete, ModeratorCVList, ModeratorCVUpdate, ResponseCVList, CVDetailView, edit_cv_list, RecomendedCVList
 
 app_name = 'cv'
 
@@ -26,6 +26,7 @@ urlpatterns = [
     path('create/', CVCreate.as_view(), name='create_cv'),
     path('update/<int:pk>/', CVUpdate.as_view(), name='update_cv'),
     path('delete/<int:pk>/', CVDelete.as_view(), name='delete_cv'),
+    path('detail/<int:pk>/', CVDetailView.as_view(), name='detail_cv'),
     path('distribute/<int:pk>/', set_public_status, name='distribute_cv'),
     path('create_experience/<int:pk>', CVExperienceCreate.as_view(), name='create_experience'), # здесь pk - это cv.id
     path('update_experience/<int:pk>/', CVExperienceUpdate.as_view(), name='update_experience'), # а здесь pk - это experience.id
@@ -39,5 +40,7 @@ urlpatterns = [
     path('responses/', ResponseCVList.as_view(), name='cv_responses'),
     path('moderator_cvs/', ModeratorCVList.as_view(), name='moderator_cvs_list'),
     path('moderator_cvs_approve/<int:pk>/', ModeratorCVUpdate.as_view(), name='moderator_cvs_approve'),
+    path('edit_cv_list/<str:stat>/', edit_cv_list, name='edit_cv_list'),
+    path('cv_recommended/<int:pk>/', RecomendedCVList.as_view(), name='cv_recommended'),
 
 ]

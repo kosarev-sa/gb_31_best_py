@@ -2,7 +2,11 @@
 {% load static %}
 
 {% block menu %}
-{% include "moderator_menu.html" %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    {% include 'inc_news_list_header.html' %}
 {% endblock %}
 
 {% block content %}

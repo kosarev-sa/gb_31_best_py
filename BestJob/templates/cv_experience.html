@@ -1,83 +1,116 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block menu %}
-    <ul>
-        <li>
-            <a href="{% url 'cv:update_cv' cv_id %}">вернуться к резюме</a>
-        </li>
-    </ul>
+{% extends "base.html" %}
 
-{% endblock %}
+{% load static %}
 
 {% block content %}
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-5">
-                <div class="card shadow-lg border-0 rounded-lg mt-5 mb-5">
-                    <div class="card-header"><h3 class="text-center font-weight-light my-4">Опыт работы</h3>
+
+
+    <!-- =============== Start of Page Header 1 Section =============== -->
+    <section class="page-header">
+        <div class="container">
+
+            <!-- Start of Page Title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Опыт работы</h2>
+                </div>
+            </div>
+            <!-- End of Page Title -->
+
+            <!-- Start of Breadcrumb -->
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="breadcrumb">
+                        <li><a href="{% url 'cv:update_cv' cv_id %}">вернуться к резюме</a></li>
+                        <li class="active">Опыт работы</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- End of Breadcrumb -->
+
+        </div>
+    </section>
+    <!-- =============== End of Page Header 1 Section =============== -->
+
+
+    <!-- =============== Start of Messages Section =============== -->
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <section class="pricing-tables">
+            <div class="container">
+                {% if messages %}
+
+                    <div class="alert alert-warning alert-dismissible show" role="alert"
+                         style="margin-top: 50px;">
+                        {#                выводим ошибки#}
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <form action="" method="post">
-                            {% csrf_token %}
+                {% endif %}
+            </div>
+        </section>
 
-                            {% if messages %}
+        <!-- =============== End of Messages Section =============== -->
 
-                                <div class="alert alert-warning alert-dismissible fade show" role="alert"
-                                     style="margin-top: 50px;">
-                                    {#                выводим ошибки#}
-                                    {% for message in messages %}
-                                        {{ message }}
-                                    {% endfor %}
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                            {% endif %}
-                            <div>
-                                <div class="form-group m-3">
-                                    <label class="small mb-1" for="{{ form.month_begin.id_for_label }} ">Месяц и год
-                                        начала</label>
-                                    <div>
-                                        {{ form.month_begin }}
-                                        {{ form.year_begin }}
-                                    </div>
+        <!-- ===== Start of Experience Section ===== -->
 
-                                </div>
-                                <div class="form-group m-3">
-                                    <label class="small mb-1" for="{{ form.month_end.id_for_label }}">Месяц и год
-                                        окончания</label>
-                                    <div data-toggle="tooltip" data-placement="bottom" title="Оставьте поле год окончания пустым если работаете на текущий момент">
-                                        {{ form.month_end }}
-                                        {{ form.year_end }}
-                                    </div>
-
-                                </div>
-                                <div class="form-group m-3">
-                                    <label class="small mb-1" for="{{ form.name.id_for_label }}">Наименование
-                                        организации</label>
-                                    <p class="card shadow-lg border-1 rounded-lg">{{ form.name }}</p>
-                                </div>
-                                <div class="form-group m-3">
-                                    <label class="small mb-1" for="{{ form.post.id_for_label }}">Должность</label>
-                                    <p class="card shadow-lg border-1 rounded-lg"> {{ form.post }}</p>
-                                </div>
-                                <div class="form-group m-3">
-                                    <label class="small mb-1" for="{{ form.stack.id_for_label }}">Stack</label>
-                                    <p class="card shadow-lg border-1 rounded-lg">{{ form.stack }}</p>
-                                </div>
-                                <div class="form-group m-3">
-                                    <label class="small mb-1" for="{{ form.responsibilities.id_for_label }}">Обязанности
-                                        на рабочем месте</label>
-                                    <p class="card shadow-lg border-1 rounded-lg">{{ form.responsibilities }}</p>
-                                </div>
-                                <div class="form-group d-flex align-items-center justify-content-center mt-4 mb-0">
-                                    <input class="btn btn-primary" type="submit" value="Coхранить">
-                                </div>
+        <section class="pricing-tables pb80">
+            <div class="container">
+                <!-- Start Row -->
+                <div class="row">
+                    <div class="mt80">
+                        <div class="form-group col-md-6 col-xs-12 mx-auto ">
+                            <label>Мeсяц и год начала</label>
+                            {{ form.month_begin }}
+                            {{ form.year_begin }}
+                        </div>
+                        <div class="form-group col-md-6 col-xs-12 mx-auto">
+                            <label>Мeсяц и год окончания</label>
+                            <div data-toggle="tooltip" data-placement="bottom"
+                                 title="Оставьте поле год окончания пустым если работаете на текущий момент">
+                                {{ form.month_end }}
+                                {{ form.year_end }}
                             </div>
-                        </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 col-xs-12">
+                        <div class="form-group">
+                            <label for="{{ form.name.id_for_label }}">Наименование организации</label>
+                            {{ form.name }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.post.id_for_label }}">Должность</label>
+                            {{ form.post }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.stack.id_for_label }}">Stack</label>
+                            {{ form.stack }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.responsibilities.id_for_label }}">Обязанности на рабочем
+                                месте</label>
+                            {{ form.responsibilities }}
+                        </div>
+
+                        <!-- Pricing Footer -->
+                        <div class="pricing-footer">
+                            <input type="submit" class="btn btn-blue btn-effect" value="Cохранить">
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
+        <!-- ===== End of Experience Section ===== -->
+    </form>
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
 {% endblock %}

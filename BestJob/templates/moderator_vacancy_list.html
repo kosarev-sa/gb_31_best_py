@@ -1,47 +1,81 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
 {% load static %}
 
 {% block menu %}
-{% include "moderator_menu.html" %}
-{% include "moderator_awaiting_menu.html" %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    <section class="page-header">
+        <div class="container">
+
+            <!-- Start of Page Title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Вакансии</h2>
+                </div>
+            </div>
+            <!-- End of Page Title -->
+
+            <!-- Start of Breadcrumb -->
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="breadcrumb">
+                        <li><a href="{% url 'users:moderator_companies_list' %}">Компании</a></li>
+                        <li class="active">Вакансии</li>
+                        <li><a href="{% url 'cv:moderator_cvs_list' %}">Резюме</a></li>
+                        <li><a href="{% url 'news:moderate_news' %}">Новости</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- End of Breadcrumb -->
+
+        </div>
+    </section>
 {% endblock %}
 
 {% block content %}
-<div class="giant-font text-center border-bottom border-secondary border-1">Модерация вакансий</div>
-<div class="d-flex flex-wrap align-items-center justify-content-center ps-5 pe-5">
 
-{% if vacancies_list %}
-    <table class="table" width="100%">
-        <thead>
-            <tr>
-                <th>ИД</th>
-                <th>Название компании</th>
-                <th>Наименование вакансии</th>
-                <th>Статус</th>
-                <th>Специлизация</th>
-                <th>Активность</th>
-                <th>Анализ</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in vacancies_list %}
-                <tr>
-                    <td>{{ item.id }}</td>
-                    <td>{{ item.employer_profile.name }}</td>
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.status }}</td>
-                    <td>{{ item.specialization }}</td>
-                    <td>{% if item.is_active %} Да {% else %} Нет {% endif %} </td>
-                    <td>
-                        <a class="btn btn-link m-0" href="{% url 'vacancies:moderator_vacancy_approve' item.id %}">просмотр</a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <p>Данные отсутствуют</p>
-{% endif %}
+    <section class="find-candidate ptb80">
+        <div class="container">
+            <!-- Start of Row -->
+            <div class="row mt60">
+                <p>Статус:</p>
+                <div class="radio radio-group-opt vac_status">
 
-</div>
+                    <div class="col-md-2 col-sm-6">
+                        <label style="display: inline-block"><input style="display: inline-block" type="radio"
+                                                                    name="vac" value="pub"  checked>Опубликовано</label>
+                    </div>
+                    <div class="col-md-2 col-sm-6">
+                        <label style="display: inline-block"><input style="display: inline-block" type="radio"
+                                                                    name="vac" value="frv">На доработку</label>
+                    </div>
+                    <div class="col-md-2 col-sm-6">
+                        <label style="display: inline-block"><input style="display: inline-block" type="radio"
+                                                                    name="vac" value="rjc">Отклонено</label>
+                    </div>
+                    <div class="col-md-2 col-sm-6">
+                        <label style="display: inline-block"><input style="display: inline-block" type="radio"
+                                                                    name="vac" value="apv">Одобрено</label>
+                    </div>
+                    <div class="col-md-2 col-sm-6">
+                        <label style="display: inline-block"><input style="display: inline-block" type="radio"
+                                                                    name="vac" value="all">все</label>
+                    </div>
+                </div>
+
+
+                {%  include 'vac_list.html' %}
+
+            </div>
+            </div>
+
+    </section>
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
 {% endblock %}

@@ -1,0 +1,96 @@
+{% load static %}
+<!-- =============== Start of Header 1 Navigation =============== -->
+<header class="header1">
+    <nav class="navbar navbar-default navbar-static-top fluid_header centered">
+        <div class="container">
+
+            <!-- Logo -->
+            <div class="col-md-2 col-sm-6 col-xs-8 nopadding">
+                <a class="navbar-brand nomargin" href="{% url 'index' %}"><img src="{% static 'img/index/logo.svg' %}" alt="logo"></a>
+            </div>
+
+            <!-- ======== Start of Main Menu ======== -->
+                <div class="col-md-10 col-sm-6 col-xs-4 nopadding">
+                  <div class="navbar-header page-scroll">
+                    <button type="button" class="navbar-toggle toggle-menu menu-right push-body" data-toggle="collapse"
+                            data-target="#main-nav" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+
+                <!-- Start of Main Nav -->
+                <div class="collapse navbar-collapse cbp-spmenu cbp-spmenu-vertical cbp-spmenu-right" id="main-nav">
+                    <ul class="nav navbar-nav pull-right">
+
+                        <!-- Simple Menu Item -->
+                        {% if user.role_id == 3 or user.is_superuser %}
+                            <li class="dropdown simple-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Соискателю<i
+                                        class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{% url 'users:worker_profile' user.id %}">профиль соискателя</a></li>
+                                    <li><a href="{% url 'cvs:create_cv' %}">создать резюме</a></li>
+                                    <li><a href="{% url 'cvs:cv_list' %}">мои резюме</a></li>
+                                    <li><a href="{% url 'search_vacancy' %}">поиск вакансий</a></li>
+                                    <li><a href="{% url 'favorites:worker_list' %}">избранное</a></li>
+                                    <li><a href="{% url 'relations:list' %}">отклики и приглашения</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+
+                        <!-- Simple Menu Item -->
+                        {% if user.role_id == 2 or user.is_superuser%}
+                            <li class="dropdown simple-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Работодателю<i
+                                        class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{% url 'vacancies:create_vacancy' %}">создать вакансию</a></li>
+                                    <li><a href="{% url 'users:employer_profile' user.id %}">профиль работодателя</a></li>
+                                    <li><a href="{% url 'vacancies:vacancy_list' %}">мои вакансии</a></li>
+                                    <li><a href="{% url 'search_cv' %}">поиск резюме</a></li>
+                                    <li><a href="{% url 'favorites:employer_list' %}">избранное</a></li>
+                                    <li><a href="{% url 'relations:list' %}">отклики и приглашения</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+
+                        <!-- Simple Menu Item -->
+                        {% if user.role_id == 1 or user.is_superuser%}
+                            <li class="dropdown simple-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">Модератору<i
+                                        class="fa fa-angle-down"></i></a>
+                                <ul class="dropdown-menu" role="menu">
+
+                                    <li><a href="{% url 'users:moderator_profile' user.id %}">профиль модератора</a></li>
+                                    <li><a href="{% url 'news:moderate_news' %}">модерация новостей</a></li>
+                                    <li><a href="{% url 'cv:moderator_cvs_list' %}">модерация резюме</a></li>
+                                    <li><a href="{% url 'users:moderator_companies_list' %}">модерация компаний</a></li>
+                                    <li><a href="{% url 'vacancies:moderator_vacancy_list' %}">модерация вакансий</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+
+                        <!-- Login Menu Item -->
+                        <li class="menu-item login-btn">
+                            {% if user.is_authenticated %}
+                            <a class="fa" href="{% url 'users:logout' %}">Выйти</a>
+                            {% else %}
+                            <a class="fa" href="{% url 'users:login' %}">Войти</a>
+                            {% endif %}
+                        </li>
+                        <li class="menu-item login-btn">
+                            <a href="{% url 'users:registration' %}" role="button"><i class="fa"></i>Регистрация</a>
+                        </li>
+
+                    </ul>
+                </div>
+                <!-- End of Main Nav -->
+            </div>
+            <!-- ======== End of Main Menu ======== -->
+        </div>
+    </nav>
+</header>
+<!-- =============== End of Header 1 Navigation =============== -->

@@ -1,124 +1,182 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
 {% load static %}
 
 {% block menu %}
-{% include "worker_menu.html" %}
-    <ul>
-        <li>
-            <a href="{% url 'cv:cv_list' %}">вернуться к списку</a>
-        </li>
-    </ul>
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
 
+{% block header %}
+    {% include 'inc_cv_header.html' %}
 {% endblock %}
 
 {% block content %}
+    <!-- ===== Start of Main Wrapper Section ===== -->
+    <section class="ptb80" id="post-job">
+        <div class="container">
+            <!-- Start of Post Resume Form -->
+            {#            <form action="#" class="post-job-resume mt50">#}
+            <div class="row candidate-profile nomargin">
 
-    <main>
-        <div>
-            <h2>Ваше резюме</h2>
-            <!--                Эти данные не заполняем - тянем из профайла соискателя-->
-            <h3>{{ worker.name }}</h3>
-            {% if worker.image %}
-                <p><img class="card-img-top" src="{{ worker.image.url }}" alt="Нет фото"></p>
-            {% else %}
-                <p>Нет фото</p>
-            {% endif %}
-            <form action="{% url 'cvs:create_cv' %}" method="post">
+                <!-- Start of Profile Picture -->
+                <div class="col-md-3 col-xs-12">
+                    <div class="profile-photo">
+                        <img src="{% if worker.image %} {{ worker.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}" class="img-thumbnail">
+                    </div>
+                </div>
+                <!-- End of Profile Picture -->
+
+                <!-- Start of Profile Description -->
+                <div class="col-md-9 col-xs-12">
+                    <div class="profile-descr">
+
+                        <!-- Profile Title -->
+                        <div class="profile-title">
+                            <h2 class="capitalize">{{ worker.name }}</h2>
+                            {#                            <h5 class="pt10">Front-End Developer</h5>#}
+                        </div>
+
+                        <!-- Profile Details -->
+                        <ul class="profile-info mt20 nopadding">
+                            <li>
+                                <i class="fa fa-map-marker"></i>
+                                <span>{{ worker.city }}</span>
+                            </li>
+                            <li>
+                                <i class="fa fa-birthday-cake"></i>
+                                <span>{{ worker.birth_date }}</span>
+                            </li>
+
+                            <li>
+                                <i class="fa fa-phone"></i>
+                                <span>{{ worker.phone_number }}</span>
+                            </li>
+
+                            <li>
+                                <i class="fa fa-envelope"></i>
+                                <span>{{ worker.user.email }}</span>
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+                <!-- End of Profile Description -->
+
+            </div>
+            <!-- End of Row -->
+
+
+            <form action="{% url 'cvs:create_cv' %}" method="post" class="post-job-resume mt50">
                 {% csrf_token %}
-                <div>
-                    <h4>Контактные данные:</h4>
-                    <div>
-                        <label for="phone_number">Мобильный телефон</label>
-                        <p id="phone_number">{{ worker.phone_number }}</p>
+
+                <!-- Start of Resume Details -->
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="{{ form.about.id_for_label }}">Обо мне</label>
+                            {{ form.about }}
+                        </div>
+
+                        <!-- Form Group -->
+                        <div class="form-group">
+                            <label for="{{ form.speciality.id_for_label }}">Специализация</label>
+                            {{ form.speciality }}
+                        </div>
+                        <!-- Form Group -->
+                        <div class="form-group">
+                            <label for="{{ form.post.id_for_label }}">Должность</label>
+                            {{ form.post }}
+                        </div>
+                        <!-- Form Group -->
+                        <div class="form-group">
+                            <label for="{{ form.skills.id_for_label }}">Основные навыки</label>
+                            {{ form.skills }}
+                        </div>
                     </div>
-                    <div>
-                        <label for="email">Email</label>
-                        <p id="email">{{ worker.user.email }}</p>
+                    <div class="form-group">
+                        <label class="col-md-12" for="{{ form.salary.id_for_label }}">Зарплата</label>
+                        <div class="col-md-6 mx-auto">
+                            {{ form.salary }}
+                        </div>
+                        <div class="col-md-6 mx-auto">
+                            {{ form.currency }}
+                        </div>
                     </div>
-                    <div>
-                        <label for="{{ worker.city }}">Город проживания</label>
-                        <p id="{{ worker.city }}">{{ worker.city }}</p>
+                    <div class="col-md-12">
+                        {#                            <div class="form-group pt30 nomargin" id="last">#}
+                        <div class="form-group pt30 nomargin">
+                            <label for="experience">Опыт работы</label>
+                            <input type="submit" class="btn btn-blue btn-effect" name="experience" id="experience"
+                                   value="Добавить опыт работы">
+
+                        </div>
+                        <!-- Form Group -->
+                        <div class="form-group pt30">
+                            <label for="{{ form.education_level.id_for_label }}">Уровень образования</label>
+                            {{ form.education_level }}
+                        </div>
+
+                        <div class="form-group nomargin">
+                            <label for="education">Образование</label>
+
+                            <input type="submit" class="btn btn-blue btn-effect" value="Добавить место обучения"
+                                   name="education" id="education">
+
+                        </div>
+                        <div class="form-group pt30 nomargin">
+                            <label for="language">Владение языками</label>
+                            <input type="submit" class="btn btn-blue btn-effect" value="Добавить язык"
+                                   name="language" id="language">
+
+                        </div>
+
+                        <div class="form-group pt30 nomargin">
+                            <label for="{{ form.moving.id_for_label }}">Возможность переезда</label>
+                            {{ form.moving }}
+                        </div>
+                    </div>
+                    {#                        <div class="form-group pt30 nomargin">#}
+                    <div class="col-md-6 mx-auto form-group pt30 nomargin">
+                        <label>Занятость </label>
+                        {% for empl in employments %}
+                            <div class="form-check">
+                                <input class="form-check-input" name="empl_{{ empl.code }}" type="checkbox" value="{{ empl.code }}"
+                                       id="empl_{{ empl.code }}">
+                                <label class="form-check-label" for="empl_{{ empl.code }}">
+                                    {{ empl.employment }}
+                                </label>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                    <div class="col-md-6 mx-auto form-group pt30 nomargin">
+                        <label>График работы </label>
+                        {% for sch in schedules %}
+                            <div class="form-check">
+                                <input class="form-check-input" name="schedule_{{ sch.code }}" type="checkbox" value="{{ sch.code }}"
+                                       id="schedule_{{ sch.code }}">
+                                <label class="form-check-label" for="schedule_{{ sch.code }}">
+                                    {{ sch.schedule }}
+                                </label>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group pt30 nomargin" id="last">
+                            <button class="btn btn-blue btn-effect">Сохранить</button>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <h4>Основная информация:</h4>
-                    <div>
-                        <label>Дата рождения</label>
-                        <p>{{ worker.birth_date }}</p>
-                    </div>
-                    <div>
-                        <label>Пол</label>
-                        <p>{{ worker.gender }}</p>
-                    </div>
-                </div>
-                <!--                    Данные заполняемые, которые будем сохранять в CV-->
-                <div>
-                    <label>Специализация</label>
-                    {{ form.speciality }}
-                </div>
-                <div>
-                    <label>Основные навыки</label>
-                    {{ form.skills }}
-                </div>
-                <div>
-                    <label>Желаемая должность</label>
-                    {{ form.post }}
-                </div>
-                <br>
-                <div>
-                    <label>Зарплата</label>
-                    {{ form.salary }}
-                    {{ form.currency }}
-                </div>
-
-
-                <div>
-                     <h4>Опыт работы</h4>
-                     <input type="submit" value="Добавить опыт работы" name="experience" id="experience">
-                </div>
-
-                <div>
-                    <h4>Образование: </h4>
-                    <label>Уровень образования</label>
-                    {{ form.education_level }}<br>
-
-                    <input type="submit" value="Добавить место обучения" name="education" id="education">
-                </div>
-
-                <div>
-                    <h4>Владение языками </h4>
-                    <input type="submit" value="Указать язык" name="language" id="language">
-
-                </div>
-
-                <div>
-                    <h4>Возможность переезда: </h4>
-                    {{ form.moving }}
-                </div>
-                <br>
-
-                <div name="employment">
-                    <h4>Занятость: </h4>
-                    {% for empl in employments %}
-                        <input type="checkbox" name="empl_{{ empl.code }}" value="{{ empl.code }}">
-                        <label>{{ empl.employment }}</label><br>
-                    {% endfor %}
-                </div>
-                <br>
-                <div name="schedule">
-                    <h4>График работы: </h4>
-                    {% for sch in schedules %}
-                        <input type="checkbox" name="schedule_{{ sch.code }}" value="{{ sch.code }}">
-                        <label>{{ sch.schedule }}</label><br>
-                    {% endfor %}
-                </div>
-                <input type="submit" value="создать">
             </form>
 
         </div>
-    </main>
+    </section>
 
-    <!--    </form>-->
 
 {% endblock %}
 
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

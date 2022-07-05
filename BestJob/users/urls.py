@@ -20,7 +20,8 @@ from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
 from users.views import WorkerProfileView, EmployerProfileView, ModeratorProfileView, UserLoginView, UserRegisterView, \
     UserLogoutView, EmployersProfileView, EmployerDetailView, UserEmailVarifyView, UserVarifyStatusView, \
     PassResetView, \
-    PassResetDoneView, PassResetConfirmView, PassResetCompletedView, ModerationAwaiting
+    PassResetDoneView, PassResetConfirmView, PassResetCompletedView, ModerationAwaiting, ModeratorCompaniesList, \
+    edit_comp_list, ModeratorCompanyUpdate, set_public_status
 
 app_name = 'users'
 
@@ -44,5 +45,10 @@ urlpatterns = [
          name='password_reset_complete'),
 
     path('moderation_awaiting/', ModerationAwaiting.as_view(), name='moderation_awaiting'),
+
+    path('moderator_company_approve/<int:pk>/', ModeratorCompanyUpdate.as_view(), name='moderator_company_approve'),
+    path('moderator_companies_list/', ModeratorCompaniesList.as_view(), name='moderator_companies_list'),
+    path('edit_comp_list/<str:stat>/', edit_comp_list, name='edit_comp_list') ,
+    path('distribute_company/<int:pk>/', set_public_status, name='distribute_company'),
 
 ]

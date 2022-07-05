@@ -1,0 +1,45 @@
+{% load static %}
+
+<div class="comp_list">
+    <div class="col-md-12 row job-post-main ptb80">
+        {% if companies_list %}
+            {% for company in  companies_list %}
+                <!-- Start of Candidates Wrapper -->
+
+                <div class="job-post-wrapper col-md-6 col-xs-12">
+                    <!-- ===== Start of Single Candidate 1 ===== -->
+                    <div class="single-job-post row nomargin">
+
+                        <!-- Candidate Image -->
+                        <div class="col-md-2 col-xs-6 ptb10 nomargin">
+                            <div class="candidate-img">
+                                <a href="{% url 'users:employers_detail' company.id %}">
+                                    <img width="200" height="200"
+                                         src="{% if company.image %} {{ company.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                                         class="img-responsive">
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-xs-6 ptb30 ">
+                            <!-- Candidate Name -->
+                            <div class="candidate-name">
+                                <h4>{{ company.name }}</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-xs-6 candidate-cta ptb30">
+                            <div class="candidate-cta">
+                                <p>{{ company.status }}</p>
+                            </div>
+                            <a href="{% url 'users:moderator_company_approve' company.id %}"
+                               class="btn btn-blue btn-small btn-effect">просмотр</a>
+                        </div>
+
+                    </div>
+                    <!-- ===== End of Single Candidate 1 ===== -->
+                </div>
+
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>

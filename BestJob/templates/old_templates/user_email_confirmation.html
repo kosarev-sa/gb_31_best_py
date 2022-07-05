@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    <ul>
+        <li>
+            <a href="{% url 'index' %}">вернуться на главную</a>
+        </li>
+    </ul>
+
+{% endblock %}
+
+{% block content %}
+
+На указанную почту отправлено письмо с ссылкой на активацию аккаунта. <br>
+    Ссылка действительна в течении {{ verify_time }} часов
+
+{% endblock %}
+

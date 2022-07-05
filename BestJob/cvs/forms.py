@@ -10,23 +10,31 @@ now = datetime.datetime.now()
 
 class CVCreateForm(forms.ModelForm):
     """форма создание резюме"""
-    speciality = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'),
-                                        required=False)
+    speciality = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'))
     post = forms.CharField(widget=forms.TextInput, required=False)
     skills = forms.CharField(widget=forms.TextInput, required=False)
+    about = forms.CharField(widget=forms.Textarea, required=False)
 
     class Meta:
         model = CV
-        fields = ('post', 'speciality', 'salary', 'currency', 'education_level', 'moving', 'skills')
+        fields = ('post', 'speciality', 'salary', 'currency', 'education_level', 'moving', 'skills', 'about')
 
     def __init__(self, *args, **kwargs):
         super(CVCreateForm, self).__init__(*args, **kwargs)
         self.fields['speciality'].widget.attrs['select'] = Category.objects.all()
         self.fields['post'].widget.attrs['placeholder'] = 'Желаемая должность'
         self.fields['salary'].widget.attrs['placeholder'] = 'Зарплата'
-        # for field_name, field in self.fields.items():
-        #     field.widget.attrs['class'] = 'form-control'
-        # self.fields['data'].widget.attrs['placeholder'] = 'Введите data'
+        self.fields['skills'].widget.attrs['placeholder'] = 'Укажите Ваши основные навыки, разделяя их запятыми. Например: Python, Django, Flask, DRF'
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+            if field_name in ['speciality', 'currency', 'education_level', 'moving']:
+                field.widget.attrs['class'] = 'selectpicker'
+                field.widget.attrs['data-size'] = '5'
+                field.widget.attrs['data-container'] = 'body'
+
+        # self.fields['about'].widget.attrs['class'] = "tinymce"
 
 
 class CVUpdateForm(forms.ModelForm):
@@ -35,13 +43,33 @@ class CVUpdateForm(forms.ModelForm):
                                         required=False)
     post = forms.CharField(widget=forms.TextInput, required=False)
     skills = forms.CharField(widget=forms.TextInput, required=False)
+    about = forms.CharField(widget=forms.Textarea, required=False)
+    disabled_fields = ('moderators_comment',)
 
     class Meta:
         model = CV
-        fields = ('post', 'speciality', 'salary', 'currency', 'education_level', 'moving', 'skills')
+        fields = ('post', 'speciality', 'salary', 'currency', 'education_level', 'moving', 'skills', 'about', 'moderators_comment')
 
     def __init__(self, *args, **kwargs):
         super(CVUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['speciality'].widget.attrs['select'] = Category.objects.all()
+        self.fields['post'].widget.attrs['placeholder'] = 'Желаемая должность'
+        self.fields['salary'].widget.attrs['placeholder'] = 'Зарплата'
+        self.fields['skills'].widget.attrs[
+            'placeholder'] = 'Укажите Ваши основные навыки, разделяя их запятыми. Например: Python, Django, Flask, DRF'
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+            if field_name in ['speciality', 'currency', 'education_level', 'moving']:
+                field.widget.attrs['class'] = 'selectpicker'
+                field.widget.attrs['data-size'] = '5'
+                field.widget.attrs['data-container'] = 'body'
+
+        for field in self.disabled_fields:
+            self.fields[field].disabled = True
+
+        # self.fields['about'].widget.attrs['class'] = "tinymce"
 
 
 class ModeratorCVUpdateForm(CVUpdateForm):
@@ -54,8 +82,10 @@ class ModeratorCVUpdateForm(CVUpdateForm):
 
     def __init__(self, *args, **kwargs):
         super(ModeratorCVUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['status'].widget.attrs['class'] = 'selectpicker'
         for field in self.disabled_fields:
             self.fields[field].disabled = True
+
 
 
 class CVDeleteForm(forms.ModelForm):
@@ -98,6 +128,10 @@ class ExperienceCreateForm(forms.ModelForm):
         super(ExperienceCreateForm, self).__init__(*args, **kwargs)
         self.fields['responsibilities'].widget.attrs[
             'placeholder'] = "Опишите Ваши обязанности, навыки и достижения на месте работы"
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+        # self.fields['responsibilities'].widget.attrs['class'] = "tinymce"
+
 
     def clean_year_end(self):
         """Проверка что дата окончания не больше даты начала"""
@@ -132,6 +166,8 @@ class EducationCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(EducationCreateForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
 
 
 class LanguagesCreateForm(forms.ModelForm):
@@ -145,6 +181,10 @@ class LanguagesCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(LanguagesCreateForm, self).__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'selectpicker'
+            field.widget.attrs['data-size'] = '5'
+            field.widget.attrs['data-container'] = 'body'
 
     def clean_language(self):
         cv = CV.objects.filter(id=self.data['cv_id']).first()
@@ -153,4 +193,21 @@ class LanguagesCreateForm(forms.ModelForm):
         if languages:
             self.add_error('language', f'{language} язык уже добавлен Вами в резюме!')
         return language
+
+
+class LanguagesUpdateForm(forms.ModelForm):
+    language = forms.ModelChoiceField(widget=forms.Select(), queryset=Languages.objects.all())
+    level = forms.ModelChoiceField(widget=forms.Select(), queryset=LanguageLevels.objects.all())
+
+    class Meta:
+        model = LanguagesSpoken
+        fields = ('language', 'level')
+
+    def __init__(self, *args, **kwargs):
+        super(LanguagesUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['language'].widget.attrs['readonly'] = True
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'selectpicker'
+            field.widget.attrs['data-size'] = '5'
+            field.widget.attrs['data-container'] = 'body'
 

@@ -35,7 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bootstrap_datepicker_plus',
     'haystack',
     'approvals',
     'cvs',
@@ -43,6 +42,9 @@ INSTALLED_APPS = [
     'search',
     'users',
     'vacancies',
+    'relations',
+    'widget_tweaks',
+    'favorites',
 
 ]
 
@@ -70,6 +72,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                # Контекстный процессор для footer
+                'users.context_processors.footer_lists',
             ],
         },
     },
@@ -110,7 +115,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru-Ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -161,3 +166,16 @@ HAYSTACK_CONNECTIONS = {
 }
 
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+NEWS_BODY_LEN_ON_NEWS_LIST = 297
+
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 4  # пагинация. кол-во на странице (HAYSTACK)
+
+# Константы ролей пользователей.
+class UserRole:
+    # Модератор.
+    MODERATOR = 1
+    # Работодатель.
+    EMPLOYER = 2
+    # Соискатель.
+    WORKER = 3

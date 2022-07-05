@@ -1,0 +1,62 @@
+[
+  {
+    "model": "users.RelationStatus",
+    "pk": 1,
+    "fields": {
+      "name": "Резюме не просмотрено",
+      "for_employer": false,
+      "for_worker": true,
+      "status_priority": 2
+    }
+  },
+  {
+    "model": "users.RelationStatus",
+    "pk": 2,
+    "fields": {
+      "name": "Приглашение не просмотрено",
+      "for_employer": true,
+      "for_worker": false,
+      "status_priority": 2
+    }
+  },
+  {
+    "model": "users.RelationStatus",
+    "pk": 3,
+    "fields": {
+      "name": "Отказ",
+      "for_employer": true,
+      "for_worker": true,
+      "status_priority": 3
+    }
+  },
+  {
+    "model": "users.RelationStatus",
+    "pk": 4,
+    "fields": {
+      "name": "Приглашение",
+      "for_employer": true,
+      "for_worker": false,
+      "status_priority": 1
+    }
+  },
+  {
+    "model": "users.RelationStatus",
+    "pk": 5,
+    "fields": {
+      "name": "Отклик",
+      "for_employer": false,
+      "for_worker": true,
+      "status_priority": 1
+    }
+  },
+  {
+    "model": "users.RelationStatus",
+    "pk": 6,
+    "fields": {
+      "name": "Встреча согласована",
+      "for_employer": true,
+      "for_worker": true,
+      "status_priority": 4
+    }
+  }
+]

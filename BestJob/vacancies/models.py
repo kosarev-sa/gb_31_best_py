@@ -24,35 +24,13 @@ class Vacancy(models.Model):
     description = models.CharField(max_length=256, blank=True, verbose_name='Описание вакансии')
     salary_from = models.DecimalField(max_digits=8, decimal_places=1, blank=True, null=True, verbose_name='доход от')
     salary_to = models.DecimalField(max_digits=8, decimal_places=1, blank=True, null=True, verbose_name='доход до')
-    currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB)
+    currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB, verbose_name='валюта')
     salary_on_hand = models.BooleanField(default=True, blank=True, verbose_name='Зарплата на руки')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
+    moderators_comment = models.TextField(max_length=5000, blank=True, null=True)
 
     def __str__(self):
         return self.name
 
     def __unicode__(self):
         return self.name
-
-
-class Skills(models.Model):
-    """Ключевые навыки"""
-    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
-    skill = models.ForeignKey(MainSkills, on_delete=models.CASCADE)
-
-
-class EmploymentType(models.Model):
-    """Тип занятости"""
-    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
-    employment = models.ForeignKey(Employments, on_delete=models.CASCADE)
-
-
-class WorkingHours(models.Model):
-    """Режим работы"""
-    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
-    schedule = models.ForeignKey(WorkSchedules, on_delete=models.CASCADE)
-
-
-class SelectedVacancies(models.Model):
-    """Избранные вакансии"""
-    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
-    worker_profile = models.ForeignKey(WorkerProfile, on_delete=models.CASCADE)

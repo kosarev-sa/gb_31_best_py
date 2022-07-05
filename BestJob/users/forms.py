@@ -1,7 +1,6 @@
 import hashlib
 from random import random
 
-from bootstrap_datepicker_plus.widgets import DatePickerInput
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
 
@@ -15,16 +14,7 @@ class WorkerProfileForm(forms.ModelForm):
     class Meta:
         model = WorkerProfile
         fields = ['name', 'image', 'city', 'phone_number', 'gender', 'birth_date', 'data']
-        widgets = {
-            'birth_date': DatePickerInput(
-            options = {
-                "format": "DD.MM.YYYY",
-                "locale": "ru",
-                "showClose": False,
-                "showClear": True,
-                "showTodayButton": True,
-            }),
-        }
+
 
     def __init__(self, *args, **kwargs):
         super(WorkerProfileForm, self).__init__(*args, **kwargs)
@@ -35,13 +25,18 @@ class WorkerProfileForm(forms.ModelForm):
         self.fields['birth_date'].widget.attrs['placeholder'] = 'Введите дату Вашего рождения'
         self.fields['data'].widget.attrs['placeholder'] = 'Введите пару слов о себе'
 
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
 
 class EmployerProfileForm(forms.ModelForm):
     """формы для профиля работодателя"""
+    disabled_fields = ('moderators_comment',)
 
     class Meta:
         model = EmployerProfile
-        exclude = ['user']
+        # exclude = ['user']
+        fields = ('name', 'image', 'city', 'data', 'moderators_comment')
 
     def __init__(self, *args, **kwargs):
         super(EmployerProfileForm, self).__init__(*args, **kwargs)
@@ -49,13 +44,25 @@ class EmployerProfileForm(forms.ModelForm):
         self.fields['city'].widget.attrs['placeholder'] = 'Введите город местонахождения'
         self.fields['data'].widget.attrs['placeholder'] = 'Введите описание компании'
 
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+
+        for field in self.disabled_fields:
+            self.fields[field].disabled = True
 
 class ModeratorProfileForm(forms.ModelForm):
     """формы для профиля модератора"""
 
     class Meta:
         model = ModeratorProfile
-        fields = ['image',]
+        fields = ['image', 'name']
+
+    def __init__(self, *args, **kwargs):
+        super(ModeratorProfileForm, self).__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs['placeholder'] = 'Введите имя модератора'
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
 
 
 class UserLoginForm(AuthenticationForm):
@@ -89,6 +96,7 @@ class UserRegisterForm(UserCreationForm):
         self.fields['password1'].widget.attrs.update({"class": "form-control", "placeholder": "Введите пароль"})
         self.fields['password2'].widget.attrs.update({"class": "form-control", "placeholder": "Подтвердите пароль"})
 
+
     def save(self, commit=True):
         """переопределяем метод save для того, чтобы добавить ключ активации email"""
         user = super(UserRegisterForm, self).save()
@@ -104,7 +112,7 @@ class PassResetForm(PasswordResetForm):
 
     def __init__(self, *args, **kwargs):
         super(PassResetForm, self).__init__(*args, **kwargs)
-        self.fields['email'].widget.attrs['placeholder'] = 'email'
+        self.fields['email'].widget.attrs.update({"class": "form-control","placeholder": "email"})
 
 
 class PassResetConfirmForm(SetPasswordForm):
@@ -112,6 +120,18 @@ class PassResetConfirmForm(SetPasswordForm):
 
     def __init__(self, *args, **kwargs):
         super(PassResetConfirmForm, self).__init__(*args, **kwargs)
-        self.fields['new_password1'].widget.attrs['placeholder'] = 'password'
-        self.fields['new_password2'].widget.attrs['placeholder'] = 'password'
+        self.fields['new_password1'].widget.attrs.update({"placeholder": "пароль", "class":"form-control"})
+        self.fields['new_password2'].widget.attrs.update({"placeholder": "подтверждение пароля", "class":"form-control"})
+
+
+class ModeratorCompanyUpdateForm(forms.ModelForm):
+
+    class Meta:
+        model = EmployerProfile
+        fields = ( 'status', 'moderators_comment')
+
+    def __init__(self, *args, **kwargs):
+        super(ModeratorCompanyUpdateForm, self).__init__(*args, **kwargs)
+        self.fields['status'].widget.attrs.update({ "class": "form-control "})
+        self.fields['moderators_comment'].widget.attrs.update({"class": "form-control"})
 

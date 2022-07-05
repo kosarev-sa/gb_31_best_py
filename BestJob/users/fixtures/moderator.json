@@ -1,11 +1,7 @@
 [
   {
-    "model": "users.moderatorprofile",
-    "pk": 1,
-    "fields": {
-      "user": 2,
-      "image": "moderator_photo/1.jpg",
-      "date_create": "2022-06-15T14:04:22"
-    }
+    "name": "Петр Петров",
+    "image": "moderator_photo/1.jpg",
+    "date_create": "2022-06-15T14:04:22"
   }
 ]

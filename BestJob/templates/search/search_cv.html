@@ -1,0 +1,335 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    <section class="page-header">
+        <div class="container">
+
+            <!-- Start of Page Title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Поиск</h2>
+                </div>
+            </div>
+            <!-- End of Page Title -->
+
+            <!-- Start of Breadcrumb -->
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="breadcrumb">
+                        <li><a href="{% url 'index' %}">На главную</a></li>
+                        <li><a href="{% url 'haystack_search' %}">Поиск</a></li>
+{#                        <li><a href="{% url 'search_vacancy' %}">расширенный поиск вакансий</a></li>#}
+                        <li class="active">расширенный поиск резюме</li>
+
+                    </ul>
+                </div>
+            </div>
+            <!-- End of Breadcrumb -->
+
+        </div>
+    </section>
+{% endblock %}
+
+{% block content %}
+        {% if message_of_denied %}
+        <script>alert('Пожалуйста, войдите или зарегистрируйтесь как работодатель.');
+        </script>
+        <div class="text-center" style="color:red">
+            <h5>{{ message_of_denied }}</h5>
+        </div>
+    {% endif %}
+    <!-- ===== Start of Main Wrapper Section ===== -->
+    <section class="search-jobs ptb80">
+        <div class="container">
+            <!-- Start of Form -->
+            <form class="row job-search-form row " method="get" action=".">
+
+                <div class="col-md-8 col-sm-12 search-keywords">
+                    {% render_field form.q class="form-control" %}
+                </div>
+
+                <!-- Start of submit input -->
+                <div class="col-md-4 col-sm-12 search-submit">
+                    {% if message_of_denied %}
+                        <button type="submit" class="btn btn-blue btn-effect"
+                                formaction={% url 'users:login' %}><i
+                                class="fa fa-search"></i>Найти
+                        </button>
+                    {% else %}
+                        <button type="submit" class="btn btn-blue btn-effect"><i
+                                class="fa fa-search"></i>Найти
+                        </button>
+                    {% endif %}
+                </div>
+                <div class="col-md-12 text-center">
+                    <h5 class="pb40"><br><br>Фильтры поиска</h5>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+
+
+                        <div class="col-md-6 mx-auto">
+                            <label for="{{ form.speciality.id_for_label }}" style="visibility: visible; display: block"><br>Специальность</label>
+                            {{ form.speciality }}
+                        </div>
+                        <div class="col-md-6 mx-auto">
+                            <label for="{{ form.education_level.id_for_label }}"
+                                   style="visibility: visible; display: block"><br>Образование</label>
+                            {{ form.education_level }}
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="pt20"></div>
+                <div class="col-md-12">
+                    <div class="form-group">
+
+                        <br>
+                        {#                        <label for="{{ form.salary.id_for_label }}"><br>Оклад & дислокация</label>#}
+                        <div class="col-md-6 mx-auto" style="background-color: transparent">
+                            <label for="{{ form.salary.id_for_label }}" style="visibility: visible; display: block"><br>Оклад</label>
+                            {{ form.salary }}
+                        </div>
+                        <div class="col-md-6 mx-auto">
+                            <label for="{{ form.moving.id_for_label }}" style="visibility: visible; display: block"><br>Возможность
+                                переезда</label>
+                            {{ form.moving }}
+                        </div>
+
+                    </div>
+                </div>
+
+
+            </form>
+            <!-- Start of Row -->
+        </div>
+    </section>
+    <section class="find-candidate">
+        <div class="container">
+            <div class="row mt60">
+
+                <!-- Start of Candidate Main -->
+                <div class="col-md-12 candidate-main">
+
+                    <!-- Start of Candidates Wrapper -->
+                    <div class="candidate-wrapper">
+                        {% if query %}
+                            {% for result in object_list %}
+
+
+                                <!-- ===== Start of Single Candidate 1 ===== -->
+                                <div class="single-candidate row nomargin">
+
+                                    <!-- Candidate Image -->
+                                    <div class="col-md-2 col-xs-3">
+                                        <div class="candidate-img">
+                                            <img width="200" height="200"
+                                                 src="{% if result.object.worker_profile.image %} {{ result.object.worker_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                                                 class="img-responsive">
+                                        </div>
+                                    </div>
+
+                                    <!-- Start of Candidate Name & Info -->
+                                    <div class="col-md-8 col-xs-6 ptb20">
+                                        <div class="job-post-header clearfix">
+                                            Резюме
+                                        </div>
+                                        <!-- Candidate Name -->
+                                        <div class="candidate-name">
+                                            <a href="{% url 'cv:detail_cv' result.object.id %}">
+                                                <h5>{{ result.object.post }}</h5></a>
+
+                                        </div>
+
+                                        <!-- Candidate Info -->
+                                        <div class="candidate-info mt5">
+                                            <ul class="list-inline">
+                                                <li>
+                                                    <span><i
+                                                            class="fa fa-money"></i>{{ result.object.salary }} RUB</span>
+                                                </li>
+
+                                                <li>
+                                                        <span><i
+                                                                class="fa fa-map-marker"></i>{{ result.object.worker_profile.city }} </span>
+                                                </li>
+
+                                                <li>
+                                                        <span><i
+                                                                class="fa fa-briefcase"></i>{{ result.object.speciality.name }} </span>
+                                                </li>
+                                            </ul>
+
+                                        </div>
+                                    </div>
+                                    <!-- End of Candidate Name & Info -->
+                                    <!-- CTA -->
+                                    <div class="col-md-2 col-xs-3">
+                                        <div class="candidate-cta ptb30">
+                                            <a href="#" style="color: lightgray">
+                                                <div class="pull-right"><h3>★</h3></div>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            {% empty %}
+                                <p>Ничего не найдено...</p>
+                            {% endfor %}
+                            <div class="single-candidate row nomargin" style="height: 1px; padding: 0px">
+                            </div>
+                            {#                    {% if page.has_previous or page.has_next %}#}
+                            <div class="col-md-12 mt10">
+                                <ul class="pagination list-inline text-center">
+                                    {% if page_obj.has_previous %}
+                                        <li><a href="?q={{ query }}&amp;page={{ page_obj.previous_page_number }}"><<</a>
+                                        </li>
+                                    {% endif %}
+                                    {% if page_obj.has_other_pages %}
+                                        <li class="active"><a
+                                                href="?q={{ query }}&amp;page={{ page_obj.number }}">{{ page_obj.number }}</a>
+                                        </li>
+                                    {% endif %}
+                                    {% if page_obj.has_next %}
+                                        <li><a href="?q={{ query }}&amp;page={{ page_obj.next_page_number }}">>></a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="ptb80"></div>
+            <!-- End of Form -->
+        </div>
+    </section>
+
+
+{% endblock %}
+
+{#{% block search %}#}
+{#    <section class="ptb80 overlay-black">#}
+{#        <div class="container">#}
+{#            <div class="col-md-12 text-center">#}
+{#                <h2 class="pb40">Поиск резюме</h2>#}
+{#            </div>#}
+{#            <form method="get" action="." class="post-job-resume job-search-form mt50">#}
+{#                <div class="col-md-12">#}
+{#                    <div class="form-group">#}
+{#                        <div class="col-md-8 mx-auto search-keywords">#}
+{#                            {{ form.q }}#}
+{#                        </div>#}
+{#                        <div class="col-md-4 mx-auto">#}
+{#                            <input type="submit" value="найти" class="btn btn-blue btn-effect btn-large">#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                </div>#}
+{#                <br>#}
+{#                <div class="col-md-12 text-center">#}
+{#                    <h4 class="pb40"><br><br>Фильтры поиска</h4>#}
+{#                </div>#}
+{#                <div class="col-md-12">#}
+{#                    <div class="form-group">#}
+{#                        <label for="{{ form.speciality.id_for_label }}"><br>Специальность & образование</label>#}
+{#                        <div class="col-md-6 mx-auto">#}
+{#                            {{ form.speciality }}#}
+{#                        </div>#}
+{#                        <div class="col-md-6 mx-auto">#}
+{#                            {{ form.education_level }}#}
+{#                        </div>#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="pt20"></div>#}
+{#                <div class="col-md-12">#}
+{#                    <div class="form-group">#}
+{#                        <label for="{{ form.salary.id_for_label }}"><br>Оклад & дислокация</label>#}
+{#                        <div class="col-md-6 mx-auto" style="background-color: transparent">#}
+{#                            {{ form.salary }}#}
+{#                        </div>#}
+{#                        <div class="col-md-6 mx-auto">#}
+{#                            {{ form.moving }}#}
+{#                        </div>#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{##}
+{#            </form>#}
+{##}
+{#            <br>#}
+{##}
+{#        </div>#}
+{#    </section>#}
+{#{% endblock %}#}
+{##}
+{#{% block content %}#}
+{#    <section class="education ptb80 " style="background-color: rgba(41, 177, 253, 0.25)">#}
+{##}
+{#        <div class="container">#}
+{#            {% if query %}#}
+{#                {% for result in object_list %}#}
+{#                    <div class="col-md-12" style="margin-bottom: 15px;">#}
+{#                        <div class="item-block shadow-hover" style="background: #ffffff;">#}
+{##}
+{#                            <div class="education-header clearfix">#}
+{#                                <div style="margin-bottom: 15px; border-bottom: 1px solid #e3e3e3; width: 100%">#}
+{#                                    Резюме#}
+{#                                </div>#}
+{#                                <br>#}
+{#                                <a href="{% url 'cv:detail_cv' result.object.id %}">#}
+{#                                    <div style="margin-bottom: 15px;"><h4>{{ result.object.post }}</h4></div>#}
+{#                                    <div style="margin-bottom: 15px;"><h6>#}
+{#                                        Специальность: {{ result.object.speciality }}</h6></div>#}
+{##}
+{#                                    <div><h6>Образование: {{ result.object.get_education_level_display }}</h6></div>#}
+{#                                </a>#}
+{#                                <br>#}
+{#                                <div><h6>{{ result.object.salary }} RUB</h6></div>#}
+{##}
+{#                                <a href="#" style="color: lightgray">#}
+{#                                    <div class="pull-right shadow-hover"><h3>★</h3></div>#}
+{#                                </a>#}
+{#                            </div>#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{##}
+{#                {% empty %}#}
+{#                    <p>Нет вакансий, удовлетворяющих условиям поиска</p>#}
+{#                {% endfor %}#}
+{##}
+{##}
+{#                {% if page.has_previous or page.has_next %}#}
+{#                    <div>#}
+{#                        {% if page.has_previous %}#}
+{#                            <a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo;#}
+{#                        Previous#}
+{#                        {% if page.has_previous %}</a>{% endif %}#}
+{#                        |#}
+{#                        {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}#}
+{#                        Next#}
+{#                        &raquo;{% if page.has_next %}</a>{% endif %}#}
+{#                    </div>#}
+{#                {% endif %}#}
+{#            {% else %}#}
+{# Show some example queries to run, maybe query syntax, something else? #}
+{#            {% endif %}#}
+{#            <br>#}
+{#        </div>#}
+{#    </section>#}
+{#{% endblock %}#}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

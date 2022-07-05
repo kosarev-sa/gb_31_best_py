@@ -1,80 +1,90 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
 {% load static %}
 
-{% block additional_styles %}
-<link rel="stylesheet" href="{% static 'css/news_moderate_list.css' %}">
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
 {% endblock %}
 
-{% block menu %}
-    {% include "multimenu.html" %}
+{% block header %}
+    <section class="page-header">
+        <div class="container">
+
+            <!-- Start of Page Title -->
+            <div class="row">
+                <div class="col-md-12">
+                    <h2>Новости</h2>
+                </div>
+            </div>
+            <!-- End of Page Title -->
+
+            <!-- Start of Breadcrumb -->
+            <div class="row">
+                <div class="col-md-12">
+                    <ul class="breadcrumb">
+                        <li><a href="{% url 'users:moderator_companies_list' %}">Компании</a></li>
+                        <li><a href="{% url 'vacancies:moderator_vacancy_list' %}">Вакансии</a></li>
+                        <li><a href="{% url 'cv:moderator_cvs_list' %}">Резюме</a></li>
+                        <li class="active">Новости</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- End of Breadcrumb -->
+
+        </div>
+    </section>
 {% endblock %}
 
 {% block content %}
-<div class="pre-browse-panel dock-side-prebrowse border border-secondary border-2 rounded m-2 bg-light">
-    <div class="col p-1 docked-prebrowse-text"></div>
-</div>
-
-<div class="giant-font text-center border-bottom border-secondary border-1">Модерация новостей</div>
-<div class="browse-news flex-fill border border-secondary border-2 rounded m-2">
-    <div class="d-flex">
-        <div class="col p-3 browse-news-text"></div>
-        <button class="btn btn-sm btn-dark btn-browse-hide">Скрыть</button>
-    </div>
-</div>
-<div class="d-flex flex-wrap align-items-center justify-content-center ps-5 pe-5">
-        <div class="card border-0">
-            <div class="card-body border border-dark border-2 m-1">
-                <a class="btn btn-sm btn-success" href="{% url 'news:create_news' %}">Создать новость</a>
-            </div>
-        </div>
-    {% for item in news_list %}
-    <div class="card border-0">
-        <div class="card-body border border-dark border-2 m-1">
-            <div class="row border-bottom border-secondary border-1">
-                <div class="col">
-                    <div class="medium-plus-font news-title linkstyle cursor-pointer">{{ item.title }}</div>
-                </div>
-            </div>
-             <div class="row border-bottom border-secondary border-1">
-                <div class="col">
-                    <div class="medium-font">Автор: {{ item.author.first_name }}</div>
-                </div>
-            </div>
-            <div class="row border-bottom border-secondary border-1">
-                <div class="col">
-                    <div class="medium-font is_active_row">Активна:
-                    {% if item.is_active %}
-                        <span class="is_active_text">Да</span>
-                    {% else %}
-                        <span class="is_active_text">Нет</span>
-                    {% endif %}
-                    </div>
-                </div>
-            </div>
-            <div class="row border-bottom border-secondary border-1">
-                <div class="col">
-                    <div class="medium-font">{{ item.created|date:"Y-m-d H:i:s" }}</div>
-                </div>
-            </div>
+    <section class="blog-listing ptb80" id="version1">
+        <div class="container">
             <div class="row">
-                <div class="col d-flex align-items-center justify-content-center mt-1">
-                    <a class="btn btn-sm btn-dark" href="{% url 'news:update_news' item.pk %}">Изменить</a>
-                </div>
-                <div class="col d-flex align-items-center justify-content-center mt-1">
-                    <a class="btn btn-sm btn-danger" href="{% url 'news:delete_news' item.pk %}">Удалить</a>
-                </div>
-            </div>
-            <div class="row d-none">
-                <div class="col">
-                    <div class="medium-font news-body">{{ item.body }}</div>
+                <ul>
+                    <li>
+                        <a href="{% url 'news:create_news' %}" class="btn btn-blue btn-effect mt10">создать новость</a>
+                    </li>
+                </ul>
+
+                <div class="col-md-12 blog-posts-wrapper">
+
+                    {% for item in news_list %}
+                        <article class="col-md-12 blog-post">
+
+                            <!-- Blog Post Thumbnail -->
+                            <div class="col-md-4 blog-thumbnail">
+                                <a href="{% url 'news:detail_news' item.pk %}" class="hover-link"><img
+                                        src="{{ item.image.url }}"
+                                        class="img-responsive"
+                                        alt=""></a>
+                                <div class="date">
+                                    <span class="day">{{ item.created|date:"d" }}</span>
+                                    <span class="publish-month">{{ item.created|date:"M" }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Blog Post Description -->
+                            <div class="col-md-8 blog-desc">
+                                <h5><a href="{% url 'news:detail_news' item.pk %}">{{ item.title }}</a></h5>
+                                <div class="post-detail pt10 pb20">
+                                    <span><i class="fa fa-user"></i>{{ item.author.name }}</span>
+                                    <span><i class="fa fa-clock-o"></i>{{ item.created|date:"H:i" }}</span>
+                                </div>
+
+                                <p>{{ item.body }}</p>
+                                <a href="{% url 'news:update_news' item.pk %}" class="btn btn-blue btn-effect mt10">Редактировать</a>
+                                <a href="{% url 'news:delete_news' item.pk %}" class="btn btn-blue btn-effect mt10">Удалить</a>
+                            </div>
+                        </article>
+
+                    {% endfor %}
+
                 </div>
             </div>
         </div>
-    </div>
-    {% endfor %}
-</div>
+    </section>
+
 {% endblock %}
 
-{% block additional_script %}
-<script src="{% static 'js/news_moderate_list.js' %}"></script>
+{% block footer %}
+    {% include 'inc_footer.html' %}
 {% endblock %}

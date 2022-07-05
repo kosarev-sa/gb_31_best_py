@@ -4,7 +4,9 @@ from django.core.management import BaseCommand
 import json
 
 from approvals.models import ApprovalStatus
+from favorites.models import EmployerFavorites, WorkerFavorites
 from news.models import News
+from relations.models import Relations, RelationHistory, RelationStatus
 from users.models import User, EmployerProfile, WorkerProfile, ModeratorProfile
 
 from vacancies.models import Vacancy
@@ -13,9 +15,10 @@ from cvs.models import CV, CVSkills, CVEmployment, CVWorkSchedule, Education, Ex
 from search.models import Category, MainSkills, Languages, LanguageLevels, Employments, WorkSchedules
 
 JSON_PATH_NEWS = 'news/fixtures/'
-JSON_PATH_USERS = 'users/fixtures/'
 JSON_PATH_VACANCIES = 'vacancies/fixtures/'
 JSON_PATH_CV = 'cvs/fixtures/'
+JSON_PATH_RELATIONS = 'relations/fixtures/'
+JSON_PATH_FAVORITES = 'favorites/fixtures/'
 
 
 def load_from_json(file_name):
@@ -24,7 +27,13 @@ def load_from_json(file_name):
 
 
 class Command(BaseCommand):
+
     def handle(self, *args, **options):
+
+        RelationHistory.objects.all().delete()
+        Relations.objects.all().delete()
+        EmployerFavorites.objects.all().delete()
+        WorkerFavorites.objects.all().delete()
 
         # Запуск после создания пользователя.
         news = load_from_json(JSON_PATH_NEWS + 'news.json')
@@ -35,64 +44,12 @@ class Command(BaseCommand):
             j_news = n.get('fields')
             j_news['id'] = n.get('pk')
             author_id = j_news.get('author')
-            author = User.objects.get(id=int(author_id))
+            author = ModeratorProfile.objects.get(id=int(author_id))
             j_news['author'] = author
             j_news['created'] = today
             j_news['updated'] = today
             new_news = News(**j_news)
             new_news.save()
-
-        employers = load_from_json(JSON_PATH_USERS + 'employers.json')
-        EmployerProfile.objects.all().delete()
-
-        for employer in employers:
-            emp = employer.get('fields')
-            emp['id'] = employer.get('pk')
-            user = emp.get('user')
-            _user = User.objects.get(id=user)
-            emp['user'] = _user  # Заменяем юзера объектом
-
-            status = emp.get('status')
-            _status = ApprovalStatus.objects.get(id=status)
-            emp['status'] = _status  # Заменяем юзера объектом
-
-            new_employer = EmployerProfile(**emp)
-            new_employer.save()
-
-        # Соискатель
-        workers = load_from_json(JSON_PATH_USERS + 'workers.json')
-        WorkerProfile.objects.all().delete()
-
-        for worker in workers:
-            work = worker.get('fields')
-            work['id'] = worker.get('pk')
-            user = work.get('user')
-            _user = User.objects.get(id=user)
-            work['user'] = _user  # Заменяем юзера объектом
-
-            birth_date = datetime.datetime.strptime(work.get('birth_date'), '%Y-%m-%d')
-            birth_date = birth_date.replace(tzinfo=datetime.timezone.utc)
-            work['birth_date'] = birth_date
-
-            new_worker = WorkerProfile(**work)
-            new_worker.save()
-
-        moderators = load_from_json(JSON_PATH_USERS + 'moderator.json')
-        ModeratorProfile.objects.all().delete()
-
-        for moderator in moderators:
-            moder = moderator.get('fields')
-            moder['id'] = moderator.get('pk')
-            user_id = moder.get('user')
-            _user = User.objects.get(id=user_id)
-            moder['user'] = _user  # Заменяем юзера объектом
-
-            date_create = datetime.datetime.strptime(moder.get('date_create'), '%Y-%m-%dT%H:%M:%S')
-            date_create = date_create.replace(tzinfo=datetime.timezone.utc)
-            moder['date_create'] = date_create
-
-            new_moder = ModeratorProfile(**moder)
-            new_moder.save()
 
         vacancies = load_from_json(JSON_PATH_VACANCIES + 'vacancies.json')
         Vacancy.objects.all().delete()
@@ -240,3 +197,55 @@ class Command(BaseCommand):
             resp['cv'] = CV.objects.get(id=resp['cv'])
             resp['vacancy'] = Vacancy.objects.get(id=resp['vacancy'])
             ConnectVacancyCv(**resp).save()
+
+        # # RELATIONS
+        # relations = load_from_json(JSON_PATH_RELATIONS + 'relation.json')
+        #
+        # for relation in relations:
+        #     relation_row = relation.get('fields')
+        #     relation_row['id'] = relation.get('pk')
+        #
+        #     date_create = datetime.datetime.strptime(relation_row.get('created'), '%Y-%m-%dT%H:%M:%S')
+        #     date_create = date_create.replace(tzinfo=datetime.timezone.utc)
+        #     relation_row['created'] = date_create
+        #
+        #     relation_row['cv'] = CV.objects.get(id=relation_row['cv'])
+        #     relation_row['vacancy'] = Vacancy.objects.get(id=relation_row['vacancy'])
+        #
+        #     new_relation = Relations(**relation_row)
+        #     new_relation.save()
+        #
+        # relations_history = load_from_json(JSON_PATH_RELATIONS + 'relation_history.json')
+        #
+        # for rh in relations_history:
+        #     rh_row = rh.get('fields')
+        #     rh_row['id'] = rh.get('pk')
+        #
+        #     date_create = datetime.datetime.strptime(rh_row.get('created'), '%Y-%m-%dT%H:%M:%S')
+        #     date_create = date_create.replace(tzinfo=datetime.timezone.utc)
+        #     rh_row['created'] = date_create
+        #
+        #     rh_row['relation'] = Relations.objects.get(pk=rh_row['relation'])
+        #     rh_row['status'] = RelationStatus.objects.get(pk=rh_row['status'])
+        #
+        #     new_rh = RelationHistory(**rh_row)
+        #     new_rh.save()
+        #
+        # # JSON_PATH_FAVORITES
+        # employer_favorites = load_from_json(JSON_PATH_FAVORITES + 'employerfavorites.json')
+        #
+        # for emp_fav in employer_favorites:
+        #     emp_fav_row = emp_fav.get('fields')
+        #     emp_fav_row['id'] = emp_fav.get('pk')
+        #     emp_fav_row['cv'] = CV.objects.get(id=emp_fav_row['cv'])
+        #     emp_fav_row['employer_profile'] = EmployerProfile.objects.get(id=emp_fav_row['employer_profile'])
+        #     EmployerFavorites(**emp_fav_row).save()
+        #
+        # worker_favorites = load_from_json(JSON_PATH_FAVORITES + 'workerfavorites.json')
+        #
+        # for work_fav in worker_favorites:
+        #     work_fav_row = work_fav.get('fields')
+        #     work_fav_row['id'] = work_fav.get('pk')
+        #     work_fav_row['vacancy'] = Vacancy.objects.get(id=work_fav_row['vacancy'])
+        #     work_fav_row['worker_profile'] = WorkerProfile.objects.get(id=work_fav_row['worker_profile'])
+        #     WorkerFavorites(**work_fav_row).save()

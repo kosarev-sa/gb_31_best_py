@@ -3,8 +3,8 @@
     "model": "cvs.cv",
     "pk": 1,
     "fields": {
-      "worker_profile": 1,
-      "status": 1,
+      "worker_profile": 11,
+      "status": 2,
       "date_create": "2022-06-20T23:58:52.107Z",
       "is_active": true,
       "speciality": "BACKD",
@@ -12,7 +12,7 @@
       "skills": "Python, Django, DRF, PyQt",
       "education_level": 4,
       "moving": 2,
-      "salary": "120000.00",
+      "salary": "120000",
       "currency": 1
     }
   },
@@ -20,8 +20,8 @@
     "model": "cvs.cv",
     "pk": 2,
     "fields": {
-      "worker_profile": 2,
-      "status": 1,
+      "worker_profile": 12,
+      "status": 3,
       "date_create": "2022-06-20T23:58:52.127Z",
       "is_active": true,
       "speciality": "BACKD",
@@ -29,7 +29,7 @@
       "skills": "HTML, css, JS",
       "education_level": 3,
       "moving": 1,
-      "salary": "100000.00",
+      "salary": "100000",
       "currency": 1
     }
   },
@@ -37,8 +37,8 @@
     "model": "cvs.cv",
     "pk": 3,
     "fields": {
-      "worker_profile": 2,
-      "status": 1,
+      "worker_profile": 13,
+      "status": 5,
       "date_create": "2022-06-21T00:01:11.054Z",
       "is_active": true,
       "speciality": "TEST",
@@ -46,8 +46,110 @@
       "skills": "pytest",
       "education_level": 4,
       "moving": 1,
-      "salary": "100.00",
+      "salary": "100",
       "currency": 2
+    }
+  },
+  {
+    "model": "cvs.cv",
+    "pk": 4,
+    "fields": {
+      "worker_profile": 14,
+      "status": 3,
+      "date_create": "2022-06-21T00:01:11.054Z",
+      "is_active": true,
+      "speciality": "PROGAN",
+      "post": "Системный аналитик",
+      "skills": "",
+      "education_level": 3,
+      "moving": 2,
+      "salary": "1000",
+      "currency": 2
+    }
+  },
+  {
+    "model": "cvs.cv",
+    "pk": 5,
+    "fields": {
+      "worker_profile": 15,
+      "status": 2,
+      "date_create": "2022-06-21T00:01:11.054Z",
+      "is_active": true,
+      "speciality": "LAYDES",
+      "post": "Фронтенд",
+      "skills": "",
+      "education_level": 3,
+      "moving": 2,
+      "salary": "10000",
+      "currency": 1
+    }
+  },
+  {
+    "model": "cvs.cv",
+    "pk": 6,
+    "fields": {
+      "worker_profile": 16,
+      "status": 5,
+      "date_create": "2022-06-21T00:01:11.054Z",
+      "is_active": true,
+      "speciality": "TML",
+      "post": "Тимлид",
+      "skills": "",
+      "education_level": 3,
+      "moving": 2,
+      "salary": "200000",
+      "currency": 1
+    }
+  },
+  {
+    "model": "cvs.cv",
+    "pk": 7,
+    "fields": {
+      "worker_profile": 17,
+      "status": 2,
+      "date_create": "2022-06-21T00:01:11.054Z",
+      "is_active": true,
+      "speciality": "PM",
+      "post": "Проджект менеджер",
+      "skills": "",
+      "education_level": 3,
+      "moving": 2,
+      "salary": "200000",
+      "currency": 1
+    }
+  },
+  {
+    "model": "cvs.cv",
+    "pk": 8,
+    "fields": {
+      "worker_profile": 18,
+      "status": 4,
+      "date_create": "2022-06-21T00:01:11.054Z",
+      "is_active": true,
+      "speciality": "FULLD",
+      "post": "Фулстак",
+      "skills": "",
+      "education_level": 2,
+      "moving": 2,
+      "salary": "150000",
+      "currency": 1
+    }
+  },
+   {
+    "model": "cvs.cv",
+    "pk": 9,
+    "fields": {
+      "worker_profile": 19,
+      "status": 1,
+      "date_create": "2022-06-21T00:01:11.054Z",
+      "is_active": true,
+      "speciality": "SYSADM",
+      "post": "Администратор Linux",
+      "skills": "",
+      "education_level": 2,
+      "moving": 2,
+      "salary": "190000",
+      "currency": 1
     }
   }
 ]

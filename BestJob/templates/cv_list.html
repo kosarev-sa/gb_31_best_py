@@ -1,58 +1,87 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load widget_tweaks %}
 
 {% block menu %}
-    {% include "worker_menu.html" %}
-    <ul>
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
 
-        <li>
-            <a href="{% url 'cv:create_cv' %}">создать резюме</a>
-        </li>
-    </ul>
-
+{% block header %}
+    {% include 'inc_cv_header.html' %}
 {% endblock %}
 
 {% block content %}
-    <div class="giant-font text-center border-bottom border-secondary border-1">Мои резюме</div>
-    <div class="d-flex flex-wrap align-items-center justify-content-center ps-5 pe-5">
-        <table class="table" width="100%">
-            <tr>
-                <th>Резюме. Должность</th>
-                <th>статус</th>
-                <th>дата создания</th>
-                <th>редактировать</th>
-                <th>удалить</th>
-                <th>разместить</th>
-            </tr>
+    <!--    Начало секции МОИ РЕЗЮМЕ-->
+    <section class="education ptb80" style="background: #f0f0f0;">
+        <div class="container">
+
             {% for cv in cvs %}
-                <tr>
-                    <td width="30%">
-                        {{ cv.post }}
-                        <br>
-                        <a href="{% url 'vacancy:vacancy_recommended' cv.id %}">вакансии для
-                            Вас</a>
-                    </td>
-                    <td>
-                        {{ cv.status }}
-                    </td>
-                    <td>
-                        {{ cv.date_create }}
-                    </td>
-                    <td>
-                        <a href="{% url 'cv:update_cv' cv.id %}">редактировать</a>
-                    </td>
-                    <td>
-                        <a href="{% url 'cv:delete_cv' cv.id %}">удалить</a>
-                    </td>
-                    <td>
-                        {% if cv.status.code == 'NPB' %}
-                            <a href="{% url 'cv:distribute_cv' cv.id %}">разместить</a>
+                <div class="col-md-12" style="margin-bottom: 15px;">
+                    <div class="item-block shadow-hover" style="background: #ffffff;">
+
+                        <div class="education-header clearfix">
+                            <h5><small>Должность -</small><a href="{% url 'cv:detail_cv' cv.id %}">{{ cv.post }}</a>
+                            </h5>
+                            <h5><small>Соискатель -</small>{{ cv.worker_profile.name }}</h5>
+                            <h5><small>Дата создания -</small> {{ cv.date_create }} </h5>
+
+                                {% if worker %}
+                                    <h5><small>Статус резюме -</small>
+                                    {{ cv.status }}
+                                    {% if cv.status.code == 'FRV' %}
+                                        <p style="color:#ff0000;">Внимание! Модератор отправил резюме на доработку!
+                                            {% if cv.moderators_comment %}
+                                                <p style="color:#ff0000;">Прочесть комментарии модератора можно на форме
+                                                    редактирования.</p>
+                                            {% endif %}
+                                    {% elif cv.status.code == 'RJC' %}
+                                        <p style="color:#ff0000;">Внимание! Резюме отклонено модератором!
+                                            {% if cv.moderators_comment %}
+                                                <p style="color:#ff0000;">Прочесть комментарии модератора можно на форме
+                                                    редактирования.</p>
+                                            {% endif %}
+                                    {% endif %}
+                                {% endif %}
+
+
+                            </h5>
+                        </div>
+                        {% if worker %}
+                            <div>
+                                <div class="col-md-4 text-left mt-4 mb-4" style="background: #ffffff;">
+                                    <a class="btn btn-blue btn-effect mt15 mb15"
+                                       href="{% url 'vacancy:vacancy_recommended' cv.id %}">вакансии для
+                                        Вас</a>
+                                </div>
+
+
+                                <div class="col-md-8 text-right mt-4 mb-4" style="background: #ffffff;">
+                                    {% if cv.status.code == 'NPB' or cv.status.code == 'FRV' %}
+                                        <a class="btn btn-blue btn-effect mt15 mb15"
+                                           href="{% url 'cv:distribute_cv' cv.id %}">Опубликовать</a>
+                                    {% endif %}
+                                    <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:update_cv' cv.id %}">редактировать</a>
+                                    <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:delete_cv' cv.id %}">удалить</a>
+                                </div>
+                            </div>
                         {% else %}
-                            <p>{{ cv.status }}</p>
+                            <div class="col-md-12 text-right mt-4 mb-4" style="background: #ffffff;">
+                                <a class="btn btn-blue btn-effect mt15 mb15"
+                                   href="{% url 'cv:detail_cv' cv.id %}">Просмотр</a>
+                            </div>
                         {% endif %}
-                    </td>
-                </tr>
+
+                    </div>
+                </div>
             {% endfor %}
-        </table>
-    </div>
+            {% if worker %}
+            <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_cv' %}">Создать резюме</a>
+            {% endif %}
+        </div>
+    </section>
+    <!--    Конец секции МОИ РЕЗЮМЕ-->
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
 {% endblock %}

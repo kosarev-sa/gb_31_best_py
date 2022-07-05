@@ -13,13 +13,15 @@ class CV(models.Model):
     status = models.ForeignKey(ApprovalStatus, on_delete=models.CASCADE)
     date_create = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True, db_index=True)
-    speciality = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
+    speciality = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
     post = models.CharField(max_length=256, blank=True, null=True)
     skills = models.CharField(max_length=256, blank=True, null=True)
     education_level = models.PositiveSmallIntegerField(choices=EducationLevel.choices, default=EducationLevel.HIGHER)
     moving = models.PositiveSmallIntegerField(choices=Moving.choices, default=Moving.UNREAL, null=True)
     salary = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, verbose_name='Зарплата')
     currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB, null=True)
+    about = models.TextField(max_length=5000, blank=True, null=True)
+    moderators_comment = models.TextField(max_length=5000,blank=True, null=True)
 
 
 class CVSkills(models.Model):
@@ -91,7 +93,14 @@ class SelectedCV(models.Model):
 
 class ConnectVacancyCv(models.Model):
     """Связь отклика, вакансии и резюме"""
+    class Initiators(models.TextChoices):
+        EMPLOYER = "0", "Employer"
+        WORKER = "1", "Worker"
     cv = models.ForeignKey(CV, on_delete=models.CASCADE)
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
     status_worker = models.BooleanField(null=True, default=None)
     status_employer = models.BooleanField(null=True, default=None)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания", editable=False)
+    initiator = models.CharField(
+        max_length=2, verbose_name="Инициатор", choices=Initiators.choices, default=Initiators.WORKER
+    )

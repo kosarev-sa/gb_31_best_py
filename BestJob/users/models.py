@@ -42,7 +42,7 @@ class WorkerProfile(models.Model):
     city = models.CharField('Город проживания', max_length=80, blank=True)
     phone_number = models.CharField('Телефон для связи', max_length=12, blank=True)
     gender = models.CharField('Пол', max_length=1, blank=True)
-    birth_date = models.DateField('Дата рождения', blank=True)
+    birth_date = models.DateField('Дата рождения', blank=True, null=True)
     data = models.TextField('О себе', blank=True)
 
 
@@ -56,6 +56,7 @@ class EmployerProfile(models.Model):
     is_active = models.BooleanField(default=True, db_index=True)
     city = models.CharField('Город местонахождения', max_length=80, blank=True)
     data = models.TextField('Описание компании', blank=True)
+    moderators_comment = models.TextField(max_length=5000, blank=True, null=True)
 
     #  формат вывода
     def __str__(self):
@@ -70,5 +71,6 @@ class EmployerProfile(models.Model):
 class ModeratorProfile(models.Model):
     """профиль для модератора"""
     user = models.ForeignKey(User, null=False, db_index=True, on_delete=models.CASCADE)
+    name = models.CharField('ФИО', max_length=80, blank=True)
     image = models.ImageField(upload_to='moderator_photo', blank=True)
     date_create = models.DateTimeField(auto_now_add=True)

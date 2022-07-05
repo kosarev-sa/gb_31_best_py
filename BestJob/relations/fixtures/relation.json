@@ -1,0 +1,56 @@
+[
+  {
+    "model": "users.Relation",
+    "pk": 1,
+    "fields": {
+      "created": "2022-06-28T14:04:22",
+      "cv": 1,
+      "vacancy": 1
+    }
+  },
+  {
+    "model": "users.Relation",
+    "pk": 2,
+    "fields": {
+      "created": "2022-06-28T15:04:22",
+      "cv": 1,
+      "vacancy": 2
+    }
+  },
+  {
+    "model": "users.Relation",
+    "pk": 3,
+    "fields": {
+      "created": "2022-06-28T16:04:22",
+      "cv": 1,
+      "vacancy": 4
+    }
+  },
+  {
+    "model": "users.Relation",
+    "pk": 4,
+    "fields": {
+      "created": "2022-06-28T17:04:22",
+      "cv": 3,
+      "vacancy": 1
+    }
+  },
+  {
+    "model": "users.Relation",
+    "pk": 5,
+    "fields": {
+      "created": "2022-06-28T18:04:22",
+      "cv": 5,
+      "vacancy": 1
+    }
+  },
+  {
+    "model": "users.Relation",
+    "pk": 6,
+    "fields": {
+      "created": "2022-06-28T19:04:22",
+      "cv": 8,
+      "vacancy": 1
+    }
+  }
+]

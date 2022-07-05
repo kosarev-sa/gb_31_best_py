@@ -1,29 +1,87 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
 {% load static %}
 
 {% block menu %}
-    <ul>
-        <li>
-            <a href="{% url 'vacancies:vacancy_list' %}">мои вакансии</a>
-        </li>
-        <li>
-            <a href="{% url 'news:moderate_news' %}">отклики по моим вакансиям</a>
-        </li>
-        <li>
-            <a href="{% url 'news:moderate_news' %}">поиск кандидатов</a>
-        </li>
-    </ul>
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
 
+{% block header %}
+    {% include 'inc_page_header.html' %}
 {% endblock %}
 
 {% block content %}
 
-    <h1>{{ object }}</h1>
+    <section class="shop ptb80">
+        <div class="container">
 
-    <h5>
-        <li>На BestJob с {{ object.date_create }}</li>
-        <li>{{ object.image }}</li>
-        <li>{{ object.data }}</li>
-    </h5>
+            <!-- Start of Row -->
+            <div class="row">
+                <!-- Start of Product Wrapper -->
+                <div class="col-md-12 product-wrapper">
 
+                    <!-- ===== Start of Row ===== -->
+                    <div class="row">
+                        <!-- Start of First Column -->
+                        <div class="col-md-6">
+
+                            <img width="1440" height="1080"
+                                 src="{% if object.image %} {{ object.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                                 class="img-responsive">
+                        </div>
+                        <!-- Start of Second Column -->
+                        <div class="col-md-6">
+
+                            <!-- Start of Product Details -->
+                            <div class="product-details">
+                                <h2>{{ object.name }}</h2>
+                                <!-- Start of Product Price -->
+
+                                <div class="product-price">
+                                    <h5>c {{ object.date_create }} на BestJob</h5>
+
+                                </div>
+                                {{ object.data }}
+                                <ul class="profile-info mt20 nopadding">
+                                    <li>
+                                        <i class="fa fa-map-marker"></i>
+                                        <span>{{ object.city }}</span>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- СЕКЦИЯ РАБОТА МОДЕРАТОРА С РЕЗЮМЕ -->
+    {% if is_moderating %}
+        <form method="post" action="">
+            {% csrf_token %}
+            <section class="education ptb30" style="background: #ffffff;">
+                <div class="container">
+                    <div class="col-md-12 text-center">
+                        <h3 class="pt30">Модерация карточки компании</h3>
+                    </div>
+                    <div class="form-group pt10">
+                        <label for="{{ form.status.id_for_label }}">Статус:</label>
+                        {{ form.status }}
+                    </div>
+                    <div class="form-group pt10">
+                        <label for="{{ form.moderators_comment.id_for_label }}">Комментарий :</label>
+                        {{ form.moderators_comment }}
+                    </div>
+                    <input class="btn btn-blue btn-effect mt15 mb15" type="submit" value="Сохранить">
+                </div>
+            </section>
+        </form>
+    {% endif %}
+    <!-- КОНЕЦ СЕКЦИИ РАБОТА МОДЕРАТОРА С РЕЗЮМЕ -->
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
 {% endblock %}

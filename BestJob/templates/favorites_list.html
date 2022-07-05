@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block additional_styles %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    {% include 'inc_header.html' %}
+{% endblock %}
+
+{% block content %}
+
+    <section class="search-jobs ptb80" id="version4">
+        <div class="container">
+
+            {% for item in favorites_list %}
+
+                <div class="col-md-12 mt20">
+                    <div class="item-block shadow-hover">
+
+                        {% if is_employer %}
+
+                            <div class="job-post-header clearfix">
+                                <a href="{% url 'cv:detail_cv' item.cv.pk %}"><img
+                                        src="{{ item.cv.worker_profile.image.url }}" alt=""></a>
+                                <div>
+                                    <a href="{% url 'cv:detail_cv' item.cv.pk %}"><h4>{{ item.cv.post }}</h4></a>
+                                    <h5><small>{{ item.cv.worker_profile.name }}</small></h5>
+                                </div>
+
+                                <ul class="pull-right">
+                                    <li>
+                                        <a href="{% url 'favorites:employer_delete' item.pk %}"
+                                           class="btn btn-blue btn-small btn-effect">Убрать из избранного</a>
+
+                                        {% if not item.has_relaton %}
+
+                                            <span id="relation_btn_{{ item.cv.pk }}_{{ item.pk }}">
+                                                <a id="employer_modal_trigger" href="#" onclick="openModalForm({{ item.cv.pk }},{{ item.pk }})" class="btn btn-blue btn-small btn-effect" role="button">Отправить приглашение</a>
+                                            </span>
+
+                                        {% endif %}
+                                    </li>
+                                    <li id="has_relaton_{{ item.cv.pk }}_{{ item.pk }}">
+                                        {% if item.has_relaton == 1 %}
+
+                                                <a href="{% url 'relations:detail' item.relations_id %}">
+                                                    <h6 class="time">У вас есть взаимодействия по этому резюме</h6></a>
+
+                                        {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="job-post-body">
+                                <ul class="list mt10">
+                                    {% if item.cv.speciality.name %}
+                                        <li>{{ item.cv.speciality.name }}</li>
+                                    {% endif %}
+
+                                    {% if item.cv.skills %}
+                                        <li>{{ item.cv.skills }}</li>
+                                    {% endif %}
+
+                                    {% if item.cv.education_level >= 4 %}
+                                        <li>Высшее</li>
+                                    {% endif %}
+
+                                    {% if item.cv.is_active %}
+                                        <li>Резюме активно</li>
+                                    {% else %}
+                                        <li>Резюме неактивно</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+
+                            <div class="job-post-footer row">
+
+                                {% if item.cv.worker_profile.city %}
+
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <i class="fa fa-map-marker"></i>
+                                        <span>{{ item.cv.worker_profile.city }}</span>
+                                    </div>
+
+                                {% endif %}
+
+                                {% if item.cv.salary %}
+
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <i class="fa fa-money"></i>
+                                        <span>{{ item.cv.salary }}</span>
+                                    </div>
+
+                                {% endif %}
+                            </div>
+
+                        {% elif is_worker %}
+
+                            <div class="job-post-header clearfix">
+                                <a href="{% url 'vacancies:detail_vacancy' item.vacancy.pk %}"><img
+                                        src="{{ item.vacancy.employer_profile.image.url }}" alt=""></a>
+                                <div>
+                                    <a href="{% url 'vacancies:detail_vacancy' item.vacancy.pk %}">
+                                        <h4>{{ item.vacancy.name }}</h4>
+                                    </a>
+                                    <h5><small>{{ item.vacancy.employer_profile.name }}</small></h5>
+                                </div>
+
+                                <ul class="pull-right">
+                                    <li>
+                                        <a href="{% url 'favorites:worker_delete' item.pk %}"
+                                           class="btn btn-blue btn-small btn-effect">Убрать из избранного</a>
+                                        {% if not item.has_relaton %}
+
+                                            <span id="relation_btn_{{ item.vacancy.pk }}_{{ item.pk }}">
+                                                <a id="worker_modal_trigger" href="#" onclick="openModalForm({{ item.vacancy.pk }},{{ item.pk }})" class="btn btn-blue btn-small btn-effect" role="button">Отправить отклик</a>
+                                            </span>
+
+                                        {% endif %}
+                                    </li>
+                                    <li id="has_relaton_{{ item.vacancy.pk }}_{{ item.pk }}">
+                                        {% if item.has_relaton %}
+
+                                            <a href="{% url 'relations:detail' item.relations_id %}">
+                                                <h6 class="time">У вас есть взаимодействия по этой вакансии</h6></a>
+
+                                        {% endif %}
+                                    </li>
+                                </ul>
+
+                            </div>
+
+                            <div class="job-post-body">
+                                <ul class="list mt10">
+
+                                    {% if item.vacancy.specialization.name %}
+                                        <li>{{ item.vacancy.specialization.name }}</li>
+                                    {% endif %}
+
+                                    {% if item.vacancy.description %}
+                                        <li>{{ item.vacancy.description }}</li>
+                                    {% endif %}
+
+                                    {% if item.vacancy.is_active %}
+                                        <li>Вакансия активна</li>
+                                    {% else %}
+                                        <li>Вакансия неактивна</li>
+                                    {% endif %}
+
+                                </ul>
+                            </div>
+
+                            <div class="job-post-footer row">
+
+                                {% if item.vacancy.city %}
+
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <i class="fa fa-map-marker"></i>
+                                        <span>{{ item.vacancy.city }}</span>
+                                    </div>
+
+                                {% endif %}
+
+                                {% if item.salary_from and item.salary_to %}
+
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <i class="fa fa-money"></i>
+                                        <span>{{ item.salary_from }} - {{ item.salary_to }}</span>
+                                    </div>
+
+                                {% elif item.salary_on_hand %}
+
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <i class="fa fa-money"></i>
+                                        <span>{{ item.salary_on_hand }}</span>
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% include 'inc_favorites_list_relation_modal_form.html' %}
+
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}
+
+{% block additional_script %}
+    <script src="{% static 'js/favorites_list.js' %}"></script>
+{% endblock %}

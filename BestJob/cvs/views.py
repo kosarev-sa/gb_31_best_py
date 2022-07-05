@@ -5,17 +5,20 @@ from django.shortcuts import render, redirect, get_object_or_404
 # Create your views here.
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse, resolve
-from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView, DetailView, ListView
 
+from BestJob.mixin import BaseClassContextMixin
+from BestJob.settings import UserRole
 from approvals.models import ApprovalStatus
 
 from cvs.forms import CVCreateForm, CVUpdateForm, CVDeleteForm, CVDistributeForm, ExperienceCreateForm, \
-    EducationCreateForm, LanguagesCreateForm, ModeratorCVUpdateForm
+    EducationCreateForm, LanguagesCreateForm, ModeratorCVUpdateForm, LanguagesUpdateForm
 from cvs.models import CV, Experience, CVWorkSchedule, CVEmployment, Education, LanguagesSpoken, CVMonths, \
     ConnectVacancyCv
 
 from search.models import Category, Currency, Employments, WorkSchedules, Languages, LanguageLevels, EducationLevel
 from users.models import WorkerProfile
+from vacancies.models import Vacancy
 
 
 class CVList(TemplateView):
@@ -29,7 +32,11 @@ class CVList(TemplateView):
         worker_id = WorkerProfile.objects.get(user=user_id)
         context = {
             'cvs': CV.objects.filter(worker_profile=worker_id, is_active=True),
-            'worker': worker_id
+            'worker': worker_id,
+            'title': "Мои резюме",
+            'heading': "Мои резюме",
+            'link': "/cvs/create/",
+            'heading_link': "Создать резюме",
         }
         return self.render_to_response(context)
 
@@ -41,7 +48,7 @@ class ModeratorCVList(TemplateView):
     def get(self, request, *args, **kwargs):
         super(ModeratorCVList, self).get(request, *args, **kwargs)
         context = self.get_context_data()
-        context['cvs_list'] = CV.objects.all()
+        context['cvs_list'] = CV.objects.filter(status__status="PUB").order_by('date_create')
         return self.render_to_response(context)
 
 
@@ -56,6 +63,10 @@ class ResponseCVList(TemplateView):
 
         context = {
             'responses': ConnectVacancyCv.objects.filter(cv_id__in=cv_worker_ids),
+            'title': "Отклики",
+            'heading': "Отклики",
+            'link': "/cvs/all/",
+            'heading_link': "Список резюме",
         }
         return self.render_to_response(context)
 
@@ -63,31 +74,36 @@ class ResponseCVList(TemplateView):
 class ModeratorCVUpdate(UpdateView):
     """view изменения вакансий"""
     model = CV
-    template_name = 'moderator_cvs_approve.html'
+    template_name = 'cv_detail.html'
     form_class = ModeratorCVUpdateForm
-    success_url = reverse_lazy('cvs:moderator_cvs_list')
+    success_url = reverse_lazy('cv:moderator_cvs_list')
 
     def get(self, request, *args, **kwargs):
         super(ModeratorCVUpdate, self).get(request, *args, **kwargs)
         context = self.get_context_data()
         cv_id = self.kwargs['pk']
-        cv = CV.objects.get(pk=cv_id)
-        cv_user_id = cv.worker_profile.user_id
-        worker = WorkerProfile.objects.filter(user_id=cv_user_id)
-        if worker:
-            context['worker'] = worker.first()
+        cv = CV.objects.get(id=cv_id)
+        context['object'] = cv
 
-        if cv.speciality_id:
-            speciality = Category.objects.get(pk=cv.speciality_id)
-            context['speciality'] = speciality
+        '''Разделение строки навыки на пункты и передача в контекст списком'''
+        skills = cv.skills.split(', ')
+        context['skills'] = skills
 
+        experience = Experience.objects.filter(cv=cv)
+        context['experience'] = experience
+        context['educations'] = Education.objects.filter(cv=cv)
+        context['langlevels'] = LanguagesSpoken.objects.filter(cv=cv)
+        context['employments'] = [cv_empl for cv_empl in CVEmployment.objects.filter(cv=cv)]
+        context['schedules'] = [cv_sch for cv_sch in CVWorkSchedule.objects.filter(cv=cv)]
+        context['is_moderating'] = True
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         form = self.form_class(data=request.POST)
         cv_id = self.kwargs['pk']
         if form.is_valid():
-            CV.objects.filter(pk=cv_id).update(status=form.instance.status)
+            CV.objects.filter(pk=cv_id).update(status=form.instance.status,
+                                               moderators_comment=form.instance.moderators_comment)
         else:
             print(form.errors)
         return redirect(self.success_url)
@@ -102,7 +118,10 @@ class CVCreate(CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVCreate, self).get_context_data(**kwargs)
-        context['title'] = 'Новое резюме'
+        context['title'] = 'Ваше резюме'
+        context['heading'] = "Ваше резюме"
+        context['link'] = "/cvs/all/"
+        context['heading_link'] = "Список резюме"
         return context
 
     def get(self, request, *args, **kwargs):
@@ -123,6 +142,7 @@ class CVCreate(CreateView):
             cv = form.save(commit=False)
             cv.worker_profile = worker
             cv.status = start_status
+            cv.about = form.data['about']
             cv.save()
 
             for key, value in form.data.items():
@@ -130,7 +150,7 @@ class CVCreate(CreateView):
                     schedule = WorkSchedules.objects.get(code=value)
                     cv_schedule = CVWorkSchedule(cv=cv, schedule=schedule)
                     cv_schedule.save()
-                    print(cv_schedule.schedule)
+
                 elif key.startswith('empl_'):
                     employment = Employments.objects.get(code=value)
                     cv_employment = CVEmployment(cv=cv, employment=employment)
@@ -161,6 +181,10 @@ class CVUpdate(UpdateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVUpdate, self).get_context_data(**kwargs)
+        context['title'] = "Изменение резюме"
+        context['heading'] = "Ваше резюме"
+        context['link'] = "/cvs/all/"
+        context['heading_link'] = "Список резюме"
         return context
 
     def get(self, request, *args, **kwargs):
@@ -181,8 +205,8 @@ class CVUpdate(UpdateView):
         cv_schedules = [cv_sch.schedule_id for cv_sch in CVWorkSchedule.objects.filter(cv=cv)]
         context['cv_schedules'] = cv_schedules
         context['schedules'] = WorkSchedules.objects.all()
+        context['moderators_comment'] = cv.moderators_comment
         return self.render_to_response(context)
-
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -196,6 +220,7 @@ class CVUpdate(UpdateView):
             cv_schedules.delete()
             cv_employments = CVEmployment.objects.filter(cv=self.object)
             cv_employments.delete()
+
             for key, value in form.data.items():
                 if key.startswith('schedule_'):
                     schedule = WorkSchedules.objects.get(code=value)
@@ -220,6 +245,15 @@ class CVDelete(DeleteView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVDelete, self).get_context_data(**kwargs)
+
+        cv_id = self.kwargs['pk']
+        cv = CV.objects.get(id=cv_id)
+
+        context['object'] = cv
+        context['title'] = "Удаление резюме"
+        context['heading'] = "Удаление резюме"
+        context['link'] = "/cvs/all/"
+        context['heading_link'] = "Список резюме"
         return context
 
     def post(self, request, *args, **kwargs):
@@ -232,19 +266,62 @@ class CVDelete(DeleteView):
         return HttpResponseRedirect(self.get_success_url())
 
 
-# class CVDistribute(TemplateView):
-#     """view для размещения резюме"""
-#     model = CV
-#     # template_name = 'cv_distribute.html'
-#     # form_class = CVDistributeForm
-#     success_url = reverse_lazy('cv:cv_list')
-#
-#     # def get_context_data(self, *, object_list=None, **kwargs):
-#     #     context = super(CVDistribute, self).get_context_data(**kwargs)
-#     #     return context
-#
-#     def get(self, request, *args, **kwargs):
-#         return self.post(request, *args, **kwargs)
+class CVDetailView(DetailView):
+    """view просмотр резюме"""
+    model = CV
+    template_name = 'cv_detail.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(CVDetailView, self).get_context_data(**kwargs)
+
+        cv_id = self.kwargs['pk']
+        cv = CV.objects.get(id=cv_id)
+        context['object'] = cv
+
+        '''Разделение строки навыки на пункты и передача в контекст списком'''
+        skills = cv.skills.split(', ')
+        context['skills'] = skills
+
+        experience = Experience.objects.filter(cv=cv)
+        # '''Разделение строки обязанности на пункты и передача в контекст списком'''
+        # for el in experience:
+        #     responsibilities = el.responsibilities.split(', ')
+        #     el.responsibilities = responsibilities
+        context['experience'] = experience
+
+        context['educations'] = Education.objects.filter(cv=cv)
+        context['langlevels'] = LanguagesSpoken.objects.filter(cv=cv)
+        cv_employments = [cv_empl.employment_id for cv_empl in CVEmployment.objects.filter(cv=cv)]
+        employments = []
+        for el in cv_employments:
+            employment = Employments.objects.filter(id=el).first()
+            employments.append(employment)
+        context['employments'] = employments
+
+        cv_schedules = [cv_sch.schedule_id for cv_sch in CVWorkSchedule.objects.filter(cv=cv)]
+        schedules = []
+        for el in cv_schedules:
+            schedule = WorkSchedules.objects.filter(id=el).first()
+            schedules.append(schedule)
+        context['schedules'] = schedules
+        context['is_moderating'] = False
+
+        context['title'] = "Резюме"
+        context['heading'] = "Резюме"
+        context['link'] = "/cvs/all/"
+        context['heading_link'] = "Список резюме"
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        super(CVDetailView, self).get(request, *args, **kwargs)
+        context = self.get_context_data(object_list=None, **kwargs)
+        if request.user.role_id == UserRole.WORKER:
+            context['worker'] = True
+        elif request.user.role_id == UserRole.EMPLOYER:
+            context['employer'] = True
+        return self.render_to_response(context)
+
 
 def set_public_status(request, pk):
     cv = get_object_or_404(CV, pk=pk)
@@ -252,19 +329,12 @@ def set_public_status(request, pk):
     cv.save()
     return HttpResponseRedirect(reverse('cv:cv_list'))
 
-# def order_forming_complete(request, pk): # метод формирования статуса
-#     order = get_object_or_404(Order, pk=pk)
-#     order.status = Order.SEND_TO_PROCEED
-#     order.save()
-#     return HttpResponseRedirect(reverse('orders:list'))
-
 
 class CVExperienceCreate(CreateView):
     """Создание опыта работы"""
     model = Experience
     template_name = 'cv_experience.html'
     form_class = ExperienceCreateForm
-
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -298,7 +368,7 @@ class CVExperienceUpdate(UpdateView):
     model = Experience
     template_name = 'cv_experience.html'
     form_class = ExperienceCreateForm
-    success_url = reverse_lazy('cv:cv_list' )
+    success_url = reverse_lazy('cv:cv_list')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -436,7 +506,7 @@ class CVLanguageUpdate(UpdateView):
     """Изменение вледения языком"""
     model = LanguagesSpoken
     template_name = 'cv_languages.html'
-    form_class = LanguagesCreateForm
+    form_class = LanguagesUpdateForm
     success_url = reverse_lazy('cv:cv_list')
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -456,6 +526,7 @@ class CVLanguageUpdate(UpdateView):
             messages.error(request, form.errors)
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 class CVLanguageDelete(DeleteView):
     """Удаление вледения языком без формы"""
     model = LanguagesSpoken
@@ -467,3 +538,48 @@ class CVLanguageDelete(DeleteView):
         self.object = self.get_object()
         self.object.delete()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+
+def edit_cv_list(request, stat):
+    """Обновление списка резюме соглано статусу на странице список резюме у модератора"""
+    cvs_list = CV.objects.exclude(status__status="NPB")
+
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # вместо отмершего if request.is_ajax()
+        if stat == 'frv':
+            cvs_list = CV.objects.filter(status__status="FRV").order_by('date_create')
+        elif stat == 'all':
+            cvs_list = CV.objects.exclude(status__status="NPB").order_by('-date_create')
+        elif stat == 'pub':
+            cvs_list = CV.objects.filter(status__status="PUB").order_by('date_create')
+        elif stat == 'rjc':
+            cvs_list = CV.objects.filter(status__status="RJC").order_by('-date_create')
+        elif stat == 'apv':
+            cvs_list = CV.objects.filter(status__status="APV").order_by('-date_create')
+        else:
+            cvs_list = CV.objects.exclude(status__status="NPB").order_by('-date_create')
+    context = {'cvs_list': cvs_list}
+    result = render_to_string('cvs_list.html', context)
+
+    return JsonResponse({'result': result})
+
+
+class RecomendedCVList(ListView, BaseClassContextMixin):
+    """view просмотра рекомендованных по вакансии резюме """
+    template_name = 'cv_list.html'
+    model = CV
+    title = 'BestJob | Рекомендованные вакансии'
+
+    def get(self, request, *args, **kwargs):
+        super(RecomendedCVList, self).get(request, *args, **kwargs)
+        vacancy = Vacancy.objects.get(id=self.kwargs['pk'])
+        context = {
+            'cvs': CV.objects.filter(speciality=vacancy.specialization),
+            'title': "Рекомендованные резюме",
+            'heading': "Рекомендованные резюме",
+
+            # Сделать переход в шапке, куда?
+            # 'link': "",
+            # 'heading_link': "",
+        }
+
+        return self.render_to_response(context)
