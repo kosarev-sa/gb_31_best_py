@@ -1,4 +1,5 @@
 let $custom_form_modal = $('.cd-user-modal');
+$custom_form_modal.removeClass('is-visible');
 let $error_message = $("#error_message");
 dropErrorMessage();
 
@@ -35,6 +36,8 @@ function sendData() {
                 "X-CSRFToken": csrf_token
             }
         });
+
+        console.log(magic_field, select_picker, letter)
     }
 }
 

@@ -16,7 +16,6 @@ WORKER_RS_CANCEL_COMMENT = 'Я не хочу у вас работать'
 EMPLOYER_RS_ACCEPT_COMMENT = 'Встреча согласована'
 EMPLOYER_RS_CANCEL_COMMENT = 'Мы свяжемся с вами позже'
 
-
 class CustomRelationModel:
     """Вспомогательный класс для формирования модели"""
 
@@ -27,35 +26,25 @@ class CustomRelationModel:
 def get_custom_relation_model(user, status_id, relation_id):
     '''
     Наполнение вспомогательного класса модели.
-    :param user:
     :param status_id:
     :param relation_id:
     :return:
     '''
     custom_relation_model = CustomRelationModel()
 
-    # Работодатель.
-    if user.role_id == UserRole.EMPLOYER:
-        # Отклик
-        if status_id == 5:
-            custom_relation_model.accept_status_id = 6
-            custom_relation_model.cancel_status_id = 3
-            custom_relation_model.button_accept_text = 'Принять отклик'
-            custom_relation_model.button_cancel_text = 'Отправить отказ'
-
-    # Соискатель.
-    elif user.role_id == UserRole.WORKER:
-        # Приглашение
-        if status_id == 4:
-            custom_relation_model.accept_status_id = 6
-            custom_relation_model.cancel_status_id = 3
-            custom_relation_model.button_accept_text = 'Отправить отклик'
-            custom_relation_model.button_cancel_text = 'Отправить отказ'
-
-    if custom_relation_model:
-        custom_relation_model.relation_id = relation_id
+    # Работодатель. Отклик.
+    if (user.role_id == UserRole.EMPLOYER and status_id == 5) or \
+            (user.role_id == UserRole.WORKER and status_id == 4):
+            custom_relation_model.button_text = 'Ответить'
+            custom_relation_model.relation_id = relation_id
 
     return custom_relation_model
+
+
+def set_modal_context(context):
+    context['modal_header'] = 'Отправка ответа'
+    context['modal_combo'] = RelationStatus.objects.filter(for_employer=True, for_worker=True)
+    context['modal_combo_empty'] = 'Выберите статус ответа'
 
 
 class LastListView(ListView):
@@ -129,6 +118,9 @@ class LastListView(ListView):
 
             context['short_history_lists'] = short_history_lists
 
+            # Modal context
+            set_modal_context(context)
+
         else:
             error_message = f'user is not authenticated'
             context['error_message'] = error_message
@@ -174,6 +166,9 @@ class RelationDetailView(TemplateView):
                     context['custom_relation_model'] = custom_relation_model
 
             context['relation_history'] = relation_history
+
+            # Modal context
+            set_modal_context(context)
 
         else:
             error_message = f'user is not authenticated'

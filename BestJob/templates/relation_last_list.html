@@ -35,29 +35,22 @@
                                 {% if history_item.status_info %}
 
                                     <div>
-                                        <div class="col-md-6 text-right mt-4 mb-4" style="background: #ffffff;">
+                                        <div class="col-md-10 text-right mt-4 mb-4" style="background: #ffffff;">
                                             <a class="btn btn-blue btn-effect mt15 mb15"
-                                               href="{% url 'relations:change' relation_id=history_item.status_info.relation_id status_id=history_item.status_info.cancel_status_id %}">{{ history_item.status_info.button_cancel_text }}</a>
+                                               href="#" onclick="openModalForm({{ history_item.status_info.relation_id }})">{{ history_item.status_info.button_text }}</a>
                                         </div>
                                     </div>
                                     <div>
-                                        <div class="col-md-3 text-right mt-4 mb-4" style="background: #ffffff;">
+                                        <div class="col-md-2 text-right mt-4 mb-4" style="background: #ffffff;">
                                             <a class="btn btn-blue btn-effect mt15 mb15"
-                                               href="{% url 'relations:change' relation_id=history_item.status_info.relation_id status_id=history_item.status_info.accept_status_id %}">{{ history_item.status_info.button_accept_text }}</a>
+                                                href="{% url 'relations:detail' history_item.relation_id %}">Подробности</a>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 text-right mt-4 mb-4" style="background: #ffffff;">
-                                        <a class="btn btn-blue btn-effect mt15 mb15"
-                                           href="{% url 'relations:detail' history_item.relation_id %}">Подробности</a>
-                                    </div>
-
                                 {% else %}
-
                                     <div class="col-md-12 text-right mt-4 mb-4" style="background: #ffffff;">
                                         <a class="btn btn-blue btn-effect mt15 mb15"
-                                           href="{% url 'relations:detail' history_item.relation_id %}">Подробности</a>
+                                            href="{% url 'relations:detail' history_item.relation_id %}">Подробности</a>
                                     </div>
-
                                 {% endif %}
                             </div>
                         </div>
@@ -67,8 +60,14 @@
         </div>
     </section>
 
+    {% include 'inc_relation_modal_form.html' %}
+
 {% endblock %}
 
 {% block footer %}
     {% include 'inc_footer.html' %}
+{% endblock %}
+
+{% block additional_script %}
+   <script src="{% static 'js/relation.js' %}"></script>
 {% endblock %}

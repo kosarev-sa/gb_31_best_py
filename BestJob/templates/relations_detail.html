@@ -31,15 +31,9 @@
 
                         {% if custom_relation_model %}
                             <div>
-                                <div class="col-md-9 text-right mt-4 mb-4" style="background: #ffffff;">
+                                <div class="col-md-12 text-right mt-4 mb-4" style="background: #ffffff;">
                                     <a class="btn btn-blue btn-effect mt15 mb15"
-                                       href="{% url 'relations:change' relation_id=custom_relation_model.relation_id status_id=custom_relation_model.cancel_status_id %}">{{ custom_relation_model.button_cancel_text }}</a>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="col-md-3 text-right mt-4 mb-4" style="background: #ffffff;">
-                                    <a class="btn btn-blue btn-effect mt15 mb15"
-                                       href="{% url 'relations:change' relation_id=custom_relation_model.relation_id status_id=custom_relation_model.accept_status_id %}">{{ custom_relation_model.button_accept_text }}</a>
+                                       href="#" onclick="openModalForm({{ custom_relation_model.relation_id }})">{{ custom_relation_model.button_text }}</a>
                                 </div>
                             </div>
                         {% endif %}
@@ -65,8 +59,15 @@
         </div>
     </section>
 
+    {% include 'inc_relation_modal_form.html' %}
+
 {% endblock %}
 
 {% block footer %}
     {% include 'inc_footer.html' %}
 {% endblock %}
+
+{% block additional_script %}
+   <script src="{% static 'js/relation.js' %}"></script>
+{% endblock %}
+
