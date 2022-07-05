@@ -18,12 +18,19 @@ EMPLOYER_RS_CANCEL_COMMENT = 'Мы свяжемся с вами позже'
 
 
 class CustomRelationModel:
-
+    """Вспомогательный класс для формирования модели"""
     def __bool__(self):
         return any([self.__dict__[attr] for attr in self.__dict__.keys()])
 
 
 def get_custom_relation_model(user, status_id, relation_id):
+    '''
+    Наполнение вспомогательного класса модели.
+    :param user:
+    :param status_id:
+    :param relation_id:
+    :return:
+    '''
     custom_relation_model = CustomRelationModel()
 
     # Работодатель.
@@ -51,6 +58,7 @@ def get_custom_relation_model(user, status_id, relation_id):
 
 
 class LastListView(ListView):
+    """view отображения списка откликов и приглашений. Общий"""
     model = RelationStatus
     template_name = 'relation_last_list.html'
 
@@ -129,6 +137,7 @@ class LastListView(ListView):
 
 
 class RelationDetailView(TemplateView):
+    """view для удаления Откликов и приглашений"""
     model = RelationHistory
     template_name = 'relations_detail.html'
 
@@ -174,6 +183,7 @@ class RelationDetailView(TemplateView):
 
 
 class RelationChangeStatusView(TemplateView):
+    """view для подтверждения или отказа Отклика или приглашения"""
     model = RelationHistory
     template_name = 'relations_detail.html'
 
@@ -240,6 +250,7 @@ class RelationChangeStatusView(TemplateView):
 
 
 class RelationCreateView(CreateView):
+    """view для создания Отклика или приглашения"""
     model = Relations
     success_url = reverse_lazy('relations:list')
 
@@ -285,6 +296,7 @@ class RelationCreateView(CreateView):
         return redirect(self.success_url)
 
 class RelationCreateFromValueView(CreateView):
+    """view для создания Отклика или приглашения из модальной формы"""
     model = Relations
     success_url = reverse_lazy('relations:list')
     template_name = 'relation_last_list.html'

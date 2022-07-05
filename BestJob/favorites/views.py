@@ -63,6 +63,12 @@ def fav_work_add_remove(request, vacancy_id):
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 def get_worker_favorites_data_for_context(user, context):
+    '''
+    Генерация дополнительного контекста для списка избранного для соискателя.
+    :param user:
+    :param context:
+    :return:
+    '''
     worker_profiles = WorkerProfile.objects.filter(user_id=user.pk)
     if worker_profiles:
         profiler = worker_profiles.first()
@@ -93,6 +99,12 @@ def get_worker_favorites_data_for_context(user, context):
         context['favorites_list'] = worker_favorites
 
 def get_employer_favorites_data_for_context(user, context):
+    '''
+    Генерация дополнительного контекста для списка избранного для работадателя.
+    :param user:
+    :param context:
+    :return:
+    '''
     employer_profiles = EmployerProfile.objects.filter(user_id=user.pk)
     if employer_profiles:
         profiler = employer_profiles.first()
@@ -158,6 +170,7 @@ class FavoritesWorkerDeleteView(DeleteView):
         return HttpResponseForbidden()
 
 class FavoritesWorkerListView(ListView):
+    """view отображения избранного для работадателя"""
     template_name = 'favorites_list.html'
     queryset = WorkerFavorites.objects.all().none()
 
@@ -187,6 +200,7 @@ class FavoritesWorkerListView(ListView):
         return self.render_to_response(context)
 
 class FavoritesEmployerListView(ListView):
+    """view отображения избранного для соискателя"""
     template_name = 'favorites_list.html'
     queryset = EmployerFavorites.objects.all().order_by('-created').none()
     context_object_name = 'favorites_list'
