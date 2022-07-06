@@ -1,4 +1,4 @@
-from BestJob.settings import UserRole
+from BestJob.settings import UserRole, RelationStatuses
 from cvs.models import CV
 from relations.models import RelationHistory, Relations, RelationStatus
 from users.models import EmployerProfile, WorkerProfile
@@ -21,11 +21,10 @@ def get_custom_relation_model(user, status_id, relation_id):
     '''
     custom_relation_model = CustomRelationModel()
 
-    # Работодатель. Отклик.
-    if (user.role_id == UserRole.EMPLOYER and status_id == 5) or \
-            (user.role_id == UserRole.WORKER and status_id == 4):
-        custom_relation_model.button_text = 'Ответить'
-        custom_relation_model.relation_id = relation_id
+    if (user.role_id == UserRole.EMPLOYER and (status_id == RelationStatuses.RESUME_NOT_VIEWED or status_id == RelationStatuses.RESUME_VIEWED or status_id == RelationStatuses.RESPONSE)) or \
+        (user.role_id == UserRole.WORKER and (status_id == RelationStatuses.INVITATION_NOT_VIEWED or status_id == RelationStatuses.INVITATION_VIEWED or status_id == RelationStatuses.INVITATION)):
+            custom_relation_model.button_text = 'Ответить'
+            custom_relation_model.relation_id = relation_id
 
     return custom_relation_model
 
@@ -120,3 +119,32 @@ def set_detail_content(user, relation_id, context):
 
     # Modal context
     set_modal_content(context, 1)
+
+
+def set_watch_relation(user, relation_id):
+    '''
+    Установить статус просмотрено, если необходимо.
+    :param user:
+    :param relation_id:
+    :return:
+    '''
+    relation_history = RelationHistory.objects.filter(relation_id=relation_id).order_by(
+        '-status__status_priority')
+
+    if relation_history:
+        last_history = relation_history.first()
+
+        new_relation_history = RelationHistory()
+        new_relation_history.relation = Relations.objects.get(pk=relation_id)
+
+        # Работодатель.
+        if user.role_id == UserRole.EMPLOYER:
+            if last_history.status.pk == RelationStatuses.RESUME_NOT_VIEWED:
+                new_relation_history.status = RelationStatus.objects.get(pk=RelationStatuses.RESUME_VIEWED)
+                new_relation_history.save()
+
+        # Соискатель.
+        elif user.role_id == UserRole.WORKER:
+            if last_history.status.pk == RelationStatuses.INVITATION_NOT_VIEWED:
+                new_relation_history.status = RelationStatus.objects.get(pk=RelationStatuses.INVITATION_VIEWED)
+                new_relation_history.save()

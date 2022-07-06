@@ -6,10 +6,10 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.views.generic import ListView, TemplateView, CreateView
 
-from BestJob.settings import UserRole
+from BestJob.settings import UserRole, RelationStatuses
 from cvs.models import CV
 from vacancies.models import Vacancy
-from .content_helper import set_last_list_section_content, set_detail_content
+from .content_helper import set_last_list_section_content, set_detail_content, set_watch_relation
 from .models import Relations, RelationHistory, RelationStatus
 
 
@@ -60,6 +60,9 @@ class RelationDetailView(TemplateView):
         if request.user.is_authenticated:
             user = request.user
             relation_id = kwargs.get('relation_id')
+
+            set_watch_relation(user, relation_id)
+
             set_detail_content(user, relation_id, context)
 
         else:
@@ -77,6 +80,7 @@ class RelationCreateFromFavoritesView(CreateView):
     template_name = 'relation_last_list.html'
 
     def post(self, request, *args, **kwargs):
+        global relation_link, status, unwatched_status
         user = request.user
         magic_field = kwargs.get('magic_id')
         relation_select_picker = kwargs.get('select_picker_id')
@@ -94,7 +98,8 @@ class RelationCreateFromFavoritesView(CreateView):
                 new_relation.vacancy = Vacancy.objects.get(pk=relation_select_picker)
                 new_relation.cv = CV.objects.get(pk=magic_field)
                 # Приглашение.
-                status = 4
+                status = RelationStatuses.INVITATION
+                unwatched_status = RelationStatuses.INVITATION_NOT_VIEWED
 
             # Соискатель.
             elif user.role_id == UserRole.WORKER:
@@ -102,17 +107,23 @@ class RelationCreateFromFavoritesView(CreateView):
                 new_relation.cv = CV.objects.get(pk=relation_select_picker)
                 new_relation.vacancy = Vacancy.objects.get(pk=magic_field)
                 # Отклик.
-                status = 5
+                status = RelationStatuses.RESPONSE
+                unwatched_status = RelationStatuses.RESUME_NOT_VIEWED
 
             new_relation.save()
 
-            relation_status = RelationStatus.objects.get(pk=status)
-
             new_relation_history = RelationHistory()
             new_relation_history.relation = new_relation
-            new_relation_history.status = relation_status
+            new_relation_history.status = RelationStatus.objects.get(pk=status)
             new_relation_history.comment = transmittal_letter
             new_relation_history.save()
+
+            # Added unwatched relation history.
+            new_unwatched_relation_history = RelationHistory()
+            new_unwatched_relation_history.relation = new_relation
+            new_unwatched_relation_history.status = RelationStatus.objects.get(pk=unwatched_status)
+            new_unwatched_relation_history.comment = ''
+            new_unwatched_relation_history.save()
 
             # Работодатель.
             if user.role_id == UserRole.EMPLOYER:
@@ -143,11 +154,14 @@ class RelationCreateFromRelationView(CreateView):
             magic_field = int(magic_field)
             relation_select_picker = int(relation_select_picker)
 
-            new_relation = Relations.objects.get(pk=magic_field)
+            relation = Relations.objects.get(pk=magic_field)
+
+            set_watch_relation(user, relation.pk)
+
             relation_status = RelationStatus.objects.get(pk=relation_select_picker)
 
             new_relation_history = RelationHistory()
-            new_relation_history.relation = new_relation
+            new_relation_history.relation = relation
             new_relation_history.status = relation_status
             new_relation_history.comment = transmittal_letter
             new_relation_history.save()
@@ -181,11 +195,14 @@ class RelationCreateFromRelationDetailView(CreateView):
             magic_field = int(magic_field)
             relation_select_picker = int(relation_select_picker)
 
-            new_relation = Relations.objects.get(pk=magic_field)
+            relation = Relations.objects.get(pk=magic_field)
+
+            set_watch_relation(user, relation.pk)
+
             relation_status = RelationStatus.objects.get(pk=relation_select_picker)
 
             new_relation_history = RelationHistory()
-            new_relation_history.relation = new_relation
+            new_relation_history.relation = relation
             new_relation_history.status = relation_status
             new_relation_history.comment = transmittal_letter
             new_relation_history.save()

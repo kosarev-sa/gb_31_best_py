@@ -179,3 +179,22 @@ class UserRole:
     EMPLOYER = 2
     # Соискатель.
     WORKER = 3
+
+# Константы статусов откликов и приглашений.
+class RelationStatuses:
+    # Приглашение.
+    INVITATION = 1
+    # Отклик.
+    RESPONSE = 2
+    # Приглашение не просмотрено.
+    INVITATION_NOT_VIEWED = 3
+    # Резюме не просмотрено.
+    RESUME_NOT_VIEWED = 4
+    # Приглашение просмотрено.
+    INVITATION_VIEWED = 5
+    # Резюме просмотрено.
+    RESUME_VIEWED = 6
+    # Отказ.
+    REFUSAL = 7
+    # Встреча согласована.
+    MEETING_AGREED = 8
