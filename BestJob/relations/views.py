@@ -9,7 +9,7 @@ from django.views.generic import ListView, TemplateView, CreateView
 from BestJob.settings import UserRole
 from cvs.models import CV
 from vacancies.models import Vacancy
-from .content_helper import set_last_list_section_content, set_detail_content, get_custom_relation_model
+from .content_helper import set_last_list_section_content, set_detail_content
 from .models import Relations, RelationHistory, RelationStatus
 
 
@@ -77,7 +77,6 @@ class RelationCreateFromFavoritesView(CreateView):
     template_name = 'relation_last_list.html'
 
     def post(self, request, *args, **kwargs):
-        global status, relation_link, new_relation, relation_status
         user = request.user
         magic_field = kwargs.get('magic_id')
         relation_select_picker = kwargs.get('select_picker_id')
@@ -135,7 +134,6 @@ class RelationCreateFromRelationView(CreateView):
     template_name = 'relation_last_list.html'
 
     def post(self, request, *args, **kwargs):
-        global status, relation_link, new_relation, relation_status
         user = request.user
         magic_field = kwargs.get('magic_id')
         relation_select_picker = kwargs.get('select_picker_id')
@@ -174,7 +172,6 @@ class RelationCreateFromRelationDetailView(CreateView):
     template_name = 'relation_last_list.html'
 
     def post(self, request, *args, **kwargs):
-        global status, relation_link, new_relation, relation_status
         user = request.user
         magic_field = kwargs.get('magic_id')
         relation_select_picker = kwargs.get('select_picker_id')
