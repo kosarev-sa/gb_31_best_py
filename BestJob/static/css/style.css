@@ -1965,11 +1965,14 @@ form.cd-form button {
 
 footer {
     position: relative;
+    /*background: url(/static/img/index/career-bg.jpg) no-repeat;*/
+    background: url(/static/img/index/1.jpg) no-repeat;
+    background-size: cover;
 }
 
 footer .footer-info {
     position: relative;
-    /*background: url(../images/img/footer-bg.jpg) no-repeat;*/
+    /*background: url(./static/img/index/career-bg.jpg) no-repeat;*/
     background-size: cover;
 }
 
