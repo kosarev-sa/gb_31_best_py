@@ -1,6 +1,8 @@
 let $custom_form_modal = $('.cd-user-modal');
-$custom_form_modal.removeClass('is-visible');
 let $error_message = $("#error_message");
+// $custom_form_modal.removeClass('is-visible');
+let $last_list_section = $('#detail_last_list_section')
+let $relation_detail_section = $('#relation_detail_section')
 dropErrorMessage();
 
 /**
@@ -18,7 +20,7 @@ function openModalForm(relation_id) {
 /**
  * Send to create relation.
  */
-function sendData() {
+function sendData(way_id) {
     dropErrorMessage();
     let csrf_token = $('meta[name="csrf-token"]').attr('content');
     let magic_field = $("#magic_field").val();
@@ -31,13 +33,46 @@ function sendData() {
 
     if (magic_field && select_picker && letter) {
 
+        let part_url;
+
+        if (way_id === 0) {
+            part_url = '/relations/create_from_rel/';
+        } else {
+            part_url = '/relations/create_from_detail/';
+        }
+
         $.ajaxSetup({
             headers: {
                 "X-CSRFToken": csrf_token
             }
         });
 
-        console.log(magic_field, select_picker, letter)
+        $.ajax({
+            type: 'POST',
+            url: part_url + magic_field + '/' + select_picker + '/' + letter + '/',
+            data: {},
+            success: (data) => {
+                if (data) {
+
+                    if (way_id === 0) {
+                        $last_list_section.html(data.result);
+                    } else {
+                        $relation_detail_section.html(data.result);
+                    }
+
+                    // Hide modal form.
+                    $custom_form_modal.removeClass('is-visible');
+                    // Clear modal form.
+                    $("#magic_field").val('');
+                    $('#relation_select_picker').val(0);
+                    $("#relation_select_picker").selectpicker('refresh')
+                    $("#transmittal_letter").val('');
+                }
+            },
+            error: function (data) {
+                createErrorMessage('Ошибка 500!');
+            }
+        });
     }
 }
 

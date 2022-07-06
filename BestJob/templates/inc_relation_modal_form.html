@@ -34,10 +34,9 @@
 
                 <div class="fieldset text-center">
                     <button type="submit" id="send_data_for_modal_page" class="btn btn-blue btn-effect"
-                            onclick="sendData()" style="background: #29b1fd;">Отправить
+                            onclick="sendData({{ modal_way_id }})" style="background: #29b1fd;">Отправить
                     </button>
                 </div>
-
             </div>
         </div>
     {% endblock %}
