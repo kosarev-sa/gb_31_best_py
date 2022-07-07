@@ -37,4 +37,6 @@ class VacancySearchView(SearchView):
         if self.request.user.id is None or self.request.user.role.id == UserRole.EMPLOYER:
             context['message_of_denied'] = 'Просматривать вакансии могут только авторизованные ' \
                                            'соискатели!'
+        context['title'] = "Поиск вакансий"
+        context['heading'] = "Поиск вакансий"
         return context

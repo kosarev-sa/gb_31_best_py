@@ -139,8 +139,8 @@ class FavoritesWorkerListView(ListView):
         context = super(FavoritesWorkerListView, self).get_context_data(**kwargs)
         context['title'] = "Избранное"
         context['heading'] = "Избранное"
-        context['link'] = "/"
-        context['heading_link'] = "На главную"
+        # context['link'] = "/"
+        # context['heading_link'] = "На главную"
         context['is_worker'] = True
 
         if self.request.user.is_authenticated:

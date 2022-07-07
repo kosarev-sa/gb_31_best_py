@@ -22,8 +22,8 @@ class LastListView(ListView):
         context = super(LastListView, self).get_context_data(**kwargs)
         context['title'] = "Отклики и приглашения"
         context['heading'] = "Отклики и приглашения"
-        context['link'] = "/"
-        context['heading_link'] = "На главную"
+        # context['link'] = "/"
+        # context['heading_link'] = "На главную"
         return context
 
     def get(self, request, *args, **kwargs):
@@ -49,8 +49,8 @@ class RelationDetailView(TemplateView):
         context = super(RelationDetailView, self).get_context_data(**kwargs)
         context['title'] = "Отклики и приглашения"
         context['heading'] = "Отклики и приглашения"
-        context['link'] = "/relations/list/"
-        context['heading_link'] = "Назад"
+        # context['link'] = "/relations/list/"
+        # context['heading_link'] = "Назад"
         return context
 
     def get(self, request, *args, **kwargs):
