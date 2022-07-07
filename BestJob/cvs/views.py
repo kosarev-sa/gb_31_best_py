@@ -118,8 +118,8 @@ class CVCreate(CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVCreate, self).get_context_data(**kwargs)
-        context['title'] = 'Ваше резюме'
-        context['heading'] = "Ваше резюме"
+        context['title'] = 'Создание резюме'
+        context['heading'] = "Создание резюме"
         context['link'] = "/cvs/all/"
         context['heading_link'] = "Список резюме"
         return context

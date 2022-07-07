@@ -273,10 +273,6 @@ class RecommendedVacancyList(ListView, BaseClassContextMixin):
             'vacancies': Vacancy.objects.filter(specialization=cv.speciality),
             'title': "Рекомендованные вакансии",
             'heading': "Рекомендованные вакансии",
-
-            # Сделать переход в шапке, куда?
-            # 'link': "",
-            # 'heading_link': "",
         }
 
         return self.render_to_response(context)
