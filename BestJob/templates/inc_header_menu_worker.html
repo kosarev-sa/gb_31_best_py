@@ -1,0 +1,52 @@
+<section class="page-header">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{{ heading }}</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="{% url 'index' %}">Главная</a>
+                    </li>
+                    <li>
+                        <a style="{% if request.resolver_match.url_name == 'worker_profile' %}color: #949396 ;{% endif %}"
+                           href="{% url 'users:worker_profile' user.id %}">Профиль</a>
+                    </li>
+
+                    <li class="dropdown simple-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                            style="{% if request.resolver_match.url_name == 'create_cv' or request.resolver_match.url_name == 'cv_list' or request.resolver_match.url_name == 'list' %}color: #949396 ;{% endif %}">Резюме<i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'cvs:create_cv' %}">Создать резюме</a>
+                            </li>
+                            <li><a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'cvs:cv_list' %}">Список резюме</a>
+                            </li>
+                            <li><a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'relations:list' %}">Отклики и приглашения на резюме</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a  style="{% if request.resolver_match.url_name == 'search_vacancy' %}color: #949396 ;{% endif %}" href="{% url 'search_vacancy' %}">Поиск вакансий</a>
+                    </li>
+
+                    <li>
+                        <a style="{% if request.resolver_match.url_name == 'worker_list' %}color: #949396 ;{% endif %}"
+                           href="{% url 'favorites:worker_list' %}">Избранное</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</section>
