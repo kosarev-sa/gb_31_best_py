@@ -43,11 +43,15 @@ def set_last_list_section_content(user, context):
     :param context:
     :return:
     '''
+    global is_employer, is_worker
     relations = set()
     short_history_lists = list()
 
     # Работодатель.
     if user.role_id == UserRole.EMPLOYER:
+
+        is_employer = True
+        is_worker = False
 
         profile = EmployerProfile.objects.get(user_id=user.pk)
         if profile:
@@ -62,6 +66,9 @@ def set_last_list_section_content(user, context):
 
     # Соискатель.
     elif user.role_id == UserRole.WORKER:
+
+        is_employer = False
+        is_worker = True
 
         profile = WorkerProfile.objects.get(user_id=user.pk)
         if profile:
@@ -80,14 +87,16 @@ def set_last_list_section_content(user, context):
 
         if relation_history:
             custom_relation_model = CustomRelationModel()
-            work_his = relation_history.first()
-            custom_relation_model.last_status = work_his.status.name
-            custom_relation_model.last_status_date = work_his.created
-            custom_relation_model.cv = work_his.relation.cv
-            custom_relation_model.vacancy = work_his.relation.vacancy
-            custom_relation_model.relation_id = work_his.relation.pk
+            rel_histr = relation_history.first()
+            custom_relation_model.last_status = rel_histr.status.name
+            custom_relation_model.last_status_date = rel_histr.created
+            custom_relation_model.cv = rel_histr.relation.cv
+            custom_relation_model.vacancy = rel_histr.relation.vacancy
+            custom_relation_model.relation_id = rel_histr.relation.pk
+            custom_relation_model.is_employer = is_employer
+            custom_relation_model.is_worker = is_worker
 
-            status_info = get_custom_relation_model(user, work_his.status.pk, relation.pk)
+            status_info = get_custom_relation_model(user, rel_histr.status.pk, relation.pk)
             if status_info:
                 custom_relation_model.status_info = status_info
 
@@ -100,6 +109,17 @@ def set_last_list_section_content(user, context):
 
 
 def set_detail_content(user, relation_id, context):
+    global is_employer, is_worker
+
+    # Работодатель.
+    if user.role_id == UserRole.EMPLOYER:
+        is_employer = True
+        is_worker = False
+    # Соискатель.
+    elif user.role_id == UserRole.WORKER:
+        is_employer = False
+        is_worker = True
+
     relation_history = RelationHistory.objects.filter(relation_id=relation_id).order_by(
         '-status__status_priority')
 
@@ -109,6 +129,8 @@ def set_detail_content(user, relation_id, context):
         relation_history.last_status_date = work_his.created
         relation_history.cv = work_his.relation.cv
         relation_history.vacancy = work_his.relation.vacancy
+        relation_history.is_employer = is_employer
+        relation_history.is_worker = is_worker
 
         custom_relation_model = get_custom_relation_model(user, work_his.status.pk, relation_id)
 

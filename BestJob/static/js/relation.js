@@ -55,9 +55,9 @@ function sendData(way_id) {
                 if (data) {
 
                     if (way_id === 0) {
-                        $last_list_section.html(data.result);
+                        $last_list_section.replaceWith(data.result);
                     } else {
-                        $relation_detail_section.html(data.result);
+                        $relation_detail_section.replaceWith(data.result);
                     }
 
                     // Hide modal form.

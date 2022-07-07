@@ -57,7 +57,7 @@ section#detail_last_list_section.search-jobs .item-block .job-post-body {
 
 section#detail_last_list_section.search-jobs .item-block .job-post-footer {
     margin: 0;
-    padding: 10px;
+    /*padding: 10px;*/
     border-top: 1px solid #e3e3e3;
     color: #999;
     text-align: center;
