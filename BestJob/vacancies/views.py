@@ -35,10 +35,10 @@ class VacancyList(TemplateView):
             'vacancies': Vacancy.objects.filter(employer_profile=employer_id, is_active=True),
             'employer': employer_id,
             'status': ApprovalStatus.objects.get(status='APV'),
-            'title': "Мои вакансии",
-            'heading': "Мои вакансии",
-            'link': "/vacancies/create/",
-            'heading_link': "Создать вакансию",
+            'title': "Ваши вакансии",
+            'heading': "Ваши вакансии",
+            # 'link': "/vacancies/create/",
+            # 'heading_link': "Создать вакансию",
         }
         return self.render_to_response(context)
 
@@ -140,10 +140,10 @@ class VacancyCreate(CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyCreate, self).get_context_data(**kwargs)
-        context['title'] = 'Ваша вакансия'
-        context['heading'] = "Ваша вакансия"
-        context['link'] = "/vacancies/all/"
-        context['heading_link'] = "Список вакансий"
+        context['title'] = 'Создание вакансии'
+        context['heading'] = "Создание вакансии"
+        # context['link'] = "/vacancies/all/"
+        # context['heading_link'] = "Список вакансий"
         return context
 
     def get(self, request, *args, **kwargs):
@@ -184,9 +184,8 @@ class VacancyUpdate(UpdateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyUpdate, self).get_context_data(**kwargs)
         context['title'] = "Изменение вакансии"
-        context['heading'] = "Ваша вакансия"
-        context['link'] = "/vacancies/all/"
-        context['heading_link'] = "Список вакансий"
+        context['heading'] = "Изменение вакансии"
+
         return context
 
     def get(self, request, *args, **kwargs):
@@ -226,6 +225,13 @@ class VacancyDelete(DeleteView):
     model = Vacancy
     template_name = 'vacancy_delete.html'
     success_url = reverse_lazy('vacancy:vacancy_list')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(VacancyDelete, self).get_context_data(**kwargs)
+        context['title'] = "Удаление вакансии"
+        context['heading'] = "Удаление вакансии"
+
+        return context
 
 
 class VacancyDistribute(UpdateView):
@@ -293,10 +299,9 @@ class VacancyDetail(DetailView):
             employer = EmployerProfile.objects.get(id=vacancy_id)
             context['vacancy'] = vacancy
             context['employer'] = employer
-            context['title'] = "Вакансии"
+            context['title'] = "Вакансия"
             context['heading'] = "Вакансия"
-            context['link'] = "/vacancies/all/"
-            context['heading_link'] = "Список вакансий"
+
         except Exception:
             print(f'Employer not exists')
         context['employments'] = Employments.objects.all()
