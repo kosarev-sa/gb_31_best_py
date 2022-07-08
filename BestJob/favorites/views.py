@@ -37,6 +37,7 @@ def fav_emp_add_remove(request, cv_id):
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 def fav_work_add_remove(request, vacancy_id):
     '''
     Добавление/Удаление избранного из поиска.
@@ -62,6 +63,7 @@ def fav_work_add_remove(request, vacancy_id):
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+
 class FavoritesEmployerDeleteView(DeleteView):
     """view удаление избранного работадателя"""
     model = EmployerFavorites
@@ -78,6 +80,7 @@ class FavoritesEmployerDeleteView(DeleteView):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
         return HttpResponseForbidden()
+
 
 class FavoritesWorkerDeleteView(DeleteView):
     """view удаление избранного соискателя"""
@@ -96,24 +99,15 @@ class FavoritesWorkerDeleteView(DeleteView):
 
         return HttpResponseForbidden()
 
+
 class FavoritesWorkerListView(ListView):
+    """view отображения избранного для работадателя"""
+    paginate_by = 3
     template_name = 'favorites_list.html'
-    queryset = WorkerFavorites.objects.all().none()
 
-    def get_context_data(self, **kwargs):
-        context = super(FavoritesWorkerListView, self).get_context_data(**kwargs)
-        context['title'] = "Избранное"
-        context['heading'] = "Избранное"
-        context['link'] = "/"
-        context['heading_link'] = "На главную"
-        context['is_worker'] = True
-        return context
-
-    def get(self, request, *args, **kwargs):
-        super(FavoritesWorkerListView, self).get(request, *args, **kwargs)
-        context = self.get_context_data()
-        if request.user.is_authenticated:
-            user = request.user
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            user = self.request.user
 
             if user.role_id == UserRole.WORKER:
                 worker_profiles = WorkerProfile.objects.filter(user_id=user.pk)
@@ -124,10 +118,6 @@ class FavoritesWorkerListView(ListView):
 
                     # Я ищу работу и у меня есть резюме. Мои резюме.
                     cvs = CV.objects.filter(worker_profile=profiler)
-
-                    context['modal_header'] = 'Выбор резюме'
-                    context['modal_combo'] = cvs
-                    context['modal_combo_empty'] = 'Выберите резюме'
 
                     # Вычисление оправлялся ли отклик на вакансию из избранного.
                     for favorit in worker_favorites:
@@ -143,34 +133,47 @@ class FavoritesWorkerListView(ListView):
                                 favorit.relations_id = relations.first().pk
                                 break
 
-                    context['favorites_list'] = worker_favorites
+                    return worker_favorites
+
+    def get_context_data(self, **kwargs):
+        context = super(FavoritesWorkerListView, self).get_context_data(**kwargs)
+        context['title'] = "Избранное"
+        context['heading'] = "Избранное"
+        # context['link'] = "/"
+        # context['heading_link'] = "На главную"
+        context['is_worker'] = True
+
+        if self.request.user.is_authenticated:
+            user = self.request.user
+
+            if user.role_id == UserRole.WORKER:
+                worker_profiles = WorkerProfile.objects.filter(user_id=user.pk)
+                if worker_profiles:
+                    profiler = worker_profiles.first()
+
+                    # Я ищу работу и у меня есть резюме. Мои резюме.
+                    cvs = CV.objects.filter(worker_profile=profiler)
+
+                    context['modal_header'] = 'Выбор резюме'
+                    context['modal_combo'] = cvs
+                    context['modal_combo_empty'] = 'Выберите резюме'
 
         else:
             error_message = f'user is not authenticated'
             context['error_message'] = error_message
             print(error_message)
 
-        return self.render_to_response(context)
-
-class FavoritesEmployerListView(ListView):
-    template_name = 'favorites_list.html'
-    queryset = EmployerFavorites.objects.all().order_by('-created').none()
-    context_object_name = 'favorites_list'
-
-    def get_context_data(self, **kwargs):
-        context = super(FavoritesEmployerListView, self).get_context_data(**kwargs)
-        context['title'] = "Избранное"
-        context['heading'] = "Избранное"
-        context['link'] = "/"
-        context['heading_link'] = "На главную"
-        context['is_employer'] = True
         return context
 
-    def get(self, request, *args, **kwargs):
-        super(FavoritesEmployerListView, self).get(request, *args, **kwargs)
-        context = self.get_context_data()
-        if request.user.is_authenticated:
-            user = request.user
+
+class FavoritesEmployerListView(ListView):
+    """view отображения избранного для соискателя"""
+    paginate_by = 3
+    template_name = 'favorites_list.html'
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            user = self.request.user
 
             if user.role_id == UserRole.EMPLOYER:
                 employer_profiles = EmployerProfile.objects.filter(user_id=user.pk)
@@ -182,10 +185,6 @@ class FavoritesEmployerListView(ListView):
 
                     # Я ищу сотрудников и у меня есть вакансии. Мои вакансии.
                     vacancies = Vacancy.objects.filter(employer_profile=profiler)
-
-                    context['modal_header'] = 'Выбор вакансии'
-                    context['modal_combo'] = vacancies
-                    context['modal_combo_empty'] = 'Выберите вакансию'
 
                     # Вычисление оправлялось ли приглашение на резюме из избранного.
                     for favorit in employer_favorites:
@@ -201,11 +200,35 @@ class FavoritesEmployerListView(ListView):
                                 favorit.relations_id = relations.first().pk
                                 break
 
-                    context['favorites_list'] = employer_favorites
+                    return employer_favorites
+
+
+    def get_context_data(self, **kwargs):
+        context = super(FavoritesEmployerListView, self).get_context_data(**kwargs)
+        context['title'] = "Избранное"
+        context['heading'] = "Избранное"
+        context['link'] = "/"
+        context['heading_link'] = "На главную"
+        context['is_employer'] = True
+
+        if self.request.user.is_authenticated:
+            user = self.request.user
+
+            if user.role_id == UserRole.EMPLOYER:
+                employer_profiles = EmployerProfile.objects.filter(user_id=user.pk)
+                if employer_profiles:
+                    profiler = employer_profiles.first()
+
+                    # Я ищу сотрудников и у меня есть вакансии. Мои вакансии.
+                    vacancies = Vacancy.objects.filter(employer_profile=profiler)
+
+                    context['modal_header'] = 'Выбор вакансии'
+                    context['modal_combo'] = vacancies
+                    context['modal_combo_empty'] = 'Выберите вакансию'
+
         else:
             error_message = f'user is not authenticated'
             context['error_message'] = error_message
             print(error_message)
 
-        return self.render_to_response(context)
-
+        return context

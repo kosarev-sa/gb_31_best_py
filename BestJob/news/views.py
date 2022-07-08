@@ -97,7 +97,7 @@ class NewsCreate(CreateView):
         if form.is_valid():
             # сохраняем новую новость
             news = form.save(commit=False)
-            news.author = User.objects.get(id=author_id)
+            news.author = ModeratorProfile.objects.get(id=author_id)
             news.title = form.data['title']
             news.body = form.data['body']
             news.image = form.instance.image

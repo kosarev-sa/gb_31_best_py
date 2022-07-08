@@ -2,34 +2,38 @@
 
 {% load static %}
 
+{% block header %}
+    {% include 'inc_header_menu.html' %}
+{% endblock %}
+
 {% block content %}
 
 
     <!-- =============== Start of Page Header 1 Section =============== -->
-    <section class="page-header">
-        <div class="container">
+<!--    <section class="page-header">-->
+<!--        <div class="container">-->
 
-            <!-- Start of Page Title -->
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Опыт работы</h2>
-                </div>
-            </div>
-            <!-- End of Page Title -->
+<!--            &lt;!&ndash; Start of Page Title &ndash;&gt;-->
+<!--            <div class="row">-->
+<!--                <div class="col-md-12">-->
+<!--                    <h2>Опыт работы</h2>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; End of Page Title &ndash;&gt;-->
 
-            <!-- Start of Breadcrumb -->
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="breadcrumb">
-                        <li><a href="{% url 'cv:update_cv' cv_id %}">вернуться к резюме</a></li>
-                        <li class="active">Опыт работы</li>
-                    </ul>
-                </div>
-            </div>
-            <!-- End of Breadcrumb -->
+<!--            &lt;!&ndash; Start of Breadcrumb &ndash;&gt;-->
+<!--            <div class="row">-->
+<!--                <div class="col-md-12">-->
+<!--                    <ul class="breadcrumb">-->
+<!--                        <li><a href="{% url 'cv:update_cv' cv_id %}">вернуться к резюме</a></li>-->
+<!--                        <li class="active">Опыт работы</li>-->
+<!--                    </ul>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; End of Breadcrumb &ndash;&gt;-->
 
-        </div>
-    </section>
+<!--        </div>-->
+<!--    </section>-->
     <!-- =============== End of Page Header 1 Section =============== -->
 
 

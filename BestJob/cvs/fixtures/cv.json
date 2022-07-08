@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "worker_profile": 11,
-      "status": 1,
+      "status": 2,
       "date_create": "2022-06-20T23:58:52.107Z",
       "is_active": true,
       "speciality": "BACKD",
@@ -21,7 +21,7 @@
     "pk": 2,
     "fields": {
       "worker_profile": 12,
-      "status": 1,
+      "status": 3,
       "date_create": "2022-06-20T23:58:52.127Z",
       "is_active": true,
       "speciality": "BACKD",
@@ -38,7 +38,7 @@
     "pk": 3,
     "fields": {
       "worker_profile": 13,
-      "status": 1,
+      "status": 5,
       "date_create": "2022-06-21T00:01:11.054Z",
       "is_active": true,
       "speciality": "TEST",
@@ -55,7 +55,7 @@
     "pk": 4,
     "fields": {
       "worker_profile": 14,
-      "status": 1,
+      "status": 3,
       "date_create": "2022-06-21T00:01:11.054Z",
       "is_active": true,
       "speciality": "PROGAN",
@@ -72,7 +72,7 @@
     "pk": 5,
     "fields": {
       "worker_profile": 15,
-      "status": 1,
+      "status": 2,
       "date_create": "2022-06-21T00:01:11.054Z",
       "is_active": true,
       "speciality": "LAYDES",
@@ -89,7 +89,7 @@
     "pk": 6,
     "fields": {
       "worker_profile": 16,
-      "status": 1,
+      "status": 5,
       "date_create": "2022-06-21T00:01:11.054Z",
       "is_active": true,
       "speciality": "TML",
@@ -106,7 +106,7 @@
     "pk": 7,
     "fields": {
       "worker_profile": 17,
-      "status": 1,
+      "status": 2,
       "date_create": "2022-06-21T00:01:11.054Z",
       "is_active": true,
       "speciality": "PM",
@@ -123,7 +123,7 @@
     "pk": 8,
     "fields": {
       "worker_profile": 18,
-      "status": 1,
+      "status": 4,
       "date_create": "2022-06-21T00:01:11.054Z",
       "is_active": true,
       "speciality": "FULLD",

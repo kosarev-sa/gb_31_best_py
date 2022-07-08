@@ -20,7 +20,7 @@ from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
 
 from vacancies.views import VacancyList, VacancyCreate, VacancyUpdate, VacancyDelete, \
     VacancyDistribute, ModeratorVacancyList, ModeratorVacancyUpdate, ResponseVacancyList, \
-    VacancyDetail, VacancyOpenList, RecommendedVacancyList, ResponseVacancyCVs, edit_vacancy_list
+    VacancyDetail, VacancyOpenList, RecommendedVacancyList, ResponseVacancyCVs, edit_vacancy_list, set_public_status
 
 app_name = 'vacancy'
 
@@ -29,7 +29,7 @@ urlpatterns = [
     path('create/', VacancyCreate.as_view(), name='create_vacancy'),
     path('update/<int:pk>/', VacancyUpdate.as_view(), name='update_vacancy'),
     path('delete/<int:pk>/', VacancyDelete.as_view(), name='delete_vacancy'),
-    path('distribute/<int:pk>/', VacancyDistribute.as_view(), name='distribute_vacancy'),
+    path('distribute/<int:pk>/', set_public_status, name='distribute_vacancy'),
     # просмотр всех вакансий любым пользователем
     path('all/open/', VacancyOpenList.as_view(), name='vacancy_openlist'),
     # просмотр вакансий рекомендованных по конкретному резюме
@@ -42,4 +42,5 @@ urlpatterns = [
     path('detail/<int:pk>/', VacancyDetail.as_view(), name='detail_vacancy'),
     # обновление списка вакансий у модератора по статусу
     path('edit_vacancy_list/<str:stat>/', edit_vacancy_list, name='edit_vacancy_list' ),
+
 ]

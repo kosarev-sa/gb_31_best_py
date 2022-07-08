@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block additional_styles %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
+
 {% block menu %}
     {% include 'inc_main_menu.html' %}
 {% endblock %}
 
 {% block header %}
-    {% include 'inc_header.html' %}
+    {% include 'inc_header_menu.html' %}
 {% endblock %}
 
 {% block content %}
@@ -14,7 +18,7 @@
     <section class="search-jobs ptb80" id="version4">
         <div class="container">
 
-            {% for item in favorites_list %}
+            {% for item in page_obj %}
 
                 <div class="col-md-12 mt20">
                     <div class="item-block shadow-hover">
@@ -36,18 +40,22 @@
 
                                         {% if not item.has_relaton %}
 
-                                            <span id="employer_relation_btn">
-                                                <a id="employer_modal_trigger" href="#" onclick="openModalForm({{ item.cv.pk }})" class="btn btn-blue btn-small btn-effect" role="button">Отправить приглашение</a>
+                                            <span id="relation_btn_{{ item.cv.pk }}_{{ item.pk }}">
+                                                <a id="employer_modal_trigger" href="#"
+                                                   onclick="openModalForm({{ item.cv.pk }},{{ item.pk }})"
+                                                   class="btn btn-blue btn-small btn-effect" role="button">Отправить приглашение</a>
                                             </span>
 
                                         {% endif %}
                                     </li>
-                                    {% if item.has_relaton == 1 %}
-                                        <li>
+                                    <li id="has_relaton_{{ item.cv.pk }}_{{ item.pk }}">
+                                        {% if item.has_relaton == 1 %}
+
                                             <a href="{% url 'relations:detail' item.relations_id %}">
-                                                <h6 class="time">Вы отправляли приглашение на это резюме</h6></a>
-                                        </li>
-                                    {% endif %}
+                                                <h6 class="time">У вас есть взаимодействия по этому резюме</h6></a>
+
+                                        {% endif %}
+                                    </li>
                                 </ul>
                             </div>
 
@@ -112,18 +120,22 @@
                                            class="btn btn-blue btn-small btn-effect">Убрать из избранного</a>
                                         {% if not item.has_relaton %}
 
-                                            <span id="worker_relation_btn">
-                                                <a id="worker_modal_trigger" href="#" onclick="openModalForm({{ item.vacancy.pk }})" class="btn btn-blue btn-small btn-effect" role="button">Отправить отклик</a>
+                                            <span id="relation_btn_{{ item.vacancy.pk }}_{{ item.pk }}">
+                                                <a id="worker_modal_trigger" href="#"
+                                                   onclick="openModalForm({{ item.vacancy.pk }},{{ item.pk }})"
+                                                   class="btn btn-blue btn-small btn-effect" role="button">Отправить отклик</a>
                                             </span>
 
                                         {% endif %}
                                     </li>
-                                    {% if item.has_relaton %}
-                                        <li>
+                                    <li id="has_relaton_{{ item.vacancy.pk }}_{{ item.pk }}">
+                                        {% if item.has_relaton %}
+
                                             <a href="{% url 'relations:detail' item.relations_id %}">
-                                                <h6 class="time">Вы откликались на эту вакансию</h6></a>
-                                        </li>
-                                    {% endif %}
+                                                <h6 class="time">У вас есть взаимодействия по этой вакансии</h6></a>
+
+                                        {% endif %}
+                                    </li>
                                 </ul>
 
                             </div>
@@ -176,54 +188,39 @@
                                 {% endif %}
 
                             </div>
+
                         {% endif %}
                     </div>
                 </div>
+
             {% endfor %}
+
+            <div class="col-md-12">
+                <ul class="pagination list-inline text-center">
+                    {% if page_obj.has_previous %}
+                        <li><a href="?page=1">&laquo; первая</a></li>
+                        <li><a href="?page={{ page_obj.previous_page_number }}">предыдущая</a></li>
+
+                    {% endif %}
+
+                    <span class="current">
+                                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+                                </span>
+
+                    <li class="active"><a href="javascript:void(0)">{{ page_obj.number }}</a></li>
+
+                    {% if page_obj.has_next %}
+
+                        <li><a href="?page={{ page_obj.next_page_number }}">следующая</a></li>
+                        <li><a href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
         </div>
     </section>
 
-    <div class="cd-user-modal">
-        <!-- this is the entire modal form, including the background -->
-        <div class="cd-user-modal-container">
-
-            <div class="modal-header" style="background: #29b1fd;">
-                <p style="width: 100%; text-align: center; font-size: xx-large; color: white;">{{ modal_header }}</p>
-            </div>
-
-            <div id="cd-relation">
-                <!-- relation form -->
-                <form action="{% url 'relations:create' %}" method="post" class="cd-form">
-                    {% csrf_token %}
-                    <p class="fieldset hidden">
-                        <label for="magic_field">magic_field</label>
-                        <input id="magic_field" name="magic_field" type="number">
-                    </p>
-
-                    <div class="form-group" style="border-style: groove; border-width: thin;">
-                        <label class="image-replace cd-email" for="relation_select_picker">Вакансии или резюме</label>
-                        <select id="relation_select_picker" name="relation_select_picker" class="selectpicker has-padding has-border" data-size="5" required>
-                            <option value="">{{ modal_combo_empty }}</option>
-                            {% for item in modal_combo %}
-                                <option value="{{ item.pk }}">
-                                    {% if item.name %} {{ item.name }} {% else %} {{ item.post }} {% endif %}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="" for="transmittal_letter">Сопроводительный текст</label>
-                        <textarea id="transmittal_letter" name="transmittal_letter" class="tinymce full-width has-padding has-border"></textarea>
-                    </div>
-
-                    <div class="fieldset">
-                        <button type="submit" id="send_data_for_modal_page" class="btn btn-blue btn-effect" style="background: #29b1fd;">Отправить</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    {% include 'inc_favorites_list_relation_modal_form.html' %}
 
 {% endblock %}
 

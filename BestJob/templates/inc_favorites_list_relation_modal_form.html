@@ -1,0 +1,45 @@
+{% extends 'base_modal_form.html' %}
+
+<div class="cd-user-modal">
+    {% block content %}
+        <div id="cd-relation">
+            <!-- relation form -->
+            <div class="cd-form">
+                <p class="fieldset hidden">
+                    <label for="magic_field">magic_field</label>
+                    <input id="magic_field" name="magic_field" type="number">
+                </p>
+
+                <div id="error_message"></div>
+
+                <div class="form-group" style="border-style: groove; border-width: thin;">
+                    <label class="image-replace cd-email" for="relation_select_picker">Вакансии или резюме</label>
+                    <select id="relation_select_picker" name="relation_select_picker"
+                            class="selectpicker has-padding has-border" data-size="5" required>
+                        <option value="0">{{ modal_combo_empty }}</option>
+                        {% for item in modal_combo %}
+                            <option value="{{ item.pk }}">
+                                {% if item.name %} {{ item.name }} {% else %} {{ item.post }} {% endif %}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group text-left">
+                    <label class="label" for="transmittal_letter">Сопроводительный текст: </label>
+                    <textarea id="transmittal_letter" name="transmittal_letter"
+                              class="form-control textarea-box has-padding has-border required"
+                              style="height: 350px;"></textarea>
+                </div>
+
+                <div class="fieldset text-center">
+                    <button type="submit" id="send_data_for_modal_page" class="btn btn-blue btn-effect"
+                            onclick="sendData()" style="background: #29b1fd;">Отправить
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    {% endblock %}
+</div>
+

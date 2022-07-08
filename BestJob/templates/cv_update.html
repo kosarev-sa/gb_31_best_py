@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block header %}
-    {% include 'inc_cv_header.html' %}
+    {% include 'inc_header_menu.html' %}
 {% endblock %}
 
 {% block content %}
@@ -106,134 +106,145 @@
                             {{ form.currency }}
                         </div>
                     </div>
-                 </div>
+                </div>
 
                 <!--    Начало секции ОПЫТ РАБОТЫ-->
                 {% if experience %}
-                <div class="form-group pt30 nomargin">
-                    <label>Опыт работы</label>
-                </div>
-                <section class="work-experience " style="background: #ffffff;">
+                    <div class="form-group pt30 nomargin">
+                        <label>Опыт работы</label>
+                    </div>
+                    <section class="work-experience " style="background: #ffffff;">
 
                         {% for exp in experience %}
-                        <div class="col-md-12" style="margin-bottom: 15px;">
-                            <div class="item-block shadow-hover" style="background: #f0f0f0;">
+                            <div class="col-md-12" style="margin-bottom: 15px;">
+                                <div class="item-block shadow-hover" style="background: #f0f0f0;">
 
-                                <div class="experience-header clearfix">
-                                    <div>
-                                        {% if exp.name %}
-                                        <h4>{{ exp.name }}</h4>
-                                        {% endif %}
+                                    <div class="experience-header clearfix">
+                                        <div>
+                                            {% if exp.name %}
+                                                <h4>{{ exp.name }}</h4>
+                                            {% endif %}
 
-                                        {% if exp.post %}
-                                        <h5><small>{{ exp.post }}</small></h5>
-                                        {% endif %}
+                                            {% if exp.post %}
+                                                <h5><small>{{ exp.post }}</small></h5>
+                                            {% endif %}
+                                        </div>
+                                        <h6 class="time">{{ exp.get_month_begin_display }} {{ exp.year_begin }} -
+                                            {% if exp.year_end %}{{ exp.get_month_end_display }}
+                                                {{ exp.year_end }} {% else %} Настоящее время {% endif %}</h6>
                                     </div>
-                                    <h6 class="time">{{ exp.get_month_begin_display }} {{ exp.year_begin }} - {% if exp.year_end %}{{ exp.get_month_end_display }} {{ exp.year_end }} {% else %} Настоящее время {% endif %}</h6>
+
+                                    <div class="experience-body">
+                                        {% if exp.stack %}
+                                            <p>Навыки:</p>
+                                            <p>{{ exp.stack }}</p>
+                                        {% endif %}
+
+                                        {% if exp.responsibilities %}
+                                            <p>Обязанности:</p>
+                                            <p>{{ exp.responsibilities }}</p>
+                                        {% endif %}
+
+                                        <a class="btn btn-blue btn-effect mt15 mb15"
+                                           href="{% url 'cv:update_experience' exp.id %}">Редактировать</a>
+                                        <a class="btn btn-blue btn-effect mt15 mb15"
+                                           href="{% url 'cv:delete_experience' exp.id %}">Удалить</a>
+                                    </div>
+
                                 </div>
-
-                                <div class="experience-body">
-                                    {% if exp.stack %}
-                                    <p>Навыки:</p>
-                                    <p>{{ exp.stack }}</p>
-                                    {% endif %}
-
-                                    {% if exp.responsibilities %}
-                                    <p>Обязанности:</p>
-                                    <p>{{ exp.responsibilities }}</p>
-                                    {% endif %}
-
-                                    <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:update_experience' exp.id %}">Редактировать</a>
-                                    <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:delete_experience' exp.id %}">Удалить</a>
-                                </div>
-
                             </div>
-                        </div>
                         {% endfor %}
 
-                </section>
+                    </section>
                 {% endif %}
 
-                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_experience' cv.id %}">Добавить Опыт работы</a>
-            <!--    Конец секции ОПЫТ РАБОТЫ-->
+                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_experience' cv.id %}">Добавить Опыт
+                    работы</a>
+                <!--    Конец секции ОПЫТ РАБОТЫ-->
 
-            <!--    Начало секции ОБРАЗОВАНИЕ-->
+                <!--    Начало секции ОБРАЗОВАНИЕ-->
                 <div class="form-group pt30">
                     <label for="{{ form.education_level.id_for_label }}">Уровень образования</label>
                     {{ form.education_level }}
                 </div>
 
                 {% if educations %}
-                <div class="form-group pt30 nomargin">
-                    <label>Образование</label>
-                </div>
-
-                <section class="education" style="background: #f0f0f0;">
-
-                    {% for education in educations %}
-                    <div class="col-md-12" style="margin-bottom: 15px;">
-                        <div class="item-block shadow-hover" style="background: #ffffff;">
-
-                            <div class="education-header clearfix">
-                                {% if education.name %}
-                                    <h4><small>Учебное заведение -</small> {{ education.name }} </h4>
-                                {% endif %}
-
-                                {% if education.department %}
-                                    <h5>{{ education.department }}</h5>
-                                {% endif %}
-
-                                {% if education.specialty %}
-                                <h5><small>Специализация -</small> {{ education.specialty }}</h5>
-                                {% endif %}
-
-                                {% if education.date_end %}
-                                    <h5><small>Год окончания -</small> {{ education.date_end }}</h5>
-                                {% endif %}
-
-                                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:update_education' education.id %}">Редактировать</a>
-                                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:delete_education' education.id %}">Удалить</a>
-                            </div>
-
-                        </div>
+                    <div class="form-group pt30 nomargin">
+                        <label>Образование</label>
                     </div>
-                    {% endfor %}
-                </section>
+
+                    <section class="education" style="background: #f0f0f0;">
+
+                        {% for education in educations %}
+                            <div class="col-md-12" style="margin-bottom: 15px;">
+                                <div class="item-block shadow-hover" style="background: #ffffff;">
+
+                                    <div class="education-header clearfix">
+                                        {% if education.name %}
+                                            <h4><small>Учебное заведение -</small> {{ education.name }} </h4>
+                                        {% endif %}
+
+                                        {% if education.department %}
+                                            <h5>{{ education.department }}</h5>
+                                        {% endif %}
+
+                                        {% if education.specialty %}
+                                            <h5><small>Специализация -</small> {{ education.specialty }}</h5>
+                                        {% endif %}
+
+                                        {% if education.date_end %}
+                                            <h5><small>Год окончания -</small> {{ education.date_end }}</h5>
+                                        {% endif %}
+
+                                        <a class="btn btn-blue btn-effect mt15 mb15"
+                                           href="{% url 'cv:update_education' education.id %}">Редактировать</a>
+                                        <a class="btn btn-blue btn-effect mt15 mb15"
+                                           href="{% url 'cv:delete_education' education.id %}">Удалить</a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </section>
                 {% endif %}
 
-                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_education' cv.id %}">Добавить место обучения</a>
-            <!--    Начало секции ОБРАЗОВАНИЕ-->
+                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_education' cv.id %}">Добавить место
+                    обучения</a>
+                <!--    Начало секции ОБРАЗОВАНИЕ-->
 
                 <!--    Начало секции ВЛАДЕНИЕ ЯЗЫКАМИ-->
                 {% if langlevels %}
-                <div class="form-group pt30 nomargin">
-                    <label>Владение языками</label>
-                </div>
-
-                <section class="education" style="background: #f0f0f0;">
-
-                    {% for langl in langlevels %}
-                    <div class="col-md-12" style="margin-bottom: 15px;">
-                        <div class="item-block shadow-hover" style="background: #ffffff;">
-                            <div class="education-header clearfix">
-                                {% if langl.language %}
-                                    <h4><small>Язык -</small> {{ langl.language }}</h4>
-                                {% endif %}
-                                {% if langl.level %}
-                                    <h4><small>Уровень знания -</small> {{ langl.level }}</h4>
-                                {% endif %}
-
-                                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:update_language' langl.id %}">Редактировать</a>
-                                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:delete_language' langl.id %}">Удалить</a>
-
-                            </div>
-                        </div>
+                    <div class="form-group pt30 nomargin">
+                        <label>Владение языками</label>
                     </div>
-                    {% endfor %}
-                </section>
+
+                    <section class="education" style="background: #f0f0f0;">
+
+                        {% for langl in langlevels %}
+                            <div class="col-md-12" style="margin-bottom: 15px;">
+                                <div class="item-block shadow-hover" style="background: #ffffff;">
+                                    <div class="education-header clearfix">
+                                        {% if langl.language %}
+                                            <h4><small>Язык -</small> {{ langl.language }}</h4>
+                                        {% endif %}
+                                        {% if langl.level %}
+                                            <h4><small>Уровень знания -</small> {{ langl.level }}</h4>
+                                        {% endif %}
+
+                                        <a class="btn btn-blue btn-effect mt15 mb15"
+                                           href="{% url 'cv:update_language' langl.id %}">Редактировать</a>
+                                        <a class="btn btn-blue btn-effect mt15 mb15"
+                                           href="{% url 'cv:delete_language' langl.id %}">Удалить</a>
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </section>
                 {% endif %}
 
-                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_language' cv.id %}">Добавить язык</a>
+                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_language' cv.id %}">Добавить
+                    язык</a>
                 <!--    Конец секции ВЛАДЕНИЕ ЯЗЫКАМИ-->
 
                 <div class="form-group pt30 nomargin">
@@ -245,13 +256,14 @@
                     <label>Занятость </label>
 
                     {% for empl in employments %}
-                    <div class="form-check">
-                        <input class="form-check-input" name="empl_{{ empl.code }}" type="checkbox" value="{{ empl.code }}"
-                               id="empl_{{ empl.code }}" {% if empl.id in cv_employments %} checked {% endif %}>
-                        <label class="form-check-label" for="empl_{{ empl.code }}">
-                            {{ empl.employment }}
-                        </label>
-                    </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="empl_{{ empl.code }}" type="checkbox"
+                                   value="{{ empl.code }}"
+                                   id="empl_{{ empl.code }}" {% if empl.id in cv_employments %} checked {% endif %}>
+                            <label class="form-check-label" for="empl_{{ empl.code }}">
+                                {{ empl.employment }}
+                            </label>
+                        </div>
                     {% endfor %}
 
                 </div>
@@ -259,13 +271,14 @@
                     <label>График работы </label>
 
                     {% for sch in schedules %}
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" name="schedule_{{ sch.code }}" value="{{ sch.code }}"
-                               id="schedule_{{ sch.code }}" {% if sch.id in cv_schedules %} checked {% endif %}>
-                        <label class="form-check-label" for="schedule_{{ sch.code }}">
-                            {{ sch.schedule }}
-                        </label>
-                    </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="schedule_{{ sch.code }}"
+                                   value="{{ sch.code }}"
+                                   id="schedule_{{ sch.code }}" {% if sch.id in cv_schedules %} checked {% endif %}>
+                            <label class="form-check-label" for="schedule_{{ sch.code }}">
+                                {{ sch.schedule }}
+                            </label>
+                        </div>
                     {% endfor %}
 
                 </div>
@@ -277,6 +290,18 @@
             </form>
         </div>
     </div>
+    <!-- Комментарий модератора BEGIN -->
+    {% if moderators_comment %}
+    <section class="education ptb30" style="background: #f0f0f0;">
+        <div class="container">
+            <div class="form-group pt10">
+                <label for="{{ form.moderators_comment.id_for_label }}">Комментарий модератора:</label>
+                {{ form.moderators_comment }}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    <!-- Комментарий модератора END -->
 {% endblock %}
 
 {% block footer %}
