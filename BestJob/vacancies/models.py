@@ -34,3 +34,12 @@ class Vacancy(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    #
+    # def is_favorite(self, worker_id):
+    #     worker = WorkerProfile.objects.get(id=worker_id)
+    #     wf = WorkerFavorites.objects.filter(worker_profile=worker, vacancy=self)
+    #     if wf:
+    #         return True
+    #     else:
+    #         return False
