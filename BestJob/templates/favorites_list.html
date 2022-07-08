@@ -108,7 +108,7 @@
                                 <a href="{% url 'vacancies:detail_vacancy' item.vacancy.pk %}"><img
                                         src="{{ item.vacancy.employer_profile.image.url }}" alt=""></a>
                                 <div>
-                                    <a href="{% url 'vacancies:detail_vacancy' item.vacancy.pk %}">
+                                    <a href="{% url 'vacancies:detail_vacancy_worker' item.vacancy.pk %}">
                                         <h4>{{ item.vacancy.name }}</h4>
                                     </a>
                                     <h5><small>{{ item.vacancy.employer_profile.name }}</small></h5>

@@ -295,8 +295,33 @@ class VacancyDetail(DetailView):
             context['employer'] = employer
             context['title'] = "Вакансии"
             context['heading'] = "Вакансия"
-            context['link'] = "/vacancies/all/"
-            context['heading_link'] = "Список вакансий"
+            # context['link'] = "/vacancies/all/"
+            # context['heading_link'] = "Список вакансий"
+        except Exception:
+            print(f'Employer not exists')
+        context['employments'] = Employments.objects.all()
+
+        return self.render_to_response(context)
+
+
+class VacancyDetailForWorker(DetailView):
+    """Просмотр одной вакансии для соискателя"""
+    model = Vacancy
+    template_name = 'vacancy_detail_worker.html'
+
+    def get(self, request, *args, **kwargs):
+        super(VacancyDetailForWorker, self).get(request, *args, **kwargs)
+        context = self.get_context_data()
+        vacancy_id = kwargs.get('pk')
+        vacancy = Vacancy.objects.get(id=vacancy_id)
+
+        try:
+            employer = EmployerProfile.objects.get(id=vacancy_id)
+            context['vacancy'] = vacancy
+            context['employer'] = employer
+            context['title'] = "Вакансия"
+            context['heading'] = "Вакансия"
+
         except Exception:
             print(f'Employer not exists')
         context['employments'] = Employments.objects.all()
