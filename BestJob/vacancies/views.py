@@ -159,7 +159,7 @@ class VacancyCreate(CreateView):
         start_status = ApprovalStatus.objects.get(status='NPB')
         form = self.form_class(data=request.POST)
         salary_on_hand = request.POST.get('id_salary_on_hand', False)
-        is_active = request.POST.get('id_is_active', False)
+        is_active = request.POST.get('id_is_active', True)
 
         if form.is_valid():
             # сохраняем новую вакансию
