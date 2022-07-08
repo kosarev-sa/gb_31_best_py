@@ -8,15 +8,80 @@ from django.views.generic import ListView, TemplateView, CreateView
 
 from BestJob.settings import UserRole, RelationStatuses
 from cvs.models import CV
+from users.models import EmployerProfile, WorkerProfile
 from vacancies.models import Vacancy
-from .content_helper import set_last_list_section_content, set_detail_content, set_watch_relation
+from .content_helper import set_detail_content, set_watch_relation, CustomRelationModel, \
+    get_custom_relation_model, set_modal_content, set_last_list_section_content
 from .models import Relations, RelationHistory, RelationStatus
 
 
 class LastListView(ListView):
     """view отображения списка откликов и приглашений. Общий"""
+    paginate_by = 3
     model = RelationStatus
     template_name = 'relation_last_list.html'
+
+    def get_queryset(self):
+        global is_employer, is_worker
+        relations = set()
+        short_history_lists = list()
+        user = self.request.user
+
+        # Работодатель.
+        if user.role_id == UserRole.EMPLOYER:
+
+            is_employer = True
+            is_worker = False
+
+            profile = EmployerProfile.objects.get(user_id=user.pk)
+            if profile:
+                vacancies = Vacancy.objects.filter(employer_profile_id=profile.pk).order_by('-created_at')
+                if vacancies:
+                    for vacancy in vacancies:
+                        relation = Relations.objects.filter(vacancy_id=vacancy.pk).order_by('-created')
+                        if relation:
+                            for rel in relation:
+                                relations.add(rel)
+
+        # Соискатель.
+        elif user.role_id == UserRole.WORKER:
+
+            is_employer = False
+            is_worker = True
+
+            profile = WorkerProfile.objects.get(user_id=user.pk)
+            if profile:
+                cvs = CV.objects.filter(worker_profile_id=profile.pk).order_by('-date_create')
+                if cvs:
+                    for cv in cvs:
+                        relation = Relations.objects.filter(cv_id=cv.pk).order_by('-created')
+                        if relation:
+                            for rel in relation:
+                                relations.add(rel)
+
+        for relation in relations:
+
+            relation_history = RelationHistory.objects.filter(relation_id=relation.pk).order_by(
+                '-status__status_priority')
+
+            if relation_history:
+                custom_relation_model = CustomRelationModel()
+                rel_hstr = relation_history.first()
+                custom_relation_model.last_status = rel_hstr.status.name
+                custom_relation_model.last_status_date = rel_hstr.created
+                custom_relation_model.cv = rel_hstr.relation.cv
+                custom_relation_model.vacancy = rel_hstr.relation.vacancy
+                custom_relation_model.relation_id = rel_hstr.relation.pk
+                custom_relation_model.is_employer = is_employer
+                custom_relation_model.is_worker = is_worker
+
+                status_info = get_custom_relation_model(user, rel_hstr.status.pk, relation.pk)
+                if status_info:
+                    custom_relation_model.status_info = status_info
+
+                short_history_lists.append(custom_relation_model)
+
+        return short_history_lists
 
     def get_context_data(self, **kwargs):
         context = super(LastListView, self).get_context_data(**kwargs)
@@ -24,6 +89,10 @@ class LastListView(ListView):
         context['heading'] = "Отклики и приглашения"
         # context['link'] = "/"
         # context['heading_link'] = "На главную"
+
+        # Modal context
+        set_modal_content(context, 0)
+
         return context
 
     def get(self, request, *args, **kwargs):

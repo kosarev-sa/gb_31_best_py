@@ -1,6 +1,6 @@
 <section id="detail_last_list_section" class="search-jobs ptb80">
     <div class="container">
-        {% for item in short_history_lists %}
+        {% for item in page_obj %}
 
             <div class="col-md-12 mt20">
                 <div class="item-block shadow-hover">
@@ -33,7 +33,8 @@
                                     <h4>{{ item.vacancy.name }}</h4>
                                 </a>
                                 <div class="h5">{{ item.vacancy.employer_profile.name }}</div>
-                                <div class="h5">Резюме: <a href="{% url 'cvs:detail_cv' item.cv.pk %}">{{ item.cv.post }}</a></div>
+                                <div class="h5">Резюме: <a
+                                        href="{% url 'cvs:detail_cv' item.cv.pk %}">{{ item.cv.post }}</a></div>
                             </div>
 
                             <ul class="pull-right">
@@ -69,5 +70,28 @@
                 </div>
             </div>
         {% endfor %}
+
+        <div class="col-md-12">
+            <ul class="pagination list-inline text-center">
+                {% if page_obj.has_previous %}
+                    <li><a href="?page=1">&laquo; первая</a></li>
+                    <li><a href="?page={{ page_obj.previous_page_number }}">предыдущая</a></li>
+
+                {% endif %}
+
+                <span class="current">
+                                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+                                </span>
+
+                <li class="active"><a href="javascript:void(0)">{{ page_obj.number }}</a></li>
+
+                {% if page_obj.has_next %}
+
+                    <li><a href="?page={{ page_obj.next_page_number }}">следующая</a></li>
+                    <li><a href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </div>
+
     </div>
 </section>
