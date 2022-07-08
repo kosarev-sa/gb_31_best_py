@@ -20,8 +20,7 @@ from news.views import NewsCreate, NewsUpdate, NewsDelete, NewsModerateList
 
 from vacancies.views import VacancyList, VacancyCreate, VacancyUpdate, VacancyDelete, \
     VacancyDistribute, ModeratorVacancyList, ModeratorVacancyUpdate, ResponseVacancyList, \
-    VacancyDetail, VacancyOpenList, RecommendedVacancyList, ResponseVacancyCVs, edit_vacancy_list, set_public_status, \
-    VacancyDetailForWorker
+    VacancyDetail, VacancyOpenList, RecommendedVacancyList, ResponseVacancyCVs, edit_vacancy_list, set_public_status
 
 app_name = 'vacancy'
 
@@ -41,7 +40,6 @@ urlpatterns = [
     path('responses/cvs/<int:pk>/', ResponseVacancyCVs.as_view(), name='vacancy_cvs'),
     path('responses/cvs/<int:pk>/<int:resp_id>/', ResponseVacancyCVs.as_view(), name='vacancy_cvs'),
     path('detail/<int:pk>/', VacancyDetail.as_view(), name='detail_vacancy'),
-    path('detail_worker/<int:pk>/', VacancyDetailForWorker.as_view(), name='detail_vacancy_worker'),
     # обновление списка вакансий у модератора по статусу
     path('edit_vacancy_list/<str:stat>/', edit_vacancy_list, name='edit_vacancy_list' ),
 
