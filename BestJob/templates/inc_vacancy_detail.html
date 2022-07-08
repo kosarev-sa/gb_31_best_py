@@ -1,15 +1,3 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block menu %}
-    {% include 'inc_main_menu.html' %}
-{% endblock %}
-
-{% block header %}
-    {% include 'inc_header_menu.html' %}
-{% endblock %}
-
-{% block content %}
     <!--    Начало секции Профиля работодателя-->
     <section class="ptb80" id="candidate-profile">
         <div class="container">
@@ -21,9 +9,10 @@
                 </div>
 
                 <div class="col-md-3 col-xs-12">
-                    <div class="profile-photo">
 
-                        <img src="{% if object.employer_profile.image %} {{ object.employer_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                    <div class="profile-photo">
+<!--                        Убрал  else   static 'img/users/default_avatar.jpg'  вылетала ошибка (Invalid block tag on line 15: 'static', expected 'endif') Ширгин Алексей-->
+                        <img src="{% if object.employer_profile.image %} {{ object.employer_profile.image.url }} {% endif %}"
                              class="img-thumbnail">
                     </div>
                 </div>
@@ -162,9 +151,3 @@
         </form>
     {% endif %}
     <!-- КОНЕЦ СЕКЦИИ РАБОТА МОДЕРАТОРА С РЕЗЮМЕ -->
-
-{% endblock %}
-
-{% block footer %}
-    {% include 'inc_footer.html' %}
-{% endblock %}
