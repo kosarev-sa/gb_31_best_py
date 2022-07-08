@@ -11,11 +11,11 @@ from cvs.models import CV
 from users.models import EmployerProfile, WorkerProfile
 from vacancies.models import Vacancy
 from .content_helper import set_detail_content, set_watch_relation, CustomRelationModel, \
-    get_custom_relation_model, set_modal_content, set_last_list_section_content
+    get_custom_relation_model, set_modal_content
 from .models import Relations, RelationHistory, RelationStatus
 
 
-class LastListView(ListView):
+class RelationListView(ListView):
     """view отображения списка откликов и приглашений. Общий"""
     paginate_by = 3
     model = RelationStatus
@@ -84,29 +84,14 @@ class LastListView(ListView):
         return short_history_lists
 
     def get_context_data(self, **kwargs):
-        context = super(LastListView, self).get_context_data(**kwargs)
+        context = super(RelationListView, self).get_context_data(**kwargs)
         context['title'] = "Отклики и приглашения"
         context['heading'] = "Отклики и приглашения"
-        # context['link'] = "/"
-        # context['heading_link'] = "На главную"
 
         # Modal context
         set_modal_content(context, 0)
 
         return context
-
-    def get(self, request, *args, **kwargs):
-        super(LastListView, self).get(request, *args, **kwargs)
-        context = self.get_context_data()
-        if request.user.is_authenticated:
-            user = request.user
-            set_last_list_section_content(user, context)
-        else:
-            error_message = f'user is not authenticated'
-            context['error_message'] = error_message
-            print(error_message)
-
-        return self.render_to_response(context)
 
 
 class RelationDetailView(TemplateView):
@@ -118,8 +103,6 @@ class RelationDetailView(TemplateView):
         context = super(RelationDetailView, self).get_context_data(**kwargs)
         context['title'] = "Отклики и приглашения"
         context['heading'] = "Отклики и приглашения"
-        # context['link'] = "/relations/list/"
-        # context['heading_link'] = "Назад"
         return context
 
     def get(self, request, *args, **kwargs):
@@ -236,10 +219,24 @@ class RelationCreateFromRelationView(CreateView):
             new_relation_history.save()
 
             context = {}
-            set_last_list_section_content(user, context)
+            context['relation_id'] = relation.pk
+            context['last_status_date'] = new_relation_history.created
+            context['last_status'] = relation_status.name
+            context['vacancy'] = relation.vacancy
+            context['cv'] = relation.cv
+
+            # Работодатель.
+            if user.role_id == UserRole.EMPLOYER:
+                context['is_employer'] = True
+                context['is_worker'] = False
+
+            # Соискатель.
+            elif user.role_id == UserRole.WORKER:
+                context['is_employer'] = False
+                context['is_worker'] = True
 
             result = render_to_string(
-                'inc_relation_last_list_section.html',
+                'inc_relation_last_list_section_extra.html',
                 context=context,
                 request=request)
 
