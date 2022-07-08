@@ -1,0 +1,40 @@
+{% if is_employer %}
+
+    <div id="rel_row_{{ employer.relation_id }}" class="job-post-header clearfix">
+        <a href="{% url 'cv:detail_cv' employer.cv.pk %}"><img
+                src="{{ employer.cv.worker_profile.image.url }}" alt=""></a>
+        <div>
+            <a href="{% url 'cv:detail_cv' employer.cv.pk %}"><h4>{{ employer.cv.post }}</h4></a>
+            <div class="h5">{{ employer.cv.worker_profile.name }}</div>
+            <div class="h5">Вакансия: <a
+                    href="{% url 'vacancies:detail_vacancy' employer.vacancy.pk %}">{{ employer.vacancy.name }}</a>
+            </div>
+        </div>
+
+        <ul class="pull-right">
+            <li id="status_date_{{ employer.relation_id }}">{{ employer.last_status_date }}</li>
+            <li id="status_{{ employer.relation_id }}" class="fw-bold">{{ employer.last_status }}</li>
+        </ul>
+    </div>
+
+{% elif is_worker %}
+
+    <div id="rel_row_{{ worker.relation_id }}" class="job-post-header clearfix">
+        <a href="{% url 'vacancies:detail_vacancy' worker.vacancy.pk %}"><img
+                src="{{ worker.vacancy.employer_profile.image.url }}" alt=""></a>
+        <div>
+            <a href="{% url 'vacancies:detail_vacancy' worker.vacancy.pk %}">
+                <h4>{{ worker.vacancy.name }}</h4>
+            </a>
+            <div class="h5">{{ worker.vacancy.employer_profile.name }}</div>
+            <div class="h5">Резюме: <a
+                    href="{% url 'cvs:detail_cv' worker.cv.pk %}">{{ worker.cv.post }}</a></div>
+        </div>
+
+        <ul class="pull-right">
+            <li id="status_date_{{ worker.relation_id }}">{{ worker.last_status_date }}</li>
+            <li id="status_{{ worker.relation_id }}" class="fw-bold">{{ worker.last_status }}</li>
+        </ul>
+    </div>
+
+{% endif %}
