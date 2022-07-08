@@ -21,6 +21,8 @@ class CVSearchView(SearchView):
         if self.request.user.id is None or self.request.user.role.id == UserRole.WORKER:
             context['message_of_denied'] = 'Просматривать резюме могут только авторизованные ' \
                                            'работодатели!'
+        context['title'] = "Поиск резюме"
+        context['heading'] = "Поиск резюме"
         return context
 
 
@@ -37,4 +39,6 @@ class VacancySearchView(SearchView):
         if self.request.user.id is None or self.request.user.role.id == UserRole.EMPLOYER:
             context['message_of_denied'] = 'Просматривать вакансии могут только авторизованные ' \
                                            'соискатели!'
+        context['title'] = "Поиск вакансий"
+        context['heading'] = "Поиск вакансий"
         return context

@@ -118,8 +118,8 @@ class CVCreate(CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVCreate, self).get_context_data(**kwargs)
-        context['title'] = 'Ваше резюме'
-        context['heading'] = "Ваше резюме"
+        context['title'] = 'Создание резюме'
+        context['heading'] = "Создание резюме"
         context['link'] = "/cvs/all/"
         context['heading_link'] = "Список резюме"
         return context
@@ -182,9 +182,8 @@ class CVUpdate(UpdateView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVUpdate, self).get_context_data(**kwargs)
         context['title'] = "Изменение резюме"
-        context['heading'] = "Ваше резюме"
-        context['link'] = "/cvs/all/"
-        context['heading_link'] = "Список резюме"
+        context['heading'] = "Изменение резюме"
+
         return context
 
     def get(self, request, *args, **kwargs):
@@ -252,8 +251,7 @@ class CVDelete(DeleteView):
         context['object'] = cv
         context['title'] = "Удаление резюме"
         context['heading'] = "Удаление резюме"
-        context['link'] = "/cvs/all/"
-        context['heading_link'] = "Список резюме"
+
         return context
 
     def post(self, request, *args, **kwargs):
@@ -308,8 +306,6 @@ class CVDetailView(DetailView):
 
         context['title'] = "Резюме"
         context['heading'] = "Резюме"
-        context['link'] = "/cvs/all/"
-        context['heading_link'] = "Список резюме"
 
         return context
 
@@ -341,6 +337,9 @@ class CVExperienceCreate(CreateView):
         context['title'] = 'Место работы'
         context['months'] = CVMonths
         context['cv_id'] = self.kwargs['pk']
+        context['title'] = "Добавление места работы"
+        context['heading'] = "Добавление места работы"
+
         return context
 
     def get(self, request, *args, **kwargs):
@@ -376,6 +375,9 @@ class CVExperienceUpdate(UpdateView):
         context['months'] = CVMonths
         exp = Experience.objects.get(id=self.kwargs.get('pk'))
         context['cv_id'] = exp.cv.id
+        context['title'] = "Изменение места работы"
+        context['heading'] = "Изменение места работы"
+
         return context
 
     def get(self, request, *args, **kwargs):
@@ -408,6 +410,14 @@ class CVExperienceDelete(DeleteView):
         self.object.delete()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+    # Раскоментировать, если будет шаблон на удаление
+    # def get_context_data(self, *, object_list=None, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['title'] = 'Удаление места работы'
+    #     context['heading'] = "Удаление места работы"
+    #
+    #     return context
+
 
 class CVEducationCreate(CreateView):
     """Создание места обучения"""
@@ -417,8 +427,9 @@ class CVEducationCreate(CreateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Место работы'
+        context['title'] = 'Добавление места обучения'
         context['cv_id'] = self.kwargs['cv_id']
+        context['heading'] = "Добавление места обучения"
         return context
 
     def post(self, request, *args, **kwargs):
@@ -445,9 +456,10 @@ class CVEducationUpdate(UpdateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Место обучения'
+        context['title'] = 'Изменение места обучения'
         educ = Education.objects.get(id=self.kwargs.get('pk'))
         context['cv_id'] = educ.cv.id
+        context['heading'] = 'Изменение места обучения'
         return context
 
     def post(self, request, *args, **kwargs):
@@ -485,6 +497,7 @@ class CVLanguageCreate(CreateView):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Владение языком'
         context['cv_id'] = self.kwargs['cv_id']
+        context['heading'] = 'Знание языка'
         return context
 
     def post(self, request, *args, **kwargs):
@@ -514,6 +527,7 @@ class CVLanguageUpdate(UpdateView):
         context['title'] = 'Владение языком'
         lang = LanguagesSpoken.objects.get(id=self.kwargs.get('pk'))
         context['cv_id'] = lang.cv.id
+        context['heading'] = 'Знание языка'
         return context
 
     def post(self, request, *args, **kwargs):

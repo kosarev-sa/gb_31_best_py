@@ -1,7 +1,7 @@
 {% load static %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="height: 100%;">
 <head>
     <meta charset="UTF-8">
     <title>{{ title }}</title>
@@ -24,20 +24,21 @@
     {% endblock %}
 </head>
 
-<body>
+<body style="height: 100%; display: flex; flex-direction: column;">
 
-    {% block menu %}
-    {% endblock %}
+    <main style="flex: 1 0 auto;">
+        {% block menu %}
+        {% endblock %}
 
-    {% block header %}
-    {% endblock %}
+        {% block header %}
+        {% endblock %}
 
-    {% block search %}
-    {% endblock %}
+        {% block search %}
+        {% endblock %}
 
-    {% block content %}
-    {% endblock %}
-
+        {% block content %}
+        {% endblock %}
+    </main>
     {% block footer %}
     {% endblock %}
 

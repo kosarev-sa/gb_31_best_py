@@ -3,36 +3,6 @@
     "model": "users.RelationStatus",
     "pk": 1,
     "fields": {
-      "name": "Резюме не просмотрено",
-      "for_employer": false,
-      "for_worker": true,
-      "status_priority": 2
-    }
-  },
-  {
-    "model": "users.RelationStatus",
-    "pk": 2,
-    "fields": {
-      "name": "Приглашение не просмотрено",
-      "for_employer": true,
-      "for_worker": false,
-      "status_priority": 2
-    }
-  },
-  {
-    "model": "users.RelationStatus",
-    "pk": 3,
-    "fields": {
-      "name": "Отказ",
-      "for_employer": true,
-      "for_worker": true,
-      "status_priority": 3
-    }
-  },
-  {
-    "model": "users.RelationStatus",
-    "pk": 4,
-    "fields": {
       "name": "Приглашение",
       "for_employer": true,
       "for_worker": false,
@@ -41,7 +11,7 @@
   },
   {
     "model": "users.RelationStatus",
-    "pk": 5,
+    "pk": 2,
     "fields": {
       "name": "Отклик",
       "for_employer": false,
@@ -51,12 +21,64 @@
   },
   {
     "model": "users.RelationStatus",
+    "pk": 3,
+    "fields": {
+      "name": "Приглашение не просмотрено",
+      "for_employer": true,
+      "for_worker": false,
+      "status_priority": 2
+    }
+  },
+
+  {
+    "model": "users.RelationStatus",
+    "pk": 4,
+    "fields": {
+      "name": "Резюме не просмотрено",
+      "for_employer": false,
+      "for_worker": true,
+      "status_priority": 2
+    }
+  },
+
+  {
+    "model": "users.RelationStatus",
+    "pk": 5,
+    "fields": {
+      "name": "Приглашение просмотрено",
+      "for_employer": true,
+      "for_worker": false,
+      "status_priority": 3
+    }
+  },
+  {
+    "model": "users.RelationStatus",
     "pk": 6,
+    "fields": {
+      "name": "Резюме просмотрено",
+      "for_employer": false,
+      "for_worker": true,
+      "status_priority": 3
+    }
+  },
+  {
+    "model": "users.RelationStatus",
+    "pk": 7,
+    "fields": {
+      "name": "Отказ",
+      "for_employer": true,
+      "for_worker": true,
+      "status_priority": 4
+    }
+  },
+  {
+    "model": "users.RelationStatus",
+    "pk": 8,
     "fields": {
       "name": "Встреча согласована",
       "for_employer": true,
       "for_worker": true,
-      "status_priority": 4
+      "status_priority": 5
     }
   }
 ]

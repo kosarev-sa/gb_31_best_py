@@ -1,72 +1,28 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block additional_styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/inc_relation_detail_section.css' %}">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
+
 {% block menu %}
     {% include 'inc_main_menu.html' %}
 {% endblock %}
 
 {% block header %}
-    {% include 'inc_header.html' %}
+    {% include 'inc_header_menu.html' %}
 {% endblock %}
 
 {% block content %}
-    <section class="education ptb80" style="background: #f0f0f0;">
-        <div class="container">
-
-            {% if relation_history %}
-
-                <div class="col-md-12" style="margin-bottom: 15px;">
-                    <div class="item-block shadow-hover" style="background: #ffffff;">
-
-                        <div class="education-header clearfix">
-                            <h5><small>Статус: </small> {{ relation_history.last_status }} </h5>
-                            <h5><small>Дата: </small> {{ relation_history.last_status_date }} </h5>
-                            <h5><small>Резюме: </small><a
-                                    href="{% url 'cv:detail_cv' relation_history.cv.pk %}">{{ relation_history.cv.post }}</a>
-                            </h5>
-                            <h5><small>Вакансия: </small><a
-                                    href="{% url 'vacancies:detail_vacancy' relation_history.vacancy.pk %}">{{ relation_history.vacancy.name }}</a>
-                            </h5>
-                        </div>
-
-                        {% if custom_relation_model %}
-                            <div>
-                                <div class="col-md-9 text-right mt-4 mb-4" style="background: #ffffff;">
-                                    <a class="btn btn-blue btn-effect mt15 mb15"
-                                       href="{% url 'relations:change' relation_id=custom_relation_model.relation_id status_id=custom_relation_model.cancel_status_id %}">{{ custom_relation_model.button_cancel_text }}</a>
-                                </div>
-                            </div>
-                            <div>
-                                <div class="col-md-3 text-right mt-4 mb-4" style="background: #ffffff;">
-                                    <a class="btn btn-blue btn-effect mt15 mb15"
-                                       href="{% url 'relations:change' relation_id=custom_relation_model.relation_id status_id=custom_relation_model.accept_status_id %}">{{ custom_relation_model.button_accept_text }}</a>
-                                </div>
-                            </div>
-                        {% endif %}
-
-                    </div>
-                </div>
-
-                {% for history_item in relation_history %}
-
-                    <div class="col-md-12" style="margin-bottom: 15px;">
-                        <div class="item-block shadow-hover" style="background: #ffffff;">
-
-                            <div class="education-header clearfix">
-                                <h5><small>Дата: </small> {{ history_item.created }} </h5>
-                                <h5><small>Статус: </small> {{ history_item.status.name }} </h5>
-                                <h5><small>Комментарий: </small> {{ history_item.comment }} </h5>
-                            </div>
-
-                        </div>
-                    </div>
-                {% endfor %}
-            {% endif %}
-        </div>
-    </section>
-
+    {% include 'inc_relation_detail_section.html' %}
+    {% include 'inc_relation_modal_form.html' %}
 {% endblock %}
 
 {% block footer %}
     {% include 'inc_footer.html' %}
+{% endblock %}
+
+{% block additional_script %}
+   <script src="{% static 'js/relation.js' %}"></script>
 {% endblock %}

@@ -48,8 +48,8 @@ class WorkerProfileView(UpdateView):
 
         context['title'] = "Профиль соискателя"
         context['heading'] = "Профиль соискателя"
-        context['link'] = "/cvs/all/"
-        context['heading_link'] = "Список резюме"
+        # context['link'] = "/cvs/all/"
+        # context['heading_link'] = "Список резюме"
         return context
 
     def post(self, request, *args, **kwargs):
