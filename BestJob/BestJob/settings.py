@@ -77,7 +77,7 @@ TEMPLATES = [
                 'users.context_processors.footer_lists',
             ],
             'libraries': {
-                'extra_tags': 'extra_tags',
+                'extra_tags': 'favorites.context_processors',
             }
         },
     },
