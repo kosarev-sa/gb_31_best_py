@@ -6,7 +6,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils.datetime_safe import datetime
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DeleteView, DetailView
 
-from BestJob.settings import NEWS_BODY_LEN_ON_NEWS_LIST
+from BestJob.settings import NEWS_BODY_LEN_ON_NEWS_LIST, UserRole
 from users.models import ModeratorProfile, User
 from news.forms import NewsCreateForm, NewsUpdateForm#, NewsDeleteForm
 from news.models import News
@@ -26,6 +26,7 @@ class IndexView(TemplateView):
                 #  Берём top 3.
                 context['news_list'] = news_list[:3]
 
+        context['roles'] = UserRole
         context['categories'] = Category.objects.all().order_by('name')
         return context
 

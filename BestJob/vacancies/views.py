@@ -14,7 +14,7 @@ from cvs.models import CV
 from search.models import Category, Employments, WorkSchedules, Languages, \
     LanguageLevels
 from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDistributeForm, ModeratorVacancyUpdateForm, \
-    VacancyResponseForm
+    VacancyResponseForm, VacancyDeleteForm
 from vacancies.models import Vacancy
 from users.models import EmployerProfile, WorkerProfile
 from approvals.models import ApprovalStatus
@@ -210,9 +210,9 @@ class VacancyUpdate(UpdateView):
         self.object = self.get_object()
         form = self.form_class(data=request.POST)
         salary_on_hand = request.POST.get('id_salary_on_hand', False)
-        is_active = request.POST.get('id_is_active', False)
+        # is_active = request.POST.get('id_is_active', False)
         if form.is_valid():
-            self.object.is_active = is_active
+            self.object.is_active = True
             self.object.salary_on_hand = salary_on_hand
             self.object.save()
             return redirect(self.success_url)
@@ -225,14 +225,29 @@ class VacancyDelete(DeleteView):
     """view удаления вакансий"""
     model = Vacancy
     template_name = 'vacancy_delete.html'
+    form_class = VacancyDeleteForm
     success_url = reverse_lazy('vacancy:vacancy_list')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyDelete, self).get_context_data(**kwargs)
+
+        vacancy_id = self.kwargs['pk']
+        vacancy = Vacancy.objects.get(id=vacancy_id)
+
+        context['object'] = vacancy
         context['title'] = "Удаление вакансии"
         context['heading'] = "Удаление вакансии"
 
         return context
+
+    def post(self, request, *args, **kwargs):
+        return self.delete(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.is_active = False
+        self.object.save()
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class VacancyDistribute(UpdateView):
@@ -311,7 +326,7 @@ class VacancyDetail(DetailView):
 
         if request.user.role.id == UserRole.WORKER:
             worker = WorkerProfile.objects.get(user=request.user)
-        context['worker'] = worker
+            context['worker'] = worker
 
         return self.render_to_response(context)
 

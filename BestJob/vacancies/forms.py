@@ -79,6 +79,9 @@ class VacancyDeleteForm(forms.ModelForm):
         model = Vacancy
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super(VacancyDeleteForm, self).__init__(*args, **kwargs)
+
 
 class VacancyDistributeForm(forms.ModelForm):
     """форма размещения вакансии"""
