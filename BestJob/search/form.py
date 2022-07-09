@@ -28,8 +28,8 @@ class CVSearchForm(SearchForm):
     def search(self):
         # Сначала берем весь список резюме
         sqs = super(CVSearchForm, self).search().models(CV)
-
-        sqs.filter()
+        # должно быть либо опубликовано, либо одобренно
+        sqs = sqs.filter(status_id__in=(2, 5))
 
         if not self.is_valid():
             return self.no_query_found()
@@ -77,8 +77,8 @@ class VacancySearchForm(SearchForm):
     def search(self):
         # Сначала берем весь список вакансий
         sqs = super(VacancySearchForm, self).search().models(Vacancy)
-
-        sqs.filter()
+        # должно быть либо опубликовано, либо одобренно
+        sqs = sqs.filter(status_id__in=(2, 5))
 
         if not self.is_valid():
             return self.no_query_found()

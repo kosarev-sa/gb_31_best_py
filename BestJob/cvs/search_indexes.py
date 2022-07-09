@@ -10,6 +10,7 @@ class CVIndex(indexes.SearchIndex, indexes.Indexable):
     speciality = indexes.CharField(model_attr='speciality')
     education_level = indexes.IntegerField(model_attr='education_level')
     moving = indexes.IntegerField(model_attr='moving')
+    status_id = indexes.IntegerField(model_attr='status_id')
 
 
     def get_model(self):
