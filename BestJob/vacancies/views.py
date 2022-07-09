@@ -9,13 +9,14 @@ from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DeleteView, DetailView
 
+from BestJob.settings import UserRole
 from cvs.models import CV
 from search.models import Category, Employments, WorkSchedules, Languages, \
     LanguageLevels
 from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDistributeForm, ModeratorVacancyUpdateForm, \
     VacancyResponseForm
 from vacancies.models import Vacancy
-from users.models import EmployerProfile
+from users.models import EmployerProfile, WorkerProfile
 from approvals.models import ApprovalStatus
 
 from BestJob.mixin import BaseClassContextMixin, UserDispatchMixin
@@ -275,8 +276,10 @@ class RecommendedVacancyList(ListView, BaseClassContextMixin):
     def get(self, request, *args, **kwargs):
         super(RecommendedVacancyList, self).get(request, *args, **kwargs)
         cv = CV.objects.get(id=self.kwargs['pk'])
+        worker = cv.worker_profile
         context = {
             'vacancies': Vacancy.objects.filter(specialization=cv.speciality),
+            'worker': worker,
             'title': "Рекомендованные вакансии",
             'heading': "Рекомендованные вакансии",
         }
@@ -305,6 +308,10 @@ class VacancyDetail(DetailView):
         except Exception:
             print(f'Employer not exists')
         context['employments'] = Employments.objects.all()
+
+        if request.user.role.id == UserRole.WORKER:
+            worker = WorkerProfile.objects.get(user=request.user)
+        context['worker'] = worker
 
         return self.render_to_response(context)
 

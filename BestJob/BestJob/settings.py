@@ -76,6 +76,9 @@ TEMPLATES = [
                 # Контекстный процессор для footer
                 'users.context_processors.footer_lists',
             ],
+            'libraries': {
+                'extra_tags': 'extra_tags',
+            }
         },
     },
 ]

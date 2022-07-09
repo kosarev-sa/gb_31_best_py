@@ -129,15 +129,21 @@
 
             </div>
             {% if not is_moderating %}
-                <div>
+                {% if worker %}
                     <div class="col-md-12 text-right mt30 mb-4">
-                        <a class="btn btn-blue btn-effect mt15 mb15"
-                           href="{% url 'favorites:worker_add_remove' vacancy_id=object.id %}">Добавить в избранное</a>
+                        {% load extra_tags %}
+                        {% is_workers_favorite object.id worker.id as favorite %}
+                        {% if favorite %}
+                            <p>Уже у Вас в избранном</p>
+                        {% else %}
+                            <a class="btn btn-blue btn-effect mt15 mb15"
+                               href="{% url 'favorites:worker_add_remove' vacancy_id=object.id %}">Добавить в
+                                избранное</a>
+                        {% endif %}
                     </div>
-                </div>
-                </div>
+                {% endif %}
             {% endif %}
-
+        </div>
     </section>
     <!-- СЕКЦИЯ РАБОТА МОДЕРАТОРА С РЕЗЮМЕ -->
     {% if is_moderating %}
