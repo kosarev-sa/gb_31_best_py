@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from news.views import IndexView
-from search.views import CVSearchView, VacancySearchView
+from search.views import CVSearchView, VacancySearchView, StandardSearch
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,7 +28,8 @@ urlpatterns = [
     path('users/', include('users.urls', namespace='users')),
     path('cvs/', include('cvs.urls', namespace='cvs')),
     path('vacancies/', include('vacancies.urls', namespace='vacancies')),
-    path('search/', include('haystack.urls')),
+    # path('search/', include('haystack.urls')),
+    path('search/', StandardSearch(), name="haystack_search"),
     path('search_cv/', CVSearchView.as_view(), name='search_cv'),
     path('search_vacancy/', VacancySearchView.as_view(), name='search_vacancy'),
     path('relations/', include('relations.urls', namespace='relations')),

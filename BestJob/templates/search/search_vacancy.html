@@ -7,33 +7,33 @@
 {% endblock %}
 
 {% block header %}
-        {% include 'inc_header_menu.html' %}
-<!--    <section class="page-header">-->
-<!--        <div class="container">-->
+    {% include 'inc_header_menu.html' %}
+    <!--    <section class="page-header">-->
+    <!--        <div class="container">-->
 
-<!--            &lt;!&ndash; Start of Page Title &ndash;&gt;-->
-<!--            <div class="row">-->
-<!--                <div class="col-md-12">-->
-<!--                    <h2>Поиск</h2>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            &lt;!&ndash; End of Page Title &ndash;&gt;-->
+    <!--            &lt;!&ndash; Start of Page Title &ndash;&gt;-->
+    <!--            <div class="row">-->
+    <!--                <div class="col-md-12">-->
+    <!--                    <h2>Поиск</h2>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            &lt;!&ndash; End of Page Title &ndash;&gt;-->
 
-<!--            &lt;!&ndash; Start of Breadcrumb &ndash;&gt;-->
-<!--            <div class="row">-->
-<!--                <div class="col-md-12">-->
-<!--                    <ul class="breadcrumb">-->
-<!--                        <li><a href="{% url 'index' %}">На главную</a></li>-->
-<!--                        <li><a href="{% url 'haystack_search' %}">Поиск</a></li>-->
-<!--                        <li class="active">расширенный поиск вакансий</li>-->
-<!--                        <li><a href="{% url 'search_cv' %}">расширенный поиск резюме</a></li>-->
-<!--                    </ul>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            &lt;!&ndash; End of Breadcrumb &ndash;&gt;-->
+    <!--            &lt;!&ndash; Start of Breadcrumb &ndash;&gt;-->
+    <!--            <div class="row">-->
+    <!--                <div class="col-md-12">-->
+    <!--                    <ul class="breadcrumb">-->
+    <!--                        <li><a href="{% url 'index' %}">На главную</a></li>-->
+    <!--                        <li><a href="{% url 'haystack_search' %}">Поиск</a></li>-->
+    <!--                        <li class="active">расширенный поиск вакансий</li>-->
+    <!--                        <li><a href="{% url 'search_cv' %}">расширенный поиск резюме</a></li>-->
+    <!--                    </ul>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            &lt;!&ndash; End of Breadcrumb &ndash;&gt;-->
 
-<!--        </div>-->
-<!--    </section>-->
+    <!--        </div>-->
+    <!--    </section>-->
 {% endblock %}
 
 {% block content %}
@@ -187,8 +187,15 @@
                                     <!-- CTA -->
                                     <div class="col-md-2 col-xs-3">
                                         <div class="candidate-cta ptb30">
-                                            <a href="#" style="color: lightgray">
-                                                <div class="pull-right"><h3>★</h3></div>
+                                            <a href="{% url 'favorites:worker_add_remove' vacancy_id=result.object.id %}"
+                                               style="color: lightgray">
+                                               {% if result.object.id in favourite_list %}
+
+
+                                                    <div class="pull-right" style="color: goldenrod"><h3>★</h3></div>
+                                                {% else %}
+                                                    <div class="pull-right"><h3>★</h3></div>
+                                                {% endif %}
                                             </a>
                                         </div>
                                     </div>
