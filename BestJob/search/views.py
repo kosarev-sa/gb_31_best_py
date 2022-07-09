@@ -1,5 +1,6 @@
 from django.contrib import messages
 from haystack.generic_views import SearchView
+from haystack.views import SearchView as SearchViewStandard
 from haystack.query import SearchQuerySet
 
 from BestJob.mixin import FavouriteListMixin
@@ -8,6 +9,15 @@ from search.form import CVSearchForm, VacancySearchForm
 from vacancies.models import Vacancy
 from BestJob.settings import UserRole
 
+
+class StandardSearch(SearchViewStandard, FavouriteListMixin):
+    def extra_context(self):
+        """
+        Allows the addition of more context variables as needed.
+
+        Must return a dictionary.
+        """
+        return {'favourite_list': self.get_favourite_list()}
 
 class CVSearchView(SearchView, FavouriteListMixin):
     """My custom search view."""

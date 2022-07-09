@@ -45,10 +45,16 @@ class FavouriteListMixin(ContextMixin):
         else:
             return []
 
-
-
     def get_context_data(self, **kwargs):
         context = super(FavouriteListMixin, self).get_context_data(**kwargs)
         context['favourite_list'] = self.get_favourite_list()
         return context
 
+    # не для generic view как standard search
+    def extra_context(self):
+        """
+        Allows the addition of more context variables as needed.
+
+        Must return a dictionary.
+        """
+        return {'favourite_list': self.get_favourite_list()}
