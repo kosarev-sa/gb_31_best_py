@@ -52,7 +52,8 @@ class ModeratorVacancyList(TemplateView):
         super(ModeratorVacancyList, self).get(request, *args, **kwargs)
 
         context = self.get_context_data()
-        context['title'] = 'Вакансии'
+        context['title'] = 'Модерация вакансий'
+        context['heading'] = 'Модерация вакансий'
         context['vacancies_list'] = Vacancy.objects.filter(status__status="PUB")
 
         return self.render_to_response(context)
@@ -119,6 +120,8 @@ class ModeratorVacancyUpdate(UpdateView):
         if employer:
             context['employer'] = employer.first()
         context['is_moderating'] = True
+        context['title'] = 'Модерация вакансии'
+        context['heading'] = 'Модерация вакансии'
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):

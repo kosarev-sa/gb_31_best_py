@@ -1062,7 +1062,7 @@ ul.list {
 
 section.page-header {
     position: relative;
-    /*background: url(../images/img/page-header.jpg) no-repeat;*/
+    background: url(../img/index/3.png) no-repeat;
     background-position: center center;
     background-size: cover;
     text-align: center;
