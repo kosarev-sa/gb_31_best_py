@@ -1,4 +1,6 @@
 import random
+
+from BestJob.settings import UserRole
 from users.models import WorkerProfile, EmployerProfile
 
 
@@ -9,3 +11,10 @@ def footer_lists(request):
     return {"footer_list_1": footer_employer_list[0:3],
             "footer_list_2": footer_employer_list[3:]
             }
+
+
+def roles(request):
+    """добавляет значение ролей в контексте"""
+    return {
+        'roles': UserRole
+    }

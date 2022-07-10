@@ -76,7 +76,7 @@ TEMPLATES = [
                 # Контекстный процессор для footer
                 'users.context_processors.footer_lists',
                 # Контекстный процессор для ролей
-                'BestJob.context_processors.roles'
+                'users.context_processors.roles'
             ],
             'libraries': {
                 'extra_tags': 'favorites.context_processors',
