@@ -7,32 +7,7 @@
 {% endblock %}
 
 {% block header %}
-    <section class="page-header">
-        <div class="container">
-
-            <!-- Start of Page Title -->
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Компании</h2>
-                </div>
-            </div>
-            <!-- End of Page Title -->
-
-            <!-- Start of Breadcrumb -->
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="breadcrumb">
-                        <li class="active">Компании</li>
-                        <li><a href="{% url 'vacancies:moderator_vacancy_list' %}">Вакансии</a></li>
-                        <li><a href="{% url 'cv:moderator_cvs_list' %}">Резюме</a></li>
-                        <li><a href="{% url 'news:moderate_news' %}">Новости</a></li>
-                    </ul>
-                </div>
-            </div>
-            <!-- End of Breadcrumb -->
-
-        </div>
-    </section>
+    {% include 'inc_header_menu.html'%}
 {% endblock %}
 
 {% block content %}

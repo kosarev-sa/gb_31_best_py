@@ -120,8 +120,11 @@ class ModeratorCompanyUpdate(UpdateView):
         comp_id = self.kwargs['pk']
         company = EmployerProfile.objects.get(id=comp_id)
         context['object'] = company
-        context['title'] = company.name
+        # context['title'] = company.name
         context['is_moderating'] = True
+
+        context['title'] = "Модерация компании"
+        context['heading'] = "Модерация компании"
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
@@ -424,6 +427,8 @@ class ModeratorCompaniesList(TemplateView):
         context = self.get_context_data()
         context['companies_list'] = EmployerProfile.objects.filter(status__status="PUB")
         # EmployerProfile.objects.exclude(status__status="NPB")
+        context['title'] = 'Модерация компаний'
+        context['heading'] = 'Модерация компаний'
         return self.render_to_response(context)
 
 

@@ -35,8 +35,6 @@ class CVList(TemplateView):
             'worker': worker_id,
             'title': "Мои резюме",
             'heading': "Мои резюме",
-            'link': "/cvs/create/",
-            'heading_link': "Создать резюме",
         }
         return self.render_to_response(context)
 
@@ -49,6 +47,8 @@ class ModeratorCVList(TemplateView):
         super(ModeratorCVList, self).get(request, *args, **kwargs)
         context = self.get_context_data()
         context['cvs_list'] = CV.objects.filter(status__status="PUB").order_by('date_create')
+        context['title'] = 'Модерация резюме'
+        context['heading'] = "Модерация резюме"
         return self.render_to_response(context)
 
 
@@ -106,6 +106,8 @@ class ModeratorCVUpdate(UpdateView):
             schedules.append(schedule)
         context['schedules'] = schedules
         context['is_moderating'] = True
+        context['title'] = 'Модерация резюме'
+        context['heading'] = "Модерация резюме"
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
@@ -130,8 +132,7 @@ class CVCreate(CreateView):
         context = super(CVCreate, self).get_context_data(**kwargs)
         context['title'] = 'Создание резюме'
         context['heading'] = "Создание резюме"
-        context['link'] = "/cvs/all/"
-        context['heading_link'] = "Список резюме"
+
         return context
 
     def get(self, request, *args, **kwargs):
