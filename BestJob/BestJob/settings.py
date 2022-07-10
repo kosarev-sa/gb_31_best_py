@@ -75,6 +75,8 @@ TEMPLATES = [
 
                 # Контекстный процессор для footer
                 'users.context_processors.footer_lists',
+                # Контекстный процессор для ролей
+                'BestJob.context_processors.roles'
             ],
             'libraries': {
                 'extra_tags': 'favorites.context_processors',
@@ -161,6 +163,7 @@ EMAIL_USER_SSL = True if os.getenv('EMAIL_USER_SSL') == 'True' else False
 EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
 
 import os
+
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
@@ -174,6 +177,7 @@ NEWS_BODY_LEN_ON_NEWS_LIST = 297
 
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 4  # пагинация. кол-во на странице (HAYSTACK)
 
+
 # Константы ролей пользователей.
 class UserRole:
     # Модератор.
@@ -182,6 +186,7 @@ class UserRole:
     EMPLOYER = 2
     # Соискатель.
     WORKER = 3
+
 
 # Константы статусов откликов и приглашений.
 class RelationStatuses:
