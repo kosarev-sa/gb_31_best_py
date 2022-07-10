@@ -100,7 +100,7 @@ WSGI_APPLICATION = 'BestJob.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'BestJob',
+        'NAME': 'bestjob',
         'USER': 'postgres'
     }
 }
