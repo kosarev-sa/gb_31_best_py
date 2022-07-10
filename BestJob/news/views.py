@@ -26,7 +26,6 @@ class IndexView(TemplateView):
                 #  Берём top 3.
                 context['news_list'] = news_list[:3]
 
-        context['roles'] = UserRole
         context['categories'] = Category.objects.all().order_by('name')
         return context
 
