@@ -82,6 +82,7 @@ class EmployerProfileForm(forms.ModelForm):
 
 class ModeratorProfileForm(forms.ModelForm):
     """формы для профиля модератора"""
+    name = forms.CharField(label='ФИО', required=True)
 
     class Meta:
         model = ModeratorProfile
