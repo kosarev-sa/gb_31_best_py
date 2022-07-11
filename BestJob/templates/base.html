@@ -7,7 +7,8 @@
     <title>{{ title }}</title>
 
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,400i,700,800|Varela+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,400i,700,800|Varela+Round"
+          rel="stylesheet">
 
     <!-- favicon link -->
     <link rel="shortcut icon" type="image/png" href="{% static 'img/favicon.png' %}"/>
@@ -15,7 +16,7 @@
     <!-- CSS links -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-select.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css'  %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/owl.carousel.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/swiper.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
@@ -26,42 +27,75 @@
 
 <body style="height: 100%; display: flex; flex-direction: column;">
 
-    <main style="flex: 1 0 auto;">
-        {% block menu %}
-        {% endblock %}
+<main style="flex: 1 0 auto;">
 
-        {% block header %}
-        {% endblock %}
-
-        {% block search %}
-        {% endblock %}
-
-        {% block content %}
-        {% endblock %}
-    </main>
-    {% block footer %}
+    {% block menu %}
     {% endblock %}
 
-    <!-- ===== Start of Back to Top Button ===== -->
-    <a href="#" class="back-top"><i class="fa fa-chevron-up"></i></a>
-    <!-- ===== End of Back to Top Button ===== -->
+    {% block header %}
+    {% endblock %}
 
-    <!-- ===== All Javascript at the bottom of the page for faster page loading ===== -->
-    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap-select.min.js' %}"></script>
-    <script src="{% static 'js/swiper.min.js' %}"></script>
-    <script src="{% static 'js/jquery.ajaxchimp.js' %}"></script>
-    <script src="{% static 'js/jquery.countTo.js' %}"></script>
-    <script src="{% static 'js/jquery.inview.min.js' %}"></script>
-    <script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
-    <script src="{% static 'js/jquery.easypiechart.min.js' %}"></script>
-    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
-    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
-    <script src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
-    <script src="{% static 'js/isotope.min.js' %}"></script>
-    <script src="{% static 'js/custom.js' %}"></script>
-    <script src="{% static 'js/moderators_lists.js' %}"></script>
+    {% block search %}
+    {% endblock %}
+
+    {% block content %}
+    {% endblock %}
+
+</main>
+
+{% if messages %}
+    {% if form.errors %}
+        <div onclick="this.parentNode.removeChild(this)">
+        <ul class="messages">
+            <li class="error">
+                <br>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <br>
+                        {% if field != '__all__' %}
+                            <strong>{{ field.label }}:</strong>
+                        {% endif %}
+                        {{ error }}
+                    {% endfor %}
+                {% endfor %}
+            </li>
+        </ul>
+        <div>
+    {% endif %}
+    <div onclick="this.parentNode.removeChild(this)">
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                    {{ message }} {{ non_field_errors }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+{% block footer %}
+{% endblock %}
+
+<!-- ===== Start of Back to Top Button ===== -->
+<a href="#" class="back-top"><i class="fa fa-chevron-up"></i></a>
+<!-- ===== End of Back to Top Button ===== -->
+
+<!-- ===== All Javascript at the bottom of the page for faster page loading ===== -->
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/bootstrap-select.min.js' %}"></script>
+<script src="{% static 'js/swiper.min.js' %}"></script>
+<script src="{% static 'js/jquery.ajaxchimp.js' %}"></script>
+<script src="{% static 'js/jquery.countTo.js' %}"></script>
+<script src="{% static 'js/jquery.inview.min.js' %}"></script>
+<script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'js/jquery.easypiechart.min.js' %}"></script>
+<script src="{% static 'js/jquery-ui.min.js' %}"></script>
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<script src="{% static 'js/tinymce/tinymce.min.js' %}"></script>
+<script src="{% static 'js/isotope.min.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+<script src="{% static 'js/moderators_lists.js' %}"></script>
 
 </body>
 {% block additional_script %}

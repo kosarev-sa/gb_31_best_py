@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 
 from BestJob.mixin import BaseClassContextMixin, UserDispatchMixin
 
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView, \
     PasswordResetConfirmView, PasswordResetCompleteView
 from django.core.mail import send_mail
@@ -186,10 +186,15 @@ class EmployerProfileView(UpdateView):
             form.instance.user = User.objects.get(pk=user_id)
 
         if form.is_valid():
+            if not form.has_changed():
+                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+                return self.form_invalid(form)
             form.save()
+            messages.success(request, 'Профиль успешно отредактирован!')
             return redirect(reverse("users:employer_profile", args=(user_id,)))
         else:
             print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения Профиля!')
         return self.form_invalid(form)
 
 

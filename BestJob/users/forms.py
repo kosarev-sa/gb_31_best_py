@@ -3,6 +3,7 @@ from random import random
 
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
+from django.core.exceptions import ValidationError
 
 from news.models import News
 from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User, Role
@@ -32,6 +33,9 @@ class WorkerProfileForm(forms.ModelForm):
 class EmployerProfileForm(forms.ModelForm):
     """формы для профиля работодателя"""
     disabled_fields = ('moderators_comment',)
+    name = forms.CharField(label='Название компании', required=True)
+    city = forms.CharField(label='Город местонахождения', required=True)
+    data = forms.CharField(label='Описание компании', required=True)
 
     class Meta:
         model = EmployerProfile
@@ -49,6 +53,12 @@ class EmployerProfileForm(forms.ModelForm):
 
         for field in self.disabled_fields:
             self.fields[field].disabled = True
+
+    def clean_city(self):
+        data = self.cleaned_data['city']
+        if not data[0].isupper():
+            raise ValidationError("Проверьте название города!")
+        return data
 
 class ModeratorProfileForm(forms.ModelForm):
     """формы для профиля модератора"""
