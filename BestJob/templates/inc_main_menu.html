@@ -66,6 +66,7 @@
                                     <ul class="dropdown-menu" role="menu">
 
                                         <li><a href="{% url 'users:moderator_profile' user.id %}">профиль модератора</a></li>
+                                        <li><a href="{% url 'news:create_news' %}">Создание новости</a></li>
                                         <li><a href="{% url 'news:moderate_news' %}">модерация новостей</a></li>
                                         <li><a href="{% url 'cv:moderator_cvs_list' %}">модерация резюме</a></li>
                                         <li><a href="{% url 'users:moderator_companies_list' %}">модерация компаний</a></li>
