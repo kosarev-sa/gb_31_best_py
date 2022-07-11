@@ -8,34 +8,6 @@
 
 {% block header %}
     {% include 'inc_header_menu.html' %}
-
-    <!--    <section class="page-header">-->
-    <!--        <div class="container">-->
-
-    <!--            &lt;!&ndash; Start of Page Title &ndash;&gt;-->
-    <!--            <div class="row">-->
-    <!--                <div class="col-md-12">-->
-    <!--                    <h2>Поиск</h2>-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!--            &lt;!&ndash; End of Page Title &ndash;&gt;-->
-
-    <!--            &lt;!&ndash; Start of Breadcrumb &ndash;&gt;-->
-    <!--            <div class="row">-->
-    <!--                <div class="col-md-12">-->
-    <!--                    <ul class="breadcrumb">-->
-    <!--                        <li><a href="{% url 'index' %}">На главную</a></li>-->
-    <!--                        <li><a href="{% url 'haystack_search' %}">Поиск</a></li>-->
-    <!--{#                        <li><a href="{% url 'search_vacancy' %}">расширенный поиск вакансий</a></li>#}-->
-    <!--                        <li class="active">расширенный поиск резюме</li>-->
-
-    <!--                    </ul>-->
-    <!--                </div>-->
-    <!--            </div>-->
-    <!--            &lt;!&ndash; End of Breadcrumb &ndash;&gt;-->
-
-    <!--        </div>-->
-    <!--    </section>-->
 {% endblock %}
 
 {% block content %}
@@ -47,7 +19,7 @@
         </div>
     {% endif %}
     <!-- ===== Start of Main Wrapper Section ===== -->
-    <section class="search-jobs ptb80">
+    <section class="search-jobs ptb80" style="background: #f0f0f0;">
         <div class="container">
             <!-- Start of Form -->
             <form class="row job-search-form row " method="get" action=".">
@@ -113,7 +85,7 @@
             <!-- Start of Row -->
         </div>
     </section>
-    <section class="find-candidate">
+    <section class="find-candidate" style="background: #f0f0f0;">
         <div class="container">
             <div class="row mt60">
 

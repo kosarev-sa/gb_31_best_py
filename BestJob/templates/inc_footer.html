@@ -10,22 +10,13 @@
     <div class="footer-info ptb80">
         <div class="container">
 
-            <div class="row">
-                <div class="col-md-3 text-center footer-about">
-                    <a href="{% url 'index' %}">
-                        <img src="{% static 'img/index/logo.svg' %}" alt="logo">
-                    </a>
-                </div>
-                <div class="col-md-4 footer-links">
-                    <h3>Ссылки</h3>
-                </div>
-                <div class="col-md-4 text-center">
-                    <h3>Партнеры</h3>
-                </div>
-            </div>
-
             <!-- 1st Footer Column -->
             <div class="col-md-3 col-sm-6 col-xs-6 footer-about">
+
+                <a href="{% url 'index' %}">
+                    <img src="{% static 'img/index/logo.svg' %}" alt="logo">
+                </a>
+
                 <!-- Small Description -->
                 <p>Учебный проект сделанный командой студентов факультета Python разработки на Django.</p>
 
@@ -39,6 +30,8 @@
 
             <!-- 2nd Footer Column -->
             <div class="col-md-3 col-sm-6 col-xs-6 footer-links">
+
+                <h3>Ссылки</h3>
 
                 <!-- Links -->
                 <ul class="nopadding">
