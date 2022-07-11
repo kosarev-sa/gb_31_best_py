@@ -54,7 +54,7 @@ class WorkerProfileView(UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = self.form_class(data=request.POST, files=request.FILES)
+        form = self.form_class(data=request.POST, files=request.FILES, instance=self.object)
         user_id = self.kwargs['pk']
 
         workerProfile = WorkerProfile.objects.filter(user_id=user_id)
@@ -72,8 +72,17 @@ class WorkerProfileView(UpdateView):
             form.instance.user_id = user_id
             form.instance.user = User.objects.get(pk=user_id)
 
-        form.save()
-        return redirect(reverse("users:worker_profile", args=(user_id,)))
+        if form.is_valid():
+            if not form.has_changed():
+                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+                return self.form_invalid(form)
+            form.save()
+            messages.success(request, 'Профиль успешно отредактирован!')
+            return redirect(reverse("users:worker_profile", args=(user_id,)))
+        else:
+            print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения Профиля!')
+        return self.form_invalid(form)
 
 
 class EmployersProfileView(ListView, BaseClassContextMixin):

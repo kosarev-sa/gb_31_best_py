@@ -1,4 +1,5 @@
 import hashlib
+import re
 from random import random
 
 from django import forms
@@ -11,6 +12,11 @@ from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User,
 
 class WorkerProfileForm(forms.ModelForm):
     """формы для профиля соискателя"""
+    name = forms.CharField(label='ФИО', required=True)
+    city = forms.CharField(label='Город проживания', required=True)
+    phone_number = forms.CharField(label='Телефон для связи', required=True)
+    birth_date = forms.DateField(label='Дата рождения', required=True)
+    data = forms.CharField(label='О себе', required=True)
 
     class Meta:
         model = WorkerProfile
@@ -28,6 +34,20 @@ class WorkerProfileForm(forms.ModelForm):
 
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
+
+    def clean_city(self):
+        data = self.cleaned_data['city']
+        if not data[0].isupper():
+            raise ValidationError("Проверьте название города.")
+        return data
+
+    def clean_phone_number(self):
+        data = self.cleaned_data['phone_number']
+        clear_phone = re.sub(r'\D', '', data)
+        result = re.match(r'^[78]?\d{10}$', clear_phone)
+        if not bool(result):
+            raise ValidationError("Проверьте корректность номера телефона.")
+        return data
 
 
 class EmployerProfileForm(forms.ModelForm):
