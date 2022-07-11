@@ -13,8 +13,7 @@ from approvals.models import ApprovalStatus
 
 from cvs.forms import CVCreateForm, CVUpdateForm, CVDeleteForm, CVDistributeForm, ExperienceCreateForm, \
     EducationCreateForm, LanguagesCreateForm, ModeratorCVUpdateForm, LanguagesUpdateForm
-from cvs.models import CV, Experience, CVWorkSchedule, CVEmployment, Education, LanguagesSpoken, CVMonths, \
-    ConnectVacancyCv
+from cvs.models import CV, Experience, CVWorkSchedule, CVEmployment, Education, LanguagesSpoken, CVMonths
 
 from search.models import Category, Currency, Employments, WorkSchedules, Languages, LanguageLevels, EducationLevel
 from users.models import WorkerProfile, EmployerProfile
@@ -49,25 +48,6 @@ class ModeratorCVList(TemplateView):
         context['cvs_list'] = CV.objects.filter(status__status="PUB").order_by('date_create')
         context['title'] = 'Модерация резюме'
         context['heading'] = "Модерация резюме"
-        return self.render_to_response(context)
-
-
-class ResponseCVList(TemplateView):
-    """view список откликов на резюме соискателя"""
-    template_name = 'cv_response_list.html'
-
-    def get(self, request, *args, **kwargs):
-        super(ResponseCVList, self).get(request, *args, **kwargs)
-        worker_id = WorkerProfile.objects.get(user=request.user.pk)
-        cv_worker_ids = [cv.id for cv in CV.objects.filter(worker_profile=worker_id, is_active=True)]
-
-        context = {
-            'responses': ConnectVacancyCv.objects.filter(cv_id__in=cv_worker_ids),
-            'title': "Отклики",
-            'heading': "Отклики",
-            'link': "/cvs/all/",
-            'heading_link': "Список резюме",
-        }
         return self.render_to_response(context)
 
 

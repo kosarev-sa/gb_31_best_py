@@ -13,14 +13,13 @@ from BestJob.settings import UserRole
 from cvs.models import CV
 from search.models import Category, Employments, WorkSchedules, Languages, \
     LanguageLevels
-from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDistributeForm, ModeratorVacancyUpdateForm, \
-    VacancyResponseForm, VacancyDeleteForm
+from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDistributeForm, ModeratorVacancyUpdateForm,\
+    VacancyDeleteForm
 from vacancies.models import Vacancy
 from users.models import EmployerProfile, WorkerProfile
 from approvals.models import ApprovalStatus
 
 from BestJob.mixin import BaseClassContextMixin, UserDispatchMixin
-from cvs.models import ConnectVacancyCv
 
 
 class VacancyList(TemplateView):
@@ -57,50 +56,6 @@ class ModeratorVacancyList(TemplateView):
         context['vacancies_list'] = Vacancy.objects.filter(status__status="PUB")
 
         return self.render_to_response(context)
-
-
-class ResponseVacancyList(TemplateView):
-    """view список откликов на вакансию работодателя"""
-    template_name = 'vacancy_response_list.html'
-
-    def get(self, request, *args, **kwargs):
-        super(ResponseVacancyList, self).get(request, *args, **kwargs)
-        employer_id = EmployerProfile.objects.get(user=request.user.pk)
-        vacancies = Vacancy.objects.filter(employer_profile=employer_id, is_active=True)
-        vacancies_cvs = []
-        for vacancy in vacancies:
-            vacancies_cvs.append((
-                vacancy,
-                ConnectVacancyCv.objects.filter(vacancy_id=vacancy.id),
-            ))
-
-        context = {
-            'vacancies_cvs': vacancies_cvs,
-        }
-        return self.render_to_response(context)
-
-
-class ResponseVacancyCVs(TemplateView):
-    """view список резюме с откликом на вакансию"""
-    template_name = 'vacancy_cvs.html'
-    form_class = VacancyResponseForm
-
-    def get(self, request, *args, **kwargs):
-        super(ResponseVacancyCVs, self).get(request, *args, **kwargs)
-        vacancy_id = kwargs['pk']
-        context = {
-            'form': self.form_class,
-            'responses': ConnectVacancyCv.objects.filter(vacancy_id=vacancy_id),
-        }
-        return self.render_to_response(context)
-
-    def post(self, request, *args, **kwargs):
-        vacancy_id = kwargs['pk']
-        response_id = kwargs.get('resp_id')
-        form = self.form_class(data=request.POST)
-        if form.is_valid():
-            ConnectVacancyCv.objects.filter(pk=response_id).update(status_employer=form.instance.status_employer)
-            return redirect(reverse("vacancy:vacancy_cvs", args=(vacancy_id,)))
 
 
 class ModeratorVacancyUpdate(UpdateView):
