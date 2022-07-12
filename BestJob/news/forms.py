@@ -6,7 +6,7 @@ from news.models import News
 
 class NewsCreateForm(forms.ModelForm):
     title = forms.CharField(label='Заголовок', required=True)
-    body = forms.CharField(label='Содержание', required=True)
+    body = forms.CharField(label='Текст новости', required=True)
     class Meta:
         model = News
         fields = ['title', 'body', 'image']
@@ -28,7 +28,7 @@ class NewsCreateForm(forms.ModelForm):
     def clean_body(self):
         data = self.cleaned_data['body']
         if len(data) < 15:
-            raise ValidationError("Слишком короткая новость.")
+            raise ValidationError("Текст новости слишком короткий. Минимум - 15 символов.")
         return data
 
 
