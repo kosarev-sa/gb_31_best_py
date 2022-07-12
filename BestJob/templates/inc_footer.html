@@ -36,7 +36,8 @@
                 <!-- Links -->
                 <ul class="nopadding">
                     {% if user.role_id == 2 or user.is_superuser %}
-                        <li><a href="{% url 'vacancy:create_vacancy' %}"><i class="fa fa-angle-double-right"></i>добавить вакансию</a></li>
+                        <li><a href="{% url 'vacancy:create_vacancy' %}"><i class="fa fa-angle-double-right"></i>добавить
+                            вакансию</a></li>
                     {% endif %}
                     <li><a href="{% url 'news:list_news' %}"><i class="fa fa-angle-double-right"></i>новости</a></li>
                     <li><a href="{% url 'haystack_search' %}"><i class="fa fa-angle-double-right"></i>поиск</a></li>
@@ -53,47 +54,49 @@
             <!-- 3 -->
             <div class="col-md-3 col-sm-6 col-xs-6 footer-posts">
 
-                {% for employer in footer_list_1 %}
-                <div class="footer-blog-post">
+                {% if footer_list_1 %}
+                    {% for employer in footer_list_1 %}
+                        <div class="footer-blog-post">
 
-                    <!-- Thumbnail -->
-                    <div class="thumbnail-post">
-                        <a href="{% url 'users:employers_detail' employer.id %}">
-                            <img src="{{ employer.image.url }}" alt="">
-                        </a>
-                    </div>
+                            <!-- Thumbnail -->
+                            <div class="thumbnail-post">
+                                <a href="{% url 'users:employers_detail' employer.id %}">
+                                    <img src="{{ employer.image.url }}" alt="">
+                                </a>
+                            </div>
 
-                    <!-- Link -->
-                    <div class="post-info">
-                        <a href="{% url 'users:employers_detail' employer.user.id %}">{{ employer.name }}</a>
-                        <span>{{ employer.city }}</span>
-                    </div>
-                </div>
-                {% endfor %}
-
+                            <!-- Link -->
+                            <div class="post-info">
+                                <a href="{% url 'users:employers_detail' employer.user.id %}">{{ employer.name }}</a>
+                                <span>{{ employer.city }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
 
             <!-- 4 -->
             <div class="col-md-3 col-sm-6 col-xs-6 footer-posts">
 
-                {% for employer in footer_list_2 %}
-                <div class="footer-blog-post">
+                {% if footer_list_2 %}
+                    {% for employer in footer_list_2 %}
+                        <div class="footer-blog-post">
 
-                    <!-- Thumbnail -->
-                    <div class="thumbnail-post">
-                        <a href="{% url 'users:employers_detail' employer.user.id %}">
-                            <img src="{{ employer.image.url }}" alt="">
-                        </a>
-                    </div>
+                            <!-- Thumbnail -->
+                            <div class="thumbnail-post">
+                                <a href="{% url 'users:employers_detail' employer.user.id %}">
+                                    <img src="{{ employer.image.url }}" alt="">
+                                </a>
+                            </div>
 
-                    <!-- Link -->
-                    <div class="post-info">
-                        <a href="{% url 'users:employers_detail' employer.user.id %}">{{ employer.name }}</a>
-                        <span>{{ employer.city }}</span>
-                    </div>
-                </div>
-                {% endfor %}
-
+                            <!-- Link -->
+                            <div class="post-info">
+                                <a href="{% url 'users:employers_detail' employer.user.id %}">{{ employer.name }}</a>
+                                <span>{{ employer.city }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
 
         </div>
