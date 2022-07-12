@@ -10,22 +10,13 @@
     <div class="footer-info ptb80">
         <div class="container">
 
-            <div class="row">
-                <div class="col-md-3 text-center footer-about">
-                    <a href="{% url 'index' %}">
-                        <img src="{% static 'img/index/logo.svg' %}" alt="logo">
-                    </a>
-                </div>
-                <div class="col-md-4 footer-links">
-                    <h3>Ссылки</h3>
-                </div>
-                <div class="col-md-4 text-center">
-                    <h3>Партнеры</h3>
-                </div>
-            </div>
-
             <!-- 1st Footer Column -->
             <div class="col-md-3 col-sm-6 col-xs-6 footer-about">
+
+                <a href="{% url 'index' %}">
+                    <img src="{% static 'img/logo.svg' %}" alt="logo">
+                </a>
+
                 <!-- Small Description -->
                 <p>Учебный проект сделанный командой студентов факультета Python разработки на Django.</p>
 
@@ -40,10 +31,13 @@
             <!-- 2nd Footer Column -->
             <div class="col-md-3 col-sm-6 col-xs-6 footer-links">
 
+                <h3>Ссылки</h3>
+
                 <!-- Links -->
                 <ul class="nopadding">
                     {% if user.role_id == 2 or user.is_superuser %}
-                        <li><a href="{% url 'vacancy:create_vacancy' %}"><i class="fa fa-angle-double-right"></i>добавить вакансию</a></li>
+                        <li><a href="{% url 'vacancy:create_vacancy' %}"><i class="fa fa-angle-double-right"></i>добавить
+                            вакансию</a></li>
                     {% endif %}
                     <li><a href="{% url 'news:list_news' %}"><i class="fa fa-angle-double-right"></i>новости</a></li>
                     <li><a href="{% url 'haystack_search' %}"><i class="fa fa-angle-double-right"></i>поиск</a></li>
@@ -60,47 +54,49 @@
             <!-- 3 -->
             <div class="col-md-3 col-sm-6 col-xs-6 footer-posts">
 
-                {% for employer in footer_list_1 %}
-                <div class="footer-blog-post">
+                {% if footer_list_1 %}
+                    {% for employer in footer_list_1 %}
+                        <div class="footer-blog-post">
 
-                    <!-- Thumbnail -->
-                    <div class="thumbnail-post">
-                        <a href="{% url 'users:employers_detail' employer.id %}">
-                            <img src="{{ employer.image.url }}" alt="">
-                        </a>
-                    </div>
+                            <!-- Thumbnail -->
+                            <div class="thumbnail-post">
+                                <a href="{% url 'users:employers_detail' employer.id %}">
+                                    <img src="{{ employer.image.url }}" alt="">
+                                </a>
+                            </div>
 
-                    <!-- Link -->
-                    <div class="post-info">
-                        <a href="{% url 'users:employers_detail' employer.user.id %}">{{ employer.name }}</a>
-                        <span>{{ employer.city }}</span>
-                    </div>
-                </div>
-                {% endfor %}
-
+                            <!-- Link -->
+                            <div class="post-info">
+                                <a href="{% url 'users:employers_detail' employer.user.id %}">{{ employer.name }}</a>
+                                <span>{{ employer.city }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
 
             <!-- 4 -->
             <div class="col-md-3 col-sm-6 col-xs-6 footer-posts">
 
-                {% for employer in footer_list_2 %}
-                <div class="footer-blog-post">
+                {% if footer_list_2 %}
+                    {% for employer in footer_list_2 %}
+                        <div class="footer-blog-post">
 
-                    <!-- Thumbnail -->
-                    <div class="thumbnail-post">
-                        <a href="{% url 'users:employers_detail' employer.user.id %}">
-                            <img src="{{ employer.image.url }}" alt="">
-                        </a>
-                    </div>
+                            <!-- Thumbnail -->
+                            <div class="thumbnail-post">
+                                <a href="{% url 'users:employers_detail' employer.user.id %}">
+                                    <img src="{{ employer.image.url }}" alt="">
+                                </a>
+                            </div>
 
-                    <!-- Link -->
-                    <div class="post-info">
-                        <a href="{% url 'users:employers_detail' employer.user.id %}">{{ employer.name }}</a>
-                        <span>{{ employer.city }}</span>
-                    </div>
-                </div>
-                {% endfor %}
-
+                            <!-- Link -->
+                            <div class="post-info">
+                                <a href="{% url 'users:employers_detail' employer.user.id %}">{{ employer.name }}</a>
+                                <span>{{ employer.city }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             </div>
 
         </div>

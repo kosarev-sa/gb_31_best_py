@@ -8,38 +8,10 @@
 
 {% block header %}
     {% include 'inc_header_menu.html' %}
-
-<!--    <section class="page-header">-->
-<!--        <div class="container">-->
-
-<!--            &lt;!&ndash; Start of Page Title &ndash;&gt;-->
-<!--            <div class="row">-->
-<!--                <div class="col-md-12">-->
-<!--                    <h2>Поиск</h2>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            &lt;!&ndash; End of Page Title &ndash;&gt;-->
-
-<!--            &lt;!&ndash; Start of Breadcrumb &ndash;&gt;-->
-<!--            <div class="row">-->
-<!--                <div class="col-md-12">-->
-<!--                    <ul class="breadcrumb">-->
-<!--                        <li><a href="{% url 'index' %}">На главную</a></li>-->
-<!--                        <li><a href="{% url 'haystack_search' %}">Поиск</a></li>-->
-<!--{#                        <li><a href="{% url 'search_vacancy' %}">расширенный поиск вакансий</a></li>#}-->
-<!--                        <li class="active">расширенный поиск резюме</li>-->
-
-<!--                    </ul>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            &lt;!&ndash; End of Breadcrumb &ndash;&gt;-->
-
-<!--        </div>-->
-<!--    </section>-->
 {% endblock %}
 
 {% block content %}
-        {% if message_of_denied %}
+    {% if message_of_denied %}
         <script>alert('Пожалуйста, войдите или зарегистрируйтесь как работодатель.');
         </script>
         <div class="text-center" style="color:red">
@@ -47,7 +19,7 @@
         </div>
     {% endif %}
     <!-- ===== Start of Main Wrapper Section ===== -->
-    <section class="search-jobs ptb80">
+    <section class="search-jobs ptb80" style="background: #f0f0f0;">
         <div class="container">
             <!-- Start of Form -->
             <form class="row job-search-form row " method="get" action=".">
@@ -113,7 +85,7 @@
             <!-- Start of Row -->
         </div>
     </section>
-    <section class="find-candidate">
+    <section class="find-candidate" style="background: #f0f0f0;">
         <div class="container">
             <div class="row mt60">
 
@@ -124,6 +96,7 @@
                     <div class="candidate-wrapper">
                         {% if query %}
                             {% for result in object_list %}
+
 
 
                                 <!-- ===== Start of Single Candidate 1 ===== -->
@@ -175,8 +148,15 @@
                                     <!-- CTA -->
                                     <div class="col-md-2 col-xs-3">
                                         <div class="candidate-cta ptb30">
-                                            <a href="#" style="color: lightgray">
-                                                <div class="pull-right"><h3>★</h3></div>
+                                            <a href="{% url 'favorites:employer_add_remove' cv_id=result.object.id %}"
+                                               style="color: lightgray">
+                                                {% if result.object.id in favourite_list %}
+
+
+                                                    <div class="pull-right" style="color: goldenrod"><h3>★</h3></div>
+                                                {% else %}
+                                                    <div class="pull-right"><h3>★</h3></div>
+                                                {% endif %}
                                             </a>
                                         </div>
                                     </div>

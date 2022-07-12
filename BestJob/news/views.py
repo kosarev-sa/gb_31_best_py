@@ -7,7 +7,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils.datetime_safe import datetime
 from django.views.generic import TemplateView, CreateView, UpdateView, ListView, DeleteView, DetailView
 
-from BestJob.settings import NEWS_BODY_LEN_ON_NEWS_LIST
+from BestJob.settings import NEWS_BODY_LEN_ON_NEWS_LIST, UserRole
 from users.models import ModeratorProfile, User
 from news.forms import NewsCreateForm, NewsUpdateForm#, NewsDeleteForm
 from news.models import News
@@ -48,6 +48,8 @@ class NewsListView(ListView):
             object_list.append(item)
 
         context['object_list'] = object_list
+        context['title'] = 'Список новостей'
+        context['heading'] = 'Список новостей'
         return context
 
 
@@ -66,18 +68,31 @@ class NewsDetailView(DetailView):
         except Exception:
             print(f'News not exists')
 
+        context['title'] = "Просмотр новости"
+        context['heading'] = "Просмотр новости"
+
         return self.render_to_response(context)
 
 
-class NewsModerateList(TemplateView):
-    """view главной страницы с новостями"""
-    template_name = 'news_moderate_list.html'
+class NewsModerateList(ListView):
+    """view страницы для модерации новостей"""
+    paginate_by = 3
+    template_name = 'news_list.html'
+    queryset = News.objects.order_by('-created')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(NewsModerateList, self).get_context_data(**kwargs)
-        context['news_list'] = News.objects.all().order_by('-created')
+        queryset = context['object_list']
+        object_list = list()
+        for item in queryset:
+            if len(item.body) > NEWS_BODY_LEN_ON_NEWS_LIST:
+                item.body = item.body[0:NEWS_BODY_LEN_ON_NEWS_LIST - 3] + '...'
+
+            object_list.append(item)
+
         context['title'] = "Модерация новостей"
         context['heading'] = "Модерация новостей"
+        context['object_list'] = object_list
         return context
 
 
@@ -87,6 +102,12 @@ class NewsCreate(CreateView):
     template_name = 'news_create.html'
     form_class = NewsCreateForm
     success_url = reverse_lazy('news:create_news')
+
+    def get_context_data(self, **kwargs):
+        context = super(NewsCreate, self).get_context_data(**kwargs)
+        context['title'] = 'Создание Новости'
+        context['heading'] = "Создание Новости"
+        return context
 
     def form_valid(self, form):
         form.save()
@@ -190,6 +211,12 @@ class NewsDelete(DeleteView):
     model = News
     template_name = 'news_confirm_delete.html'
     success_url = reverse_lazy('news:moderate_news')
+
+    def get_context_data(self, **kwargs):
+        context = super(NewsDelete, self).get_context_data(**kwargs)
+        context['title'] = 'Удаление Новости'
+        context['heading'] = "Удаление Новости"
+        return context
 
     def form_valid(self, form):
         """Новость удаляется"""

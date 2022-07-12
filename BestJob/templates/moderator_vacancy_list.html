@@ -7,37 +7,12 @@
 {% endblock %}
 
 {% block header %}
-    <section class="page-header">
-        <div class="container">
-
-            <!-- Start of Page Title -->
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Вакансии</h2>
-                </div>
-            </div>
-            <!-- End of Page Title -->
-
-            <!-- Start of Breadcrumb -->
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="breadcrumb">
-                        <li><a href="{% url 'users:moderator_companies_list' %}">Компании</a></li>
-                        <li class="active">Вакансии</li>
-                        <li><a href="{% url 'cv:moderator_cvs_list' %}">Резюме</a></li>
-                        <li><a href="{% url 'news:moderate_news' %}">Новости</a></li>
-                    </ul>
-                </div>
-            </div>
-            <!-- End of Breadcrumb -->
-
-        </div>
-    </section>
+    {% include 'inc_header_menu.html'%}
 {% endblock %}
 
 {% block content %}
 
-    <section class="find-candidate ptb80">
+    <section class="find-candidate ptb80" style="background: #f0f0f0;">
         <div class="container">
             <!-- Start of Row -->
             <div class="row mt60">

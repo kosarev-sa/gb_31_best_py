@@ -107,3 +107,59 @@
     </div>
 </section>
 {% endif %}
+
+{% if user.role_id == 1 %}
+<section class="page-header">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{{ heading }}</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="{% url 'index' %}">Главная</a>
+                    </li>
+                    <li>
+                        <a style="{% if request.resolver_match.url_name == 'moderator_profile' %}color: #949396 ;{% endif %}"
+                           href="{% url 'users:moderator_profile' user.id %}">Профиль</a>
+                    </li>
+
+                    <li class="dropdown simple-menu">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                           style="{% if request.resolver_match.url_name == 'moderate_news' or request.resolver_match.url_name == 'moderator_cvs_list' or request.resolver_match.url_name == 'moderator_cvs_approve' or request.resolver_match.url_name == 'moderator_companies_list' or request.resolver_match.url_name == 'moderator_company_approve' or request.resolver_match.url_name == 'moderator_vacancy_list' or request.resolver_match.url_name == 'moderator_vacancy_approve' %}color: #949396 ;{% endif %}">Модерация<i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'news:create_news' %}">Создание новости</a>
+                            </li>
+                            <li>
+                                <a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'news:moderate_news' %}">Модерация новостей</a>
+                            </li>
+                            <li>
+                                <a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'cv:moderator_cvs_list' %}">Модерация резюме</a>
+                            </li>
+                            <li>
+                                <a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'users:moderator_companies_list' %}">Модерация компаний</a>
+                            </li>
+                            <li>
+                                <a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'vacancies:moderator_vacancy_list' %}">Модерация вакансий</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endif %}

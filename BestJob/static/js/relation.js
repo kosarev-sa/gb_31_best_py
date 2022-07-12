@@ -27,6 +27,10 @@ function sendData(way_id) {
     let select_picker = $("#relation_select_picker").val();
     let letter = $("#transmittal_letter").val();
 
+    let rel_row_str = '#rel_row_' + magic_field;
+    let rel_row = $(rel_row_str);
+
+
     if (!checkValues(select_picker, letter)) {
         return;
     }
@@ -53,13 +57,13 @@ function sendData(way_id) {
             data: {},
             success: (data) => {
                 if (data) {
-
-                    if (way_id === 0) {
-                        $last_list_section.replaceWith(data.result);
-                    } else {
-                        $relation_detail_section.replaceWith(data.result);
+                    if (data.result) {
+                        if (way_id === 0) {
+                            rel_row.replaceWith(data.result)
+                        } else {
+                            $relation_detail_section.replaceWith(data.result);
+                        }
                     }
-
                     // Hide modal form.
                     $custom_form_modal.removeClass('is-visible');
                     // Clear modal form.

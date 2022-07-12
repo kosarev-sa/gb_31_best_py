@@ -13,11 +13,10 @@ from approvals.models import ApprovalStatus
 
 from cvs.forms import CVCreateForm, CVUpdateForm, CVDeleteForm, CVDistributeForm, ExperienceCreateForm, \
     EducationCreateForm, LanguagesCreateForm, ModeratorCVUpdateForm, LanguagesUpdateForm
-from cvs.models import CV, Experience, CVWorkSchedule, CVEmployment, Education, LanguagesSpoken, CVMonths, \
-    ConnectVacancyCv
+from cvs.models import CV, Experience, CVWorkSchedule, CVEmployment, Education, LanguagesSpoken, CVMonths
 
 from search.models import Category, Currency, Employments, WorkSchedules, Languages, LanguageLevels, EducationLevel
-from users.models import WorkerProfile
+from users.models import WorkerProfile, EmployerProfile
 from vacancies.models import Vacancy
 
 
@@ -35,8 +34,6 @@ class CVList(TemplateView):
             'worker': worker_id,
             'title': "Мои резюме",
             'heading': "Мои резюме",
-            'link': "/cvs/create/",
-            'heading_link': "Создать резюме",
         }
         return self.render_to_response(context)
 
@@ -49,25 +46,8 @@ class ModeratorCVList(TemplateView):
         super(ModeratorCVList, self).get(request, *args, **kwargs)
         context = self.get_context_data()
         context['cvs_list'] = CV.objects.filter(status__status="PUB").order_by('date_create')
-        return self.render_to_response(context)
-
-
-class ResponseCVList(TemplateView):
-    """view список откликов на резюме соискателя"""
-    template_name = 'cv_response_list.html'
-
-    def get(self, request, *args, **kwargs):
-        super(ResponseCVList, self).get(request, *args, **kwargs)
-        worker_id = WorkerProfile.objects.get(user=request.user.pk)
-        cv_worker_ids = [cv.id for cv in CV.objects.filter(worker_profile=worker_id, is_active=True)]
-
-        context = {
-            'responses': ConnectVacancyCv.objects.filter(cv_id__in=cv_worker_ids),
-            'title': "Отклики",
-            'heading': "Отклики",
-            'link': "/cvs/all/",
-            'heading_link': "Список резюме",
-        }
+        context['title'] = 'Модерация резюме'
+        context['heading'] = "Модерация резюме"
         return self.render_to_response(context)
 
 
@@ -93,9 +73,21 @@ class ModeratorCVUpdate(UpdateView):
         context['experience'] = experience
         context['educations'] = Education.objects.filter(cv=cv)
         context['langlevels'] = LanguagesSpoken.objects.filter(cv=cv)
-        context['employments'] = [cv_empl for cv_empl in CVEmployment.objects.filter(cv=cv)]
-        context['schedules'] = [cv_sch for cv_sch in CVWorkSchedule.objects.filter(cv=cv)]
+        cv_employments = [cv_empl.employment_id for cv_empl in CVEmployment.objects.filter(cv=cv)]
+        employments = []
+        for el in cv_employments:
+            employment = Employments.objects.filter(id=el).first()
+            employments.append(employment)
+        context['employments'] = employments
+        cv_schedules = [cv_sch.schedule_id for cv_sch in CVWorkSchedule.objects.filter(cv=cv)]
+        schedules = []
+        for el in cv_schedules:
+            schedule = WorkSchedules.objects.filter(id=el).first()
+            schedules.append(schedule)
+        context['schedules'] = schedules
         context['is_moderating'] = True
+        context['title'] = 'Модерация резюме'
+        context['heading'] = "Модерация резюме"
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
@@ -120,8 +112,7 @@ class CVCreate(CreateView):
         context = super(CVCreate, self).get_context_data(**kwargs)
         context['title'] = 'Создание резюме'
         context['heading'] = "Создание резюме"
-        context['link'] = "/cvs/all/"
-        context['heading_link'] = "Список резюме"
+
         return context
 
     def get(self, request, *args, **kwargs):
@@ -320,10 +311,11 @@ class CVDetailView(DetailView):
     def get(self, request, *args, **kwargs):
         super(CVDetailView, self).get(request, *args, **kwargs)
         context = self.get_context_data(object_list=None, **kwargs)
+
         if request.user.role_id == UserRole.WORKER:
             context['worker'] = True
         elif request.user.role_id == UserRole.EMPLOYER:
-            context['employer'] = True
+            context['employer'] = EmployerProfile.objects.get(user=request.user)
         return self.render_to_response(context)
 
 
@@ -594,11 +586,12 @@ class RecomendedCVList(ListView, BaseClassContextMixin):
     def get(self, request, *args, **kwargs):
         super(RecomendedCVList, self).get(request, *args, **kwargs)
         vacancy = Vacancy.objects.get(id=self.kwargs['pk'])
+        employer = vacancy.employer_profile
         context = {
             'cvs': CV.objects.filter(speciality=vacancy.specialization),
             'title': "Рекомендованные резюме",
             'heading': "Рекомендованные резюме",
-
+            'employer': employer
             # Сделать переход в шапке, куда?
             # 'link': "",
             # 'heading_link': "",

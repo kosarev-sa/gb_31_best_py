@@ -1,12 +1,12 @@
 from django.urls import path, re_path
 
-from .views import LastListView, RelationDetailView, RelationCreateFromFavoritesView, \
+from .views import RelationListView, RelationDetailView, RelationCreateFromFavoritesView, \
     RelationCreateFromRelationView, RelationCreateFromRelationDetailView
 
 app_name = 'relations'
 
 urlpatterns = [
-    path('list/', LastListView.as_view(), name='list'),
+    path('list/', RelationListView.as_view(), name='list'),
     path('detail/<int:relation_id>/', RelationDetailView.as_view(), name='detail'),
     # Создание из favorites
     re_path(r'^create_from_fav/(?P<magic_id>\d+)/(?P<select_picker_id>\d+)/(?P<letter>[\w|\W]+)/$',

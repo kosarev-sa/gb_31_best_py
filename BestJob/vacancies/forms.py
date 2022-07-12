@@ -3,7 +3,6 @@ from django import forms
 from approvals.models import ApprovalStatus
 from search.models import Category
 from vacancies.models import Vacancy
-from cvs.models import ConnectVacancyCv
 
 
 class VacancyCreateForm(forms.ModelForm):
@@ -79,6 +78,9 @@ class VacancyDeleteForm(forms.ModelForm):
         model = Vacancy
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super(VacancyDeleteForm, self).__init__(*args, **kwargs)
+
 
 class VacancyDistributeForm(forms.ModelForm):
     """форма размещения вакансии"""
@@ -92,11 +94,3 @@ class VacancyDistributeForm(forms.ModelForm):
         self.fields['name'].widget.attrs['placeholder'] = 'Backend разработчик'
         self.fields['city'].widget.attrs['placeholder'] = 'Москва'
         self.fields['description'].widget.attrs['placeholder'] = 'Описание вакансии'
-
-
-class VacancyResponseForm(forms.ModelForm):
-    """форма изменения отклика на вакансию"""
-
-    class Meta:
-        model = ConnectVacancyCv
-        exclude = ('cv', 'vacancy', 'status_worker', 'created_at', 'initiator')
