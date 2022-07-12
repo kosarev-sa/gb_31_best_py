@@ -11,6 +11,11 @@
 {% endblock %}
 
 {% block content %}
+
+    {% block messages %}
+        {% include 'inc_messages_for_forms.html' %}
+    {% endblock %}
+
     <!-- ===== Start of Main Wrapper Section ===== -->
     <div class="ptb80" id="post-job">
         <div class="container">
@@ -21,7 +26,8 @@
                 <div class="col-md-3 col-xs-12">
                     <div class="profile-photo">
                         {% if worker.image %}
-                            <img src="{{ worker.image.url }}" class="img-responsive" alt="Нет фото">
+                            <img src="{{ worker.image.url }}" class="img-responsive"
+                                 alt="Нет фото">
                         {% else %}
                             <p>Нет фото</p>
                         {% endif %}
@@ -69,7 +75,8 @@
             <!-- End of Row -->
 
 
-            <form action="{% url 'cvs:update_cv' object.pk %}" method="post" class="post-job-resume mt50">
+            <form action="{% url 'cvs:update_cv' object.pk %}" method="post"
+                  class="post-job-resume mt50">
                 {% csrf_token %}
 
                 <!-- Start of Resume Details -->
@@ -83,22 +90,26 @@
 
                         <!-- Form Group -->
                         <div class="form-group">
-                            <label for="{{ form.speciality.id_for_label }}">Специализация</label>
+                            <label for="{{ form.speciality.id_for_label }}">Специализация
+                                <span style="color:red">*</span></label>
                             {{ form.speciality }}
                         </div>
                         <!-- Form Group -->
                         <div class="form-group">
-                            <label for="{{ form.post.id_for_label }}">Должность</label>
+                            <label for="{{ form.post.id_for_label }}">Должность
+                                <span style="color:red">*</span></label>
                             {{ form.post }}
                         </div>
                         <!-- Form Group -->
                         <div class="form-group">
-                            <label for="{{ form.skills.id_for_label }}">Основные навыки</label>
+                            <label for="{{ form.skills.id_for_label }}">Основные навыки
+                                <span style="color:red">*</span></label>
                             {{ form.skills }}
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-12" for="{{ form.salary.id_for_label }}">Зарплата</label>
+                        <label class="col-md-12" for="{{ form.salary.id_for_label }}">Зарплата
+                            <span style="color:red">*</span></label>
                         <div class="col-md-6 mx-auto">
                             {{ form.salary }}
                         </div>
@@ -129,9 +140,11 @@
                                                 <h5><small>{{ exp.post }}</small></h5>
                                             {% endif %}
                                         </div>
-                                        <h6 class="time">{{ exp.get_month_begin_display }} {{ exp.year_begin }} -
+                                        <h6 class="time">{{ exp.get_month_begin_display }} {{ exp.year_begin }}
+                                            -
                                             {% if exp.year_end %}{{ exp.get_month_end_display }}
-                                                {{ exp.year_end }} {% else %} Настоящее время {% endif %}</h6>
+                                                {{ exp.year_end }} {% else %} Настоящее
+                                                время {% endif %}</h6>
                                     </div>
 
                                     <div class="experience-body">
@@ -158,13 +171,15 @@
                     </section>
                 {% endif %}
 
-                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_experience' cv.id %}">Добавить Опыт
+                <a class="btn btn-blue btn-effect mt15 mb15"
+                   href="{% url 'cv:create_experience' cv.id %}">Добавить Опыт
                     работы</a>
                 <!--    Конец секции ОПЫТ РАБОТЫ-->
 
                 <!--    Начало секции ОБРАЗОВАНИЕ-->
                 <div class="form-group pt30">
-                    <label for="{{ form.education_level.id_for_label }}">Уровень образования</label>
+                    <label for="{{ form.education_level.id_for_label }}">Уровень образования
+                        <span style="color:red">*</span></label>
                     {{ form.education_level }}
                 </div>
 
@@ -181,7 +196,8 @@
 
                                     <div class="education-header clearfix">
                                         {% if education.name %}
-                                            <h4><small>Учебное заведение -</small> {{ education.name }} </h4>
+                                            <h4><small>Учебное заведение
+                                                -</small> {{ education.name }} </h4>
                                         {% endif %}
 
                                         {% if education.department %}
@@ -189,11 +205,13 @@
                                         {% endif %}
 
                                         {% if education.specialty %}
-                                            <h5><small>Специализация -</small> {{ education.specialty }}</h5>
+                                            <h5><small>Специализация
+                                                -</small> {{ education.specialty }}</h5>
                                         {% endif %}
 
                                         {% if education.date_end %}
-                                            <h5><small>Год окончания -</small> {{ education.date_end }}</h5>
+                                            <h5><small>Год окончания
+                                                -</small> {{ education.date_end }}</h5>
                                         {% endif %}
 
                                         <a class="btn btn-blue btn-effect mt15 mb15"
@@ -208,7 +226,8 @@
                     </section>
                 {% endif %}
 
-                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_education' cv.id %}">Добавить место
+                <a class="btn btn-blue btn-effect mt15 mb15"
+                   href="{% url 'cv:create_education' cv.id %}">Добавить место
                     обучения</a>
                 <!--    Начало секции ОБРАЗОВАНИЕ-->
 
@@ -228,7 +247,8 @@
                                             <h4><small>Язык -</small> {{ langl.language }}</h4>
                                         {% endif %}
                                         {% if langl.level %}
-                                            <h4><small>Уровень знания -</small> {{ langl.level }}</h4>
+                                            <h4><small>Уровень знания -</small> {{ langl.level }}
+                                            </h4>
                                         {% endif %}
 
                                         <a class="btn btn-blue btn-effect mt15 mb15"
@@ -243,12 +263,14 @@
                     </section>
                 {% endif %}
 
-                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_language' cv.id %}">Добавить
+                <a class="btn btn-blue btn-effect mt15 mb15"
+                   href="{% url 'cv:create_language' cv.id %}">Добавить
                     язык</a>
                 <!--    Конец секции ВЛАДЕНИЕ ЯЗЫКАМИ-->
 
                 <div class="form-group pt30 nomargin">
-                    <label for="{{ form.moving.id_for_label }}">Возможность переезда</label>
+                    <label for="{{ form.moving.id_for_label }}">Возможность переезда
+                        <span style="color:red">*</span></label>
                     {{ form.moving }}
                 </div>
 
@@ -257,9 +279,11 @@
 
                     {% for empl in employments %}
                         <div class="form-check">
-                            <input class="form-check-input" name="empl_{{ empl.code }}" type="checkbox"
+                            <input class="form-check-input" name="empl_{{ empl.code }}"
+                                   type="checkbox"
                                    value="{{ empl.code }}"
-                                   id="empl_{{ empl.code }}" {% if empl.id in cv_employments %} checked {% endif %}>
+                                   id="empl_{{ empl.code }}" {% if empl.id in cv_employments %}
+                                   checked {% endif %}>
                             <label class="form-check-label" for="empl_{{ empl.code }}">
                                 {{ empl.employment }}
                             </label>
@@ -268,13 +292,15 @@
 
                 </div>
                 <div class="col-md-6 mx-auto form-group pt30 nomargin">
-                    <label>График работы </label>
+                    <label>График работы</label>
 
                     {% for sch in schedules %}
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="schedule_{{ sch.code }}"
+                            <input class="form-check-input" type="checkbox"
+                                   name="schedule_{{ sch.code }}"
                                    value="{{ sch.code }}"
-                                   id="schedule_{{ sch.code }}" {% if sch.id in cv_schedules %} checked {% endif %}>
+                                   id="schedule_{{ sch.code }}" {% if sch.id in cv_schedules %}
+                                   checked {% endif %}>
                             <label class="form-check-label" for="schedule_{{ sch.code }}">
                                 {{ sch.schedule }}
                             </label>
@@ -292,14 +318,15 @@
     </div>
     <!-- Комментарий модератора BEGIN -->
     {% if moderators_comment %}
-    <section class="education ptb30" style="background: #f0f0f0;">
-        <div class="container">
-            <div class="form-group pt10">
-                <label for="{{ form.moderators_comment.id_for_label }}">Комментарий модератора:</label>
-                {{ form.moderators_comment }}
+        <section class="education ptb30" style="background: #f0f0f0;">
+            <div class="container">
+                <div class="form-group pt10">
+                    <label for="{{ form.moderators_comment.id_for_label }}">Комментарий
+                        модератора:</label>
+                    {{ form.moderators_comment }}
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
     {% endif %}
     <!-- Комментарий модератора END -->
 {% endblock %}
