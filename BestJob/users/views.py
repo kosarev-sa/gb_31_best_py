@@ -4,7 +4,7 @@ from django.template.loader import render_to_string
 
 from BestJob.mixin import BaseClassContextMixin, UserDispatchMixin
 
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView, \
     PasswordResetConfirmView, PasswordResetCompleteView
 from django.core.mail import send_mail
@@ -54,7 +54,7 @@ class WorkerProfileView(UpdateView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = self.form_class(data=request.POST, files=request.FILES)
+        form = self.form_class(data=request.POST, files=request.FILES, instance=self.object)
         user_id = self.kwargs['pk']
 
         workerProfile = WorkerProfile.objects.filter(user_id=user_id)
@@ -72,8 +72,17 @@ class WorkerProfileView(UpdateView):
             form.instance.user_id = user_id
             form.instance.user = User.objects.get(pk=user_id)
 
-        form.save()
-        return redirect(reverse("users:worker_profile", args=(user_id,)))
+        if form.is_valid():
+            if not form.has_changed():
+                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+                return self.form_invalid(form)
+            form.save()
+            messages.success(request, 'Профиль успешно отредактирован!')
+            return redirect(reverse("users:worker_profile", args=(user_id,)))
+        else:
+            print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения Профиля!')
+        return self.form_invalid(form)
 
 
 class EmployersProfileView(ListView, BaseClassContextMixin):
@@ -188,10 +197,15 @@ class EmployerProfileView(UpdateView):
             form.instance.user = User.objects.get(pk=user_id)
 
         if form.is_valid():
+            if not form.has_changed():
+                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+                return self.form_invalid(form)
             form.save()
+            messages.success(request, 'Профиль успешно отредактирован!')
             return redirect(reverse("users:employer_profile", args=(user_id,)))
         else:
             print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения Профиля!')
         return self.form_invalid(form)
 
 
@@ -226,7 +240,7 @@ class ModeratorProfileView(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        form = self.form_class(data=request.POST, files=request.FILES)
+        form = self.form_class(data=request.POST, files=request.FILES, instance=self.object)
         user_id = self.kwargs['pk']
         moderatorProfile = ModeratorProfile.objects.filter(user_id=user_id)
 
@@ -244,8 +258,17 @@ class ModeratorProfileView(UpdateView):
             form.instance.user_id = user_id
             form.instance.user = User.objects.get(pk=user_id)
 
-        form.save()
-        return redirect(reverse("users:moderator_profile", args=(user_id,)))
+        if form.is_valid():
+            if not form.has_changed():
+                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+                return self.form_invalid(form)
+            form.save()
+            messages.success(request, 'Профиль успешно отредактирован!')
+            return redirect(reverse("users:moderator_profile", args=(user_id,)))
+        else:
+            print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения Профиля!')
+        return self.form_invalid(form)
 
 
 class UserLoginView(LoginView):
@@ -292,10 +315,11 @@ class UserRegisterView(FormView):
             elif user.role_id == 3:
                 worker_profile = WorkerProfile(user_id=user.pk)
                 worker_profile.save()
-
+            messages.success(request, 'Профиль успешно зарегистрирован!')
             return redirect(self.success_url)
         else:
             print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения формы!')
         return self.form_invalid(form)
 
     def send_verify_link(self, user):

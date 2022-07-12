@@ -106,7 +106,7 @@ class CVCreate(CreateView):
     model = CV
     template_name = 'cv_create.html'
     form_class = CVCreateForm
-    success_url = reverse_lazy('cv:cv_list')
+    success_url = reverse_lazy('cv:create_cv')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVCreate, self).get_context_data(**kwargs)
@@ -125,6 +125,7 @@ class CVCreate(CreateView):
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
+        self.object = None
         worker = WorkerProfile.objects.get(user=request.user.pk)
         start_status = ApprovalStatus.objects.get(status='NPB')
         form = self.form_class(data=request.POST)
@@ -157,9 +158,11 @@ class CVCreate(CreateView):
             if request.POST.get('language', None):
                 return redirect('cv:create_language', cv_id=cv.id)
 
+            messages.success(request, 'Резюме успешно создано!')
             return redirect(self.success_url)
         else:
             print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения резюме!')
         return self.form_invalid(form)
 
 
@@ -168,7 +171,7 @@ class CVUpdate(UpdateView):
     model = CV
     template_name = 'cv_update.html'
     form_class = CVUpdateForm
-    success_url = reverse_lazy('cv:cv_list')
+    success_url = reverse_lazy('cv:update_cv')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVUpdate, self).get_context_data(**kwargs)
@@ -203,6 +206,9 @@ class CVUpdate(UpdateView):
         form = self.form_class(request.POST, instance=self.object)
 
         if form.is_valid():
+            if not form.has_changed():
+                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+                return self.form_invalid(form)
 
             self.object.save()
 
@@ -220,9 +226,11 @@ class CVUpdate(UpdateView):
                     employment = Employments.objects.get(code=value)
                     cv_employment = CVEmployment(cv=self.object, employment=employment)
                     cv_employment.save()
-            return redirect(self.success_url)
+            messages.success(request, 'Резюме успешно отредактировано!')
+            return redirect(reverse('cv:update_cv', args=(kwargs.get('pk'),)))
         else:
             print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения резюме!')
         return self.form_invalid(form)
 
 
