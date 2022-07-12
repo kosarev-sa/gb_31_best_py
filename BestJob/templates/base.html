@@ -43,36 +43,6 @@
 
 </main>
 
-{% if messages %}
-    {% if form.errors %}
-        <div onclick="this.parentNode.removeChild(this)">
-        <ul class="messages">
-            <li class="error">
-                <br>
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <br>
-                        {% if field != '__all__' %}
-                            <strong>{{ field.label }}:</strong>
-                        {% endif %}
-                        {{ error }}
-                    {% endfor %}
-                {% endfor %}
-            </li>
-        </ul>
-        <div>
-    {% endif %}
-    <div onclick="this.parentNode.removeChild(this)">
-        <ul class="messages">
-            {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-                    {{ message }} {{ non_field_errors }}
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-{% endif %}
-
 {% block footer %}
 {% endblock %}
 

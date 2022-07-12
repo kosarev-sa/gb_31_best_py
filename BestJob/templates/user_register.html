@@ -12,20 +12,10 @@
 
 {% block content %}
 
-    <!-- =============== Start of Messages Section =============== -->
-    <section id="login">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-6 col-md-offset-3 col-xs-12">
+    {% block messages %}
+        {% include 'inc_messages_for_reg_and_log.html' %}
+    {% endblock %}
 
-                    {% block messages %}
-                        {% include 'inc_messages.html' %}
-                    {% endblock %}
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- =============== End of Messages Section =============== -->
     <!-- ===== Start of Login - Register Section ===== -->
     <section class="ptb80" id="login">
         <div class="container">
@@ -43,35 +33,41 @@
                         {% csrf_token %}
                         <!-- Form Group -->
                         <div class="form-group">
-                            <label for="{{ form.role.id_for_label }}">Роль</label>
+                            <label for="{{ form.role.id_for_label }}">Роль
+                                <span style="color:red">*</span></label>
                             {{ form.role }}
                         </div>
                         <!-- Form Group -->
                         <div class="form-group">
-                            <label for="{{ form.username.id_for_label }}">Имя пользователя</label>
+                            <label for="{{ form.username.id_for_label }}">Имя пользователя
+                                <span style="color:red">*</span></label>
                             {{ form.username }}
                         </div>
                         <!-- Form Group -->
                         <div class="form-group">
-                            <label for="{{ form.email.id_for_label }}">E-mail</label>
+                            <label for="{{ form.email.id_for_label }}">E-mail
+                                <span style="color:red">*</span></label>
                             {{ form.email }}
                         </div>
 
                         <!-- Form Group -->
                         <div class="form-group">
-                            <label for="{{ form.password1.id_for_label }}">Пароль</label>
+                            <label for="{{ form.password1.id_for_label }}">Пароль
+                                <span style="color:red">*</span></label>
                             {{ form.password1 }}
                         </div>
 
                         <!-- Form Group -->
                         <div class="form-group">
-                            <label for="{{ form.password2.id_for_label }}">Подтвердите пароль</label>
+                            <label for="{{ form.password2.id_for_label }}">Подтвердите пароль
+                                <span style="color:red">*</span></label>
                             {{ form.password2 }}
                         </div>
 
                         <!-- Form Group -->
                         <div class="form-group text-center">
-                            <input class="btn btn-blue btn-effect" type="submit" value="Зарегистрироваться">
+                            <input class="btn btn-blue btn-effect" type="submit"
+                                   value="Зарегистрироваться">
 
                         </div>
 

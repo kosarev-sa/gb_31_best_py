@@ -137,6 +137,14 @@ class UserRegisterForm(UserCreationForm):
         user.save()
         return user
 
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        result = re.match(r'^[-\w\.]+@([-\w]+\.)+[-\w]{2,4}$', data)
+        print(bool(result))
+        if not bool(result):
+            raise ValidationError("Проверьте корректность email.")
+        return data
+
 
 class PassResetForm(PasswordResetForm):
     """форма для востановления пароля (ввод email). нужна будет, чтобы поля под дизайн фронта переделать"""

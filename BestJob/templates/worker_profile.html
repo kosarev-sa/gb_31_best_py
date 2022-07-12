@@ -10,6 +10,11 @@
 {% endblock %}
 
 {% block content %}
+
+    {% block messages %}
+        {% include 'inc_messages_for_forms.html' %}
+    {% endblock %}
+
     <div class="ptb80" id="post-job">
         <div class="container">
 
