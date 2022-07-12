@@ -10,14 +10,21 @@
 {% endblock %}
 
 {% block content %}
+
+    {% block messages %}
+        {% include 'inc_messages_for_forms.html' %}
+    {% endblock %}
+
     <div class="ptb80" id="blog-post">
         <div class="container">
-            <form action="{% url 'news:create_news' %}" method="post" enctype="multipart/form-data" class="post-job-resume mt50">
-                        {% csrf_token %}
+            <form action="{% url 'news:create_news' %}" method="post" enctype="multipart/form-data"
+                  class="post-job-resume mt50">
+                {% csrf_token %}
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="{{ form.title.id_for_label }}">Заголовок</label>
+                            <label for="{{ form.title.id_for_label }}">Заголовок
+                                <span style="color:red">*</span></label>
                             {{ form.title }}
                         </div>
                     </div>
@@ -25,7 +32,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="{{ form.body.id_for_label }}">Текст новости</label>
+                            <label for="{{ form.body.id_for_label }}">Текст новости
+                                <span style="color:red">*</span></label>
                             {{ form.body }}
                         </div>
                     </div>
@@ -33,7 +41,8 @@
                 <div class="row">
                     <div class="form-group">
                         {{ form.image }}
-                        <label class="custom-file-label" for="image">Выберите изображение</label>
+                        <label class="custom-file-label" for="image">Выберите изображение
+                             <span style="color:red">*</span></label>
                     </div>
                 </div>
                 <div class="col-md-12">
