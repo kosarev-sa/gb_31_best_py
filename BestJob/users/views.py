@@ -103,6 +103,7 @@ class EmployerDetailView(DetailView, BaseClassContextMixin):
         company = EmployerProfile.objects.get(id=comp_id)
         context['object'] = company
         context['title'] = company.name
+        context['heading'] = 'Карточка работодателя'
         context['is_moderating'] = False
         return context
 
@@ -162,8 +163,6 @@ class EmployerProfileView(UpdateView):
 
         context['title'] = "Профиль работодателя"
         context['heading'] = "Профиль работодателя"
-        context['link'] = "/vacancy/all/"
-        context['heading_link'] = "Список вакансий"
         return context
 
     def post(self, request, *args, **kwargs):

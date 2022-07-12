@@ -6,7 +6,7 @@
 
             <!-- Logo -->
             <div class="col-md-2 col-sm-6 col-xs-8 nopadding">
-                <a class="navbar-brand nomargin" href="{% url 'index' %}"><img src="{% static 'img/index/logo.svg' %}" alt="logo"></a>
+                <a class="navbar-brand nomargin" href="{% url 'index' %}"><img src="{% static 'img/logo.svg' %}" alt="logo"></a>
             </div>
 
             <!-- ======== Start of Main Menu ======== -->
@@ -66,6 +66,7 @@
                                     <ul class="dropdown-menu" role="menu">
 
                                         <li><a href="{% url 'users:moderator_profile' user.id %}">профиль модератора</a></li>
+                                        <li><a href="{% url 'news:create_news' %}">Создание новости</a></li>
                                         <li><a href="{% url 'news:moderate_news' %}">модерация новостей</a></li>
                                         <li><a href="{% url 'cv:moderator_cvs_list' %}">модерация резюме</a></li>
                                         <li><a href="{% url 'users:moderator_companies_list' %}">модерация компаний</a></li>

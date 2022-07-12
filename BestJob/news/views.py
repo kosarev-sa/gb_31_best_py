@@ -47,6 +47,8 @@ class NewsListView(ListView):
             object_list.append(item)
 
         context['object_list'] = object_list
+        context['title'] = 'Список новостей'
+        context['heading'] = 'Список новостей'
         return context
 
 
@@ -64,6 +66,9 @@ class NewsDetailView(DetailView):
             context['news_object'] = news
         except Exception:
             print(f'News not exists')
+
+        context['title'] = "Просмотр новости"
+        context['heading'] = "Просмотр новости"
 
         return self.render_to_response(context)
 
