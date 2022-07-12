@@ -19,7 +19,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="{{ form.title.id_for_label }}">Заголовок</label>
+                        <label for="{{ form.title.id_for_label }}">Заголовок<span style="color:red">*</span></label>
                         {{ form.title }}
                     </div>
                 </div>
@@ -27,7 +27,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="form-group">
-                        <label for="{{ form.body.id_for_label }}">Текст новости</label>
+                        <label for="{{ form.body.id_for_label }}">Текст новости<span style="color:red">*</span></label>
                         {{ form.body }}
                     </div>
                 </div>
@@ -36,9 +36,9 @@
                 <div class="col-md-12">
 
                     <div class="form-group">
-                        {{ form.image }}
-                        <label class="custom-file-label" for="image">Выберите изображение
+                        <label class="custom-file-label" for="{{ form.image.id_for_label }}">Выберите изображение
                              <span style="color:red">*</span></label>
+                        {{ form.image }}
                     </div>
                 </div>
             </div>
