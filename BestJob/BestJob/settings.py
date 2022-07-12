@@ -164,11 +164,18 @@ USER_EMAIL_KEY_LIFETIME = 48
 # настройки для подтверждения email
 # для получения в термина ссылки (linux):  sudo python3 -m smtpd -n -c DebuggingServer localhost:25
 # для получения в термина ссылки (windows):  python -m smtpd -n -c DebuggingServer localhost:25
+# DOMAIN_NAME = '127.0.0.1:8000'
+# EMAIL_HOST = 'localhost'
+# EMAIL_PORT = 25
+# EMAIL_USER_SSL = True if os.getenv('EMAIL_USER_SSL') == 'True' else False
+# EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = 'bestjob_45@mail.ru', 'Data2010!'
+
 DOMAIN_NAME = '127.0.0.1:8000'
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 25
-EMAIL_USER_SSL = True if os.getenv('EMAIL_USER_SSL') == 'True' else False
-EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 2525
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = 'bestjob_45@mail.ru', 'Data2010!'
 
 import os
 
