@@ -1,5 +1,6 @@
+from django.contrib import messages
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
 from django.urls import reverse_lazy, reverse
@@ -100,7 +101,7 @@ class NewsCreate(CreateView):
     model = News
     template_name = 'news_create.html'
     form_class = NewsCreateForm
-    success_url = reverse_lazy('news:moderate_news')
+    success_url = reverse_lazy('news:create_news')
 
     def get_context_data(self, **kwargs):
         context = super(NewsCreate, self).get_context_data(**kwargs)
@@ -113,6 +114,7 @@ class NewsCreate(CreateView):
         return super(NewsCreate, self).form_valid(form)
 
     def post(self, request, *args, **kwargs):
+        self.object = None
         author_id = request.user.pk
         form = self.form_class(data=request.POST, files=request.FILES)
         if form.is_valid():
@@ -123,9 +125,11 @@ class NewsCreate(CreateView):
             news.body = form.data['body']
             news.image = form.instance.image
             news.save()
+            messages.success(request, 'Просмотр: "Главная" или "Модерация новостей"')
             return redirect(self.success_url)
         else:
             print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения новости!')
         return self.form_invalid(form)
 
 
@@ -188,8 +192,18 @@ class NewsUpdate(UpdateView):
         else:
             form.instance.news_id = news_id
             form.instance.user = News.objects.get(pk=news_id)
-        form.save()
-        return redirect(self.success_url)
+
+        if form.is_valid():
+            if not form.has_changed():
+                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+                return self.form_invalid(form)
+            form.save()
+            messages.success(request, 'Новость успешно отредактирована!')
+            return redirect(reverse("news:update_news", args=(news_id,)))
+        else:
+            print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения новости!')
+        return self.form_invalid(form)
 
 
 class NewsDelete(DeleteView):

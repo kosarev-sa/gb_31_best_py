@@ -1,8 +1,10 @@
 import hashlib
+import re
 from random import random
 
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
+from django.core.exceptions import ValidationError
 
 from news.models import News
 from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User, Role
@@ -10,6 +12,11 @@ from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User,
 
 class WorkerProfileForm(forms.ModelForm):
     """формы для профиля соискателя"""
+    name = forms.CharField(label='ФИО', required=True)
+    city = forms.CharField(label='Город проживания', required=True)
+    phone_number = forms.CharField(label='Телефон для связи', required=True)
+    birth_date = forms.DateField(label='Дата рождения', required=True)
+    data = forms.CharField(label='О себе', required=True)
 
     class Meta:
         model = WorkerProfile
@@ -28,10 +35,27 @@ class WorkerProfileForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 
+    def clean_city(self):
+        data = self.cleaned_data['city']
+        if not data[0].isupper():
+            raise ValidationError("Проверьте название города.")
+        return data
+
+    def clean_phone_number(self):
+        data = self.cleaned_data['phone_number']
+        clear_phone = re.sub(r'\D', '', data)
+        result = re.match(r'^[78]?\d{10}$', clear_phone)
+        if not bool(result):
+            raise ValidationError("Проверьте корректность номера телефона.")
+        return data
+
 
 class EmployerProfileForm(forms.ModelForm):
     """формы для профиля работодателя"""
     disabled_fields = ('moderators_comment',)
+    name = forms.CharField(label='Название компании', required=True)
+    city = forms.CharField(label='Город местонахождения', required=True)
+    data = forms.CharField(label='Описание компании', required=True)
 
     class Meta:
         model = EmployerProfile
@@ -50,8 +74,15 @@ class EmployerProfileForm(forms.ModelForm):
         for field in self.disabled_fields:
             self.fields[field].disabled = True
 
+    def clean_city(self):
+        data = self.cleaned_data['city']
+        if not data[0].isupper():
+            raise ValidationError("Проверьте название города!")
+        return data
+
 class ModeratorProfileForm(forms.ModelForm):
     """формы для профиля модератора"""
+    name = forms.CharField(label='ФИО', required=True)
 
     class Meta:
         model = ModeratorProfile
@@ -105,6 +136,14 @@ class UserRegisterForm(UserCreationForm):
         user.activation_key = hashlib.sha256((user.email + salt).encode('utf8')).hexdigest()
         user.save()
         return user
+
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        result = re.match(r'^[-\w\.]+@([-\w]+\.)+[-\w]{2,4}$', data)
+        print(bool(result))
+        if not bool(result):
+            raise ValidationError("Проверьте корректность email.")
+        return data
 
 
 class PassResetForm(PasswordResetForm):

@@ -2,6 +2,8 @@ from django import forms
 import time
 import datetime
 
+from django.core.exceptions import ValidationError
+
 from cvs.models import CV, Experience, Education, LanguagesSpoken
 from search.models import Category, Currency, Languages, LanguageLevels
 
@@ -10,10 +12,13 @@ now = datetime.datetime.now()
 
 class CVCreateForm(forms.ModelForm):
     """форма создание резюме"""
-    speciality = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'))
-    post = forms.CharField(widget=forms.TextInput, required=False)
-    skills = forms.CharField(widget=forms.TextInput, required=False)
+    speciality = forms.ModelChoiceField(widget=forms.Select(),
+                                        queryset=Category.objects.all().order_by('name'),
+                                        required=True, label='Специализация')
+    post = forms.CharField(widget=forms.TextInput, required=True, label='Должность')
+    skills = forms.CharField(widget=forms.TextInput, required=True)
     about = forms.CharField(widget=forms.Textarea, required=False)
+    salary = forms.DecimalField(label='Зарплата', required=True)
 
     class Meta:
         model = CV
@@ -36,15 +41,23 @@ class CVCreateForm(forms.ModelForm):
 
         # self.fields['about'].widget.attrs['class'] = "tinymce"
 
+    def clean_post(self):
+        data = self.cleaned_data['post']
+        if len(data) > 30:
+            raise ValidationError("Сократите название должности.")
+        return data
+
 
 class CVUpdateForm(forms.ModelForm):
     """форма просмотра\редактирования резюме"""
-    speciality = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'),
-                                        required=False)
-    post = forms.CharField(widget=forms.TextInput, required=False)
-    skills = forms.CharField(widget=forms.TextInput, required=False)
-    about = forms.CharField(widget=forms.Textarea, required=False)
     disabled_fields = ('moderators_comment',)
+    speciality = forms.ModelChoiceField(widget=forms.Select(),
+                                        queryset=Category.objects.all().order_by('name'),
+                                        required=True, label='Специализация')
+    post = forms.CharField(widget=forms.TextInput, required=True, label='Должность')
+    skills = forms.CharField(widget=forms.TextInput, required=True)
+    about = forms.CharField(widget=forms.Textarea, required=False)
+    salary = forms.DecimalField(label='Зарплата', required=True)
 
     class Meta:
         model = CV
@@ -70,6 +83,12 @@ class CVUpdateForm(forms.ModelForm):
             self.fields[field].disabled = True
 
         # self.fields['about'].widget.attrs['class'] = "tinymce"
+
+    def clean_post(self):
+        data = self.cleaned_data['post']
+        if len(data) > 30:
+            raise ValidationError("Сократите название должности.")
+        return data
 
 
 class ModeratorCVUpdateForm(CVUpdateForm):
