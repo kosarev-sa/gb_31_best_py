@@ -395,12 +395,18 @@ class CVExperienceUpdate(UpdateView):
     def post(self, request, *args, **kwargs):
         super(CVExperienceUpdate, self).post(request, *args, **kwargs)
         self.object = self.get_object()
-        form = self.form_class(data=request.POST)
+        form = self.form_class(data=request.POST, instance=self.object)
         if form.is_valid():
+            if not form.has_changed():
+                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+                return self.form_invalid(form)
+            messages.success(request, 'Опыт работы обновлён!')
             return redirect('cv:update_cv', pk=self.object.cv.id)
         else:
-            messages.error(request, form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # messages.error(request, form.errors)
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(request, 'Проверьте правильность заполнения формы!')
+            return self.form_invalid(form)
 
 
 class CVExperienceDelete(DeleteView):
