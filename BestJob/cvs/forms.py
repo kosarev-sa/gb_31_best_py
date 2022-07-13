@@ -16,9 +16,9 @@ class CVCreateForm(forms.ModelForm):
                                         queryset=Category.objects.all().order_by('name'),
                                         required=True, label='Специализация')
     post = forms.CharField(widget=forms.TextInput, required=True, label='Должность')
-    skills = forms.CharField(widget=forms.TextInput, required=True)
+    skills = forms.CharField(widget=forms.TextInput, required=False)
     about = forms.CharField(widget=forms.Textarea, required=False)
-    salary = forms.DecimalField(label='Зарплата', required=True)
+    salary = forms.DecimalField(label='Зарплата', required=False)
 
     class Meta:
         model = CV
