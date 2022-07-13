@@ -6,7 +6,7 @@
     <div onclick="this.parentNode.removeChild(this)" style="margin-top: 20px;">
         <ul class="container messages">
             {% for message in messages %}
-                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>
                     {{ message }}
                 </li>
             {% endfor %}

@@ -22,14 +22,15 @@ class WorkerProfileForm(forms.ModelForm):
         model = WorkerProfile
         fields = ['name', 'image', 'city', 'phone_number', 'gender', 'birth_date', 'data']
 
-
     def __init__(self, *args, **kwargs):
         super(WorkerProfileForm, self).__init__(*args, **kwargs)
         self.fields['name'].widget.attrs['placeholder'] = 'Введите ФИО'
         self.fields['city'].widget.attrs['placeholder'] = 'Введите город проживания'
         self.fields['phone_number'].widget.attrs['placeholder'] = 'Введите телефон для связи'
+        self.fields['phone_number'].widget.attrs['style'] = 'font-family: arial;'
         self.fields['gender'].widget.attrs['placeholder'] = 'Введите Ваш пол'
         self.fields['birth_date'].widget.attrs['placeholder'] = 'Введите дату Вашего рождения'
+        self.fields['birth_date'].widget.attrs['style'] = 'font-family: arial;'
         self.fields['data'].widget.attrs['placeholder'] = 'Введите пару слов о себе'
 
         for field_name, field in self.fields.items():
