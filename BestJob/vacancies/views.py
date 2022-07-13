@@ -96,7 +96,7 @@ class VacancyCreate(CreateView):
     model = Vacancy
     template_name = 'vacancy_create.html'
     form_class = VacancyCreateForm
-    success_url = reverse_lazy('vacancy:vacancy_list')
+    success_url = 'vacancy:update_vacancy'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyCreate, self).get_context_data(**kwargs)
@@ -114,9 +114,10 @@ class VacancyCreate(CreateView):
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
+        self.object=None
         employer = EmployerProfile.objects.get(user=request.user.pk)
         start_status = ApprovalStatus.objects.get(status='NPB')
-        form = self.form_class(data=request.POST)
+        form = self.form_class(data=request.POST, files=request.FILES)
         salary_on_hand = request.POST.get('id_salary_on_hand', False)
         is_active = request.POST.get('id_is_active', True)
 
@@ -128,9 +129,11 @@ class VacancyCreate(CreateView):
             vacancy.salary_on_hand = salary_on_hand
             vacancy.is_active = is_active
             vacancy.save()
-            return redirect(self.success_url)
+            messages.success(request, 'Вакансия успешно создана!')
+            return redirect(self.success_url, pk=vacancy.id)
         else:
             print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения вакансии!')
         return self.form_invalid(form)
 
 
@@ -167,17 +170,24 @@ class VacancyUpdate(UpdateView):
     def post(self, request, *args, **kwargs):
         super(VacancyUpdate, self).post(request, *args, **kwargs)
         self.object = self.get_object()
-        form = self.form_class(data=request.POST)
+        form = self.form_class(data=request.POST)  # ,instance=self.object)
         salary_on_hand = request.POST.get('id_salary_on_hand', False)
         # is_active = request.POST.get('id_is_active', False)
         if form.is_valid():
             self.object.is_active = True
             self.object.salary_on_hand = salary_on_hand
             self.object.save()
+            # if not form.has_changed():
+            #     messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+            #     return self.form_invalid(form)
+            messages.success(request, 'Вакансия успешно отредактирована!')
             return redirect(self.success_url)
         else:
-            messages.error(request, form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # messages.error(request, form.errors)
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения вакансии!')
+        return self.form_invalid(form)
 
 
 class VacancyDelete(DeleteView):

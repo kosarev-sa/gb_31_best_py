@@ -55,9 +55,9 @@ class CVUpdateForm(forms.ModelForm):
                                         queryset=Category.objects.all().order_by('name'),
                                         required=True, label='Специализация')
     post = forms.CharField(widget=forms.TextInput, required=True, label='Должность')
-    skills = forms.CharField(widget=forms.TextInput, required=True)
+    skills = forms.CharField(widget=forms.TextInput, required=False)
     about = forms.CharField(widget=forms.Textarea, required=False)
-    salary = forms.DecimalField(label='Зарплата', required=True)
+    salary = forms.DecimalField(label='Зарплата', required=False)
 
     class Meta:
         model = CV
@@ -178,8 +178,10 @@ class ExperienceCreateForm(forms.ModelForm):
 
 class EducationCreateForm(forms.ModelForm):
     """форма создания места обучения"""
-    date_end = forms.IntegerField(min_value=1950, required=False)
-    department = forms.CharField(widget=forms.TextInput, max_length=256, required=False)
+    name = forms.CharField(max_length=256, required=True, label='Наименование учебного заведения')
+    date_end = forms.IntegerField(min_value=1950, required=True, label='Год окончания')
+    department = forms.CharField(widget=forms.TextInput, max_length=256, required=True,
+                                 label='Факультет')
     specialty = forms.CharField(widget=forms.TextInput, max_length=256, required=False)
 
     class Meta:
@@ -191,11 +193,19 @@ class EducationCreateForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        if len(data) > 50:
+            raise ValidationError("Название должно быть не более 50 символов.")
+        return data
+
 
 class LanguagesCreateForm(forms.ModelForm):
     """форма создания языка"""
-    language = forms.ModelChoiceField(widget=forms.Select(), queryset=Languages.objects.all())
-    level = forms.ModelChoiceField(widget=forms.Select(), queryset=LanguageLevels.objects.all())
+    language = forms.ModelChoiceField(widget=forms.Select(), queryset=Languages.objects.all(),
+                                      label='Язык', required=True)
+    level = forms.ModelChoiceField(widget=forms.Select(), queryset=LanguageLevels.objects.all(),
+                                   label='Уровень', required=True)
 
     class Meta:
         model = LanguagesSpoken
@@ -218,8 +228,10 @@ class LanguagesCreateForm(forms.ModelForm):
 
 
 class LanguagesUpdateForm(forms.ModelForm):
-    language = forms.ModelChoiceField(widget=forms.Select(), queryset=Languages.objects.all())
-    level = forms.ModelChoiceField(widget=forms.Select(), queryset=LanguageLevels.objects.all())
+    language = forms.ModelChoiceField(widget=forms.Select(), queryset=Languages.objects.all(),
+                                      label='Язык', required=True)
+    level = forms.ModelChoiceField(widget=forms.Select(), queryset=LanguageLevels.objects.all(),
+                                   label='Уровень', required=True)
 
     class Meta:
         model = LanguagesSpoken
@@ -232,4 +244,3 @@ class LanguagesUpdateForm(forms.ModelForm):
             field.widget.attrs['class'] = 'selectpicker'
             field.widget.attrs['data-size'] = '5'
             field.widget.attrs['data-container'] = 'body'
-
