@@ -40,40 +40,43 @@
     <!-- =============== End of Page Header 1 Section =============== -->
 
     <!-- =============== Start of Messages Section =============== -->
-
     <form action="" method="post">
         {% csrf_token %}
-        {#    <section class="pricing-tables pb80">#}
-        {#        <div class="container">#}
-        {#            {% if messages %}#}
-        {##}
-        {#                <div class="alert alert-warning alert-dismissible show" role="alert"#}
-        {#                     style="margin-top: 50px;">#}
-        {#                выводим ошибки#}
-        {#                    {% for message in messages %}#}
-        {#                        {{ message }}#}
-        {#                    {% endfor %}#}
-        {#                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">#}
-        {#                        <span aria-hidden="true">&times;</span>#}
-        {#                    </button>#}
-        {#                </div>#}
-        {#            {% endif %}#}
-        {#        </div>#}
-        {#    </section>#}
-        <!-- =============== End of Messages Section =============== -->
+{#    <section class="pricing-tables pb80">#}
+{#        <div class="container">#}
+{#            {% if messages %}#}
+{##}
+{#                <div class="alert alert-warning alert-dismissible show" role="alert"#}
+{#                     style="margin-top: 50px;">#}
+{#                выводим ошибки#}
+{#                    {% for message in messages %}#}
+{#                        {{ message }}#}
+{#                    {% endfor %}#}
+{#                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">#}
+{#                        <span aria-hidden="true">&times;</span>#}
+{#                    </button>#}
+{#                </div>#}
+{#            {% endif %}#}
+{#        </div>#}
+{#    </section>#}
+    <!-- =============== End of Messages Section =============== -->
 
-        <!-- ===== Start of Education Section ===== -->
-        <section class="pricing-tables pb80">
-            <div class="container">
-                <!-- Start Row -->
-                <div class="row">
-                    <div class="col-md-12 col-xs-12 mt80">
-                        <div class="form-group pt30">
-                            <label for="{{ form.name.id_for_label }}">Наименование учебного
-                                заведения
-                                <span style="color:red">*</span></label>
-                            {{ form.name }}
-                        </div>
+    <!-- ===== Start of Education Section ===== -->
+    <section class="pricing-tables pb80" style="background: #ffffff">
+        <div class="container">
+            <!-- Start Row -->
+            <div class="row">
+                <div class="col-md-12 col-xs-12 mt80">
+                    <div class="form-group pt30">
+                        <label for="{{ form.name.id_for_label }}">Наименование учебного заведения</label>
+                        {{ form.name }}
+                    </div>
+                </div>
+                <div class="form-group pt30 col-md-4">
+                    <label for="{{ form.date_end.id_for_label }}">Год окончания</label>
+                    <div data-toggle="tooltip" data-placement="bottom"
+                         title="Если еще учитесь, укажите предполагаемый год окончания">
+                        {{ form.date_end }}
                     </div>
                     <div class="form-group pt30 col-md-4">
                         <label for="{{ form.date_end.id_for_label }}">Год окончания
