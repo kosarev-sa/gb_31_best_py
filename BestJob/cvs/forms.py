@@ -16,9 +16,9 @@ class CVCreateForm(forms.ModelForm):
                                         queryset=Category.objects.all().order_by('name'),
                                         required=True, label='Специализация')
     post = forms.CharField(widget=forms.TextInput, required=True, label='Должность')
-    skills = forms.CharField(widget=forms.TextInput, required=True)
+    skills = forms.CharField(widget=forms.TextInput, required=False)
     about = forms.CharField(widget=forms.Textarea, required=False)
-    salary = forms.DecimalField(label='Зарплата', required=True)
+    salary = forms.DecimalField(label='Зарплата', required=False)
 
     class Meta:
         model = CV
@@ -135,9 +135,12 @@ class ExperienceCreateForm(forms.ModelForm):
     """форма создания опыта работы"""
     responsibilities = forms.CharField(widget=forms.Textarea, required=False)
     stack = forms.CharField(widget=forms.TextInput, required=False)
-    year_begin = forms.IntegerField(min_value=1950, max_value=now.year)
+    year_begin = forms.IntegerField(min_value=1950, max_value=now.year, required=True,
+                                    label='Год начала')
     year_end = forms.IntegerField(min_value=1950, max_value=now.year, required=False,
                                   label='Оставьте поле пустым, если продолжаете тут работать')
+    name = forms.CharField(required=True, label='Наименование организации')
+    post = forms.CharField(required=True, label='Должность')
 
     class Meta:
         model = Experience
