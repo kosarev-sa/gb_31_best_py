@@ -10,6 +10,11 @@
 {% endblock %}
 
 {% block content %}
+
+    {% block messages %}
+        {% include 'inc_messages_for_forms.html' %}
+    {% endblock %}
+
     <!--    Начало секции Вакансии-->
     <section class="education ptb80">
         <div class="container">

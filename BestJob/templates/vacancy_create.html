@@ -12,6 +12,10 @@
 
 {% block content %}
 
+    {% block messages %}
+        {% include 'inc_messages_for_forms.html' %}
+    {% endblock %}
+
     <!-- ===== Start of Main Wrapper Job Section ===== -->
     <section class="ptb80" id="job-page" style="padding: 60px;">
         <div class="container">
@@ -40,13 +44,15 @@
 
 
                             <div class="form-group">
-                                <label for="{{ form.name.id_for_label }}">Название вакансии</label>
+                                <label for="{{ form.name.id_for_label }}">Название вакансии
+                                    <span style="color:red">*</span></label>
                                 {{ form.name }}
                             </div>
 
 
                             <div class="form-group">
-                                <label for="{{ form.specialization.id_for_label }}">Специализация</label>
+                                <label for="{{ form.specialization.id_for_label }}">Специализация
+                                    <span style="color:red">*</span></label>
                                 {{ form.specialization }}
                             </div>
                             <div class="form-group">
