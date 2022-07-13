@@ -178,8 +178,10 @@ class ExperienceCreateForm(forms.ModelForm):
 
 class EducationCreateForm(forms.ModelForm):
     """форма создания места обучения"""
-    date_end = forms.IntegerField(min_value=1950, required=False)
-    department = forms.CharField(widget=forms.TextInput, max_length=256, required=False)
+    name = forms.CharField(max_length=256, required=True, label='Наименование учебного заведения')
+    date_end = forms.IntegerField(min_value=1950, required=True, label='Год окончания')
+    department = forms.CharField(widget=forms.TextInput, max_length=256, required=True,
+                                 label='Факультет')
     specialty = forms.CharField(widget=forms.TextInput, max_length=256, required=False)
 
     class Meta:
@@ -190,6 +192,12 @@ class EducationCreateForm(forms.ModelForm):
         super(EducationCreateForm, self).__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
+
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        if len(data) > 50:
+            raise ValidationError("Название должно быть не более 50 символов.")
+        return data
 
 
 class LanguagesCreateForm(forms.ModelForm):

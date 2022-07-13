@@ -397,9 +397,9 @@ class CVExperienceUpdate(UpdateView):
         self.object = self.get_object()
         form = self.form_class(data=request.POST, instance=self.object)
         if form.is_valid():
-            if not form.has_changed():
-                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
-                return self.form_invalid(form)
+            # if not form.has_changed():
+            #     messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+            #     return self.form_invalid(form)
             messages.success(request, 'Опыт работы обновлён!')
             return redirect('cv:update_cv', pk=self.object.cv.id)
         else:
@@ -444,6 +444,7 @@ class CVEducationCreate(CreateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        self.object = None
         cv = CV.objects.get(id=self.kwargs.get('cv_id'))
         form = self.form_class(data=request.POST)
         if form.is_valid():
@@ -451,11 +452,14 @@ class CVEducationCreate(CreateView):
             education = form.save(commit=False)
             education.cv = cv
             education.save()
+            messages.success(request, 'Обучение успешно добавлено!')
             return redirect('cv:update_cv', pk=cv.id)
         else:
-            messages.error(request, form.errors)
+            # messages.error(request, form.errors)
             print(form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(request, 'Проверьте правильность заполнения формы!')
+            return self.form_invalid(form)
 
 
 class CVEducationUpdate(UpdateView):
@@ -476,12 +480,18 @@ class CVEducationUpdate(UpdateView):
     def post(self, request, *args, **kwargs):
         super(CVEducationUpdate, self).post(request, *args, **kwargs)
         self.object = self.get_object()
-        form = self.form_class(data=request.POST)
+        form = self.form_class(request.POST, instance=self.object)
         if form.is_valid():
+            # if not form.has_changed():
+            #     messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+            #     return self.form_invalid(form)
+            messages.success(request, 'Информация об обучении обновлена!')
             return redirect('cv:update_cv', pk=self.object.cv.id)
         else:
-            messages.error(request, form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # messages.error(request, form.errors)
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(request, 'Проверьте правильность заполнения формы!')
+            return self.form_invalid(form)
 
 
 class CVEducationDelete(DeleteView):
