@@ -5,6 +5,8 @@ from random import random
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
 from django.core.exceptions import ValidationError
+from bootstrap_datepicker_plus.widgets import DatePickerInput
+from django.forms import TextInput, Textarea
 
 from news.models import News
 from users.models import WorkerProfile, EmployerProfile, ModeratorProfile, User, Role
@@ -15,12 +17,24 @@ class WorkerProfileForm(forms.ModelForm):
     name = forms.CharField(label='ФИО', required=True)
     city = forms.CharField(label='Город проживания', required=True)
     phone_number = forms.CharField(label='Телефон для связи', required=True)
-    birth_date = forms.DateField(label='Дата рождения', required=True)
-    data = forms.CharField(label='О себе', required=True)
 
     class Meta:
         model = WorkerProfile
         fields = ['name', 'image', 'city', 'phone_number', 'gender', 'birth_date', 'data']
+        widgets = {
+            'birth_date': DatePickerInput(
+                options={
+                    "format": "DD.MM.YYYY",
+                    "locale": "ru",
+                    "showClose": False,
+                    "showClear": True,
+                    "showTodayButton": True,
+                },
+                attrs={
+                    'required': True, 'label': 'Дата Рождения'
+                }),
+            'data': Textarea(attrs={'rows': 3, 'required': True, 'label': 'О себе'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super(WorkerProfileForm, self).__init__(*args, **kwargs)
