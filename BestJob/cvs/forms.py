@@ -55,9 +55,9 @@ class CVUpdateForm(forms.ModelForm):
                                         queryset=Category.objects.all().order_by('name'),
                                         required=True, label='Специализация')
     post = forms.CharField(widget=forms.TextInput, required=True, label='Должность')
-    skills = forms.CharField(widget=forms.TextInput, required=True)
+    skills = forms.CharField(widget=forms.TextInput, required=False)
     about = forms.CharField(widget=forms.Textarea, required=False)
-    salary = forms.DecimalField(label='Зарплата', required=True)
+    salary = forms.DecimalField(label='Зарплата', required=False)
 
     class Meta:
         model = CV
@@ -202,8 +202,10 @@ class EducationCreateForm(forms.ModelForm):
 
 class LanguagesCreateForm(forms.ModelForm):
     """форма создания языка"""
-    language = forms.ModelChoiceField(widget=forms.Select(), queryset=Languages.objects.all())
-    level = forms.ModelChoiceField(widget=forms.Select(), queryset=LanguageLevels.objects.all())
+    language = forms.ModelChoiceField(widget=forms.Select(), queryset=Languages.objects.all(),
+                                      label='Язык', required=True)
+    level = forms.ModelChoiceField(widget=forms.Select(), queryset=LanguageLevels.objects.all(),
+                                   label='Уровень', required=True)
 
     class Meta:
         model = LanguagesSpoken
@@ -226,8 +228,10 @@ class LanguagesCreateForm(forms.ModelForm):
 
 
 class LanguagesUpdateForm(forms.ModelForm):
-    language = forms.ModelChoiceField(widget=forms.Select(), queryset=Languages.objects.all())
-    level = forms.ModelChoiceField(widget=forms.Select(), queryset=LanguageLevels.objects.all())
+    language = forms.ModelChoiceField(widget=forms.Select(), queryset=Languages.objects.all(),
+                                      label='Язык', required=True)
+    level = forms.ModelChoiceField(widget=forms.Select(), queryset=LanguageLevels.objects.all(),
+                                   label='Уровень', required=True)
 
     class Meta:
         model = LanguagesSpoken
@@ -240,4 +244,3 @@ class LanguagesUpdateForm(forms.ModelForm):
             field.widget.attrs['class'] = 'selectpicker'
             field.widget.attrs['data-size'] = '5'
             field.widget.attrs['data-container'] = 'body'
-

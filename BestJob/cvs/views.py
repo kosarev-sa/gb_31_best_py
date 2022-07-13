@@ -522,6 +522,7 @@ class CVLanguageCreate(CreateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        self.object = None
         cv = CV.objects.get(id=self.kwargs.get('cv_id'))
         form = self.form_class(data=request.POST)
         if form.is_valid():
@@ -529,11 +530,14 @@ class CVLanguageCreate(CreateView):
             language = form.save(commit=False)
             language.cv = cv
             language.save()
+            messages.success(request, 'Информация о языке добавлена!')
             return redirect('cv:update_cv', pk=cv.id)
         else:
-            messages.error(request, form.errors)
+            # messages.error(request, form.errors)
             print(form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(request, 'Проверьте правильность заполнения формы!')
+            return self.form_invalid(form)
 
 
 class CVLanguageUpdate(UpdateView):
@@ -554,12 +558,18 @@ class CVLanguageUpdate(UpdateView):
     def post(self, request, *args, **kwargs):
         super(CVLanguageUpdate, self).post(request, *args, **kwargs)
         self.object = self.get_object()
-        form = self.form_class(data=request.POST)
+        form = self.form_class(data=request.POST, instance=self.object)
         if form.is_valid():
+            # if not form.has_changed():
+            #     messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+            #     return self.form_invalid(form)
+            messages.success(request, 'Информация о языке обновлена!')
             return redirect('cv:update_cv', pk=self.object.cv.id)
         else:
-            messages.error(request, form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # messages.error(request, form.errors)
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(request, 'Проверьте правильность заполнения формы!')
+            return self.form_invalid(form)
 
 
 class CVLanguageDelete(DeleteView):
