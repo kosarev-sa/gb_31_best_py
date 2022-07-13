@@ -45,7 +45,8 @@ class ModeratorCVList(TemplateView):
     def get(self, request, *args, **kwargs):
         super(ModeratorCVList, self).get(request, *args, **kwargs)
         context = self.get_context_data()
-        context['cvs_list'] = CV.objects.filter(status__status="PUB").order_by('date_create')
+        context['cvs_list'] = CV.objects.filter(status__status="PUB").exclude(
+                is_active=False).order_by('date_create')
         context['title'] = 'Модерация резюме'
         context['heading'] = "Модерация резюме"
         return self.render_to_response(context)
@@ -560,17 +561,23 @@ def edit_cv_list(request, stat):
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # вместо отмершего if request.is_ajax()
         if stat == 'frv':
-            cvs_list = CV.objects.filter(status__status="FRV").order_by('date_create')
+            cvs_list = CV.objects.filter(status__status="FRV").exclude(
+                is_active=False).order_by('date_create')
         elif stat == 'all':
-            cvs_list = CV.objects.exclude(status__status="NPB").order_by('-date_create')
+            cvs_list = CV.objects.exclude(status__status="NPB").exclude(
+                is_active=False).order_by('-date_create')
         elif stat == 'pub':
-            cvs_list = CV.objects.filter(status__status="PUB").order_by('date_create')
+            cvs_list = CV.objects.filter(status__status="PUB").exclude(
+                is_active=False).order_by('date_create')
         elif stat == 'rjc':
-            cvs_list = CV.objects.filter(status__status="RJC").order_by('-date_create')
+            cvs_list = CV.objects.filter(status__status="RJC").exclude(
+                is_active=False).order_by('-date_create')
         elif stat == 'apv':
-            cvs_list = CV.objects.filter(status__status="APV").order_by('-date_create')
+            cvs_list = CV.objects.filter(status__status="APV").exclude(
+                is_active=False).order_by('-date_create')
         else:
-            cvs_list = CV.objects.exclude(status__status="NPB").order_by('-date_create')
+            cvs_list = CV.objects.exclude(status__status="NPB").exclude(
+                is_active=False).order_by('-date_create')
     context = {'cvs_list': cvs_list}
     result = render_to_string('cvs_list.html', context)
 
@@ -588,7 +595,9 @@ class RecomendedCVList(ListView, BaseClassContextMixin):
         vacancy = Vacancy.objects.get(id=self.kwargs['pk'])
         employer = vacancy.employer_profile
         context = {
-            'cvs': CV.objects.filter(speciality=vacancy.specialization),
+            'cvs': CV.objects.filter(speciality=vacancy.specialization).exclude(
+                status__status="NPB").exclude(status__status="RJC").exclude(
+                is_active=False),
             'title': "Рекомендованные резюме",
             'heading': "Рекомендованные резюме",
             'employer': employer

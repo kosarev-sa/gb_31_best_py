@@ -5,7 +5,8 @@ from users.models import WorkerProfile, EmployerProfile
 
 
 def footer_lists(request):
-    footer_employer_list = EmployerProfile.objects.all()
+    footer_employer_list = EmployerProfile.objects.all().exclude(
+                status__status="NPB").exclude(status__status="RJC")
     if footer_employer_list:
         footer_employer_list = random.sample(list(footer_employer_list), 6)
         return {"footer_list_1": footer_employer_list[0:3],
