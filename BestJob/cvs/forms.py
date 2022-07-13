@@ -135,9 +135,12 @@ class ExperienceCreateForm(forms.ModelForm):
     """форма создания опыта работы"""
     responsibilities = forms.CharField(widget=forms.Textarea, required=False)
     stack = forms.CharField(widget=forms.TextInput, required=False)
-    year_begin = forms.IntegerField(min_value=1950, max_value=now.year)
+    year_begin = forms.IntegerField(min_value=1950, max_value=now.year, required=True,
+                                    label='Год начала')
     year_end = forms.IntegerField(min_value=1950, max_value=now.year, required=False,
                                   label='Оставьте поле пустым, если продолжаете тут работать')
+    name = forms.CharField(required=True, label='Наименование организации')
+    post = forms.CharField(required=True, label='Должность')
 
     class Meta:
         model = Experience

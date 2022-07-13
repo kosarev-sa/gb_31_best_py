@@ -107,7 +107,7 @@ class CVCreate(CreateView):
     model = CV
     template_name = 'cv_create.html'
     form_class = CVCreateForm
-    success_url = reverse_lazy('cv:create_cv')
+    success_url = 'cv:update_cv'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVCreate, self).get_context_data(**kwargs)
@@ -160,7 +160,7 @@ class CVCreate(CreateView):
                 return redirect('cv:create_language', cv_id=cv.id)
 
             messages.success(request, 'Резюме успешно создано!')
-            return redirect(self.success_url)
+            return redirect(self.success_url, pk=cv.id)
         else:
             print(form.errors)
             messages.error(request, 'Проверьте правильность заполнения резюме!')
@@ -349,6 +349,7 @@ class CVExperienceCreate(CreateView):
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
+        self.object = None
         cv = CV.objects.get(id=self.kwargs.get('pk'))
         form = self.form_class(data=request.POST)
         if form.is_valid():
@@ -356,11 +357,14 @@ class CVExperienceCreate(CreateView):
             experience = form.save(commit=False)
             experience.cv = cv
             experience.save()
+            messages.success(request, 'Опыт работы добавлен!')
             return redirect('cv:update_cv', pk=cv.id)
         else:
-            messages.error(request, form.errors)
+            # messages.error(request, form.errors)
             print(form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(request, 'Проверьте правильность заполнения формы!')
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return self.form_invalid(form)
 
 
 class CVExperienceUpdate(UpdateView):
