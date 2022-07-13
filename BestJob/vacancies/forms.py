@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 from approvals.models import ApprovalStatus
 from search.models import Category
@@ -7,6 +8,10 @@ from vacancies.models import Vacancy
 
 class VacancyCreateForm(forms.ModelForm):
     """форма создание вакансии"""
+    name = forms.CharField(label='Название вакансии', required=True)
+    specialization = forms.ModelChoiceField(widget=forms.Select(),
+                                            queryset=Category.objects.all().order_by('name'),
+                                            label='Специализация', required=True)
 
     class Meta:
         model = Vacancy
@@ -22,11 +27,19 @@ class VacancyCreateForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        if len(data) > 50:
+            raise ValidationError("Название должно быть не более 50 символов.")
+        return data
+
 
 class VacancyUpdateForm(forms.ModelForm):
     """форма просмотра\редактирования вакансии"""
-    specialization = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'),
-                                            required=False)
+    name = forms.CharField(label='Название вакансии', required=True)
+    specialization = forms.ModelChoiceField(widget=forms.Select(),
+                                            queryset=Category.objects.all().order_by('name'),
+                                            label='Специализация', required=True)
     disabled_fields = ('moderators_comment',)
 
     class Meta:
@@ -49,6 +62,12 @@ class VacancyUpdateForm(forms.ModelForm):
 
         for field in self.disabled_fields:
             self.fields[field].disabled = True
+
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        if len(data) > 50:
+            raise ValidationError("Название должно быть не более 50 символов.")
+        return data
 
 
 class ModeratorVacancyUpdateForm(VacancyUpdateForm):
