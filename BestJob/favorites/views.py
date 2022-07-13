@@ -152,7 +152,8 @@ class FavoritesWorkerListView(ListView):
                     profiler = worker_profiles.first()
 
                     # Я ищу работу и у меня есть резюме. Мои резюме.
-                    cvs = CV.objects.filter(worker_profile=profiler)
+                    cvs = CV.objects.filter(worker_profile=profiler).exclude(status__status="NPB").\
+                        exclude(status__status="RJC").exclude(is_active=False)
 
                     context['modal_header'] = 'Выбор резюме'
                     context['modal_combo'] = cvs
@@ -220,7 +221,8 @@ class FavoritesEmployerListView(ListView):
                     profiler = employer_profiles.first()
 
                     # Я ищу сотрудников и у меня есть вакансии. Мои вакансии.
-                    vacancies = Vacancy.objects.filter(employer_profile=profiler)
+                    vacancies = Vacancy.objects.filter(employer_profile=profiler).exclude(status__status="NPB").\
+                        exclude(status__status="RJC").exclude(is_active=False)
 
                     context['modal_header'] = 'Выбор вакансии'
                     context['modal_combo'] = vacancies
