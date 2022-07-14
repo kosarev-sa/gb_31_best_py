@@ -157,15 +157,20 @@ class EmployerProfileView(UpdateView):
     title = 'BestJob | Профайл работодателя'
 
     def get_object(self, queryset=None):
-        user_id = self.kwargs['pk']
-        employer_profile = EmployerProfile.objects.filter(user_id=user_id)
+        pk = self.kwargs['pk']
+
+        employer_profile = EmployerProfile.objects.filter(user_id=pk)
 
         if employer_profile:
             return employer_profile.first()
         else:
-            employer_profile = EmployerProfile()
-            employer_profile.user = User.objects.get(pk=user_id)
-            return employer_profile
+            employer_profile = EmployerProfile.objects.filter(pk=pk)
+            if employer_profile:
+                return employer_profile.first()
+            else:
+                employer_profile = EmployerProfile()
+                employer_profile.user = User.objects.get(pk=pk)
+                return employer_profile
 
     def get_context_data(self, **kwargs):
         context = super(EmployerProfileView, self).get_context_data(**kwargs)
