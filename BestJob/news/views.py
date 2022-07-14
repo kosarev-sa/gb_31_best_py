@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404
 
 # Create your views here.
@@ -209,17 +209,16 @@ class NewsUpdate(UpdateView):
 class NewsDelete(DeleteView):
     """view для удаления новостей"""
     model = News
-    template_name = 'news_confirm_delete.html'
-    success_url = reverse_lazy('news:moderate_news')
 
-    def get_context_data(self, **kwargs):
-        context = super(NewsDelete, self).get_context_data(**kwargs)
-        context['title'] = 'Удаление Новости'
-        context['heading'] = "Удаление Новости"
-        return context
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
 
-    def form_valid(self, form):
-        """Новость удаляется"""
-        success_url = self.get_success_url()
-        self.object.delete()
-        return HttpResponseRedirect(success_url)
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            user = request.user
+            if user.role_id == UserRole.MODERATOR:
+                self.object = self.get_object()
+                self.object.delete()
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+        return HttpResponseForbidden()

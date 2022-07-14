@@ -10,11 +10,15 @@
                     <input id="magic_field" name="magic_field" type="number">
                 </p>
 
+                <div id="error_message"></div>
+
+                <p>Вы подтверждаете удаление новости?</p>
+
                 <div class="fieldset text-center">
-                    <button type="submit" id="send_data_for_modal_page" class="btn btn-blue btn-effect"
+                    <button type="submit" id="cancel_delete_news" class="btn btn-blue btn-effect"
                             onclick="cancelDelete()" style="background: #29b1fd;">Отмена
                     </button>
-                    <button type="submit" id="send_data_for_modal_page" class="btn btn-blue btn-effect"
+                    <button type="submit" id="delete_news" class="btn btn-blue btn-effect"
                             onclick="newsDelete()" style="background: #29b1fd;">Удалить
                     </button>
                 </div>
