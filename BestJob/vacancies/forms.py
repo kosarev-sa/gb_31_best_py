@@ -74,10 +74,8 @@ class ModeratorVacancyUpdateForm(VacancyUpdateForm):
     """форма просмотра\редактирования вакансии"""
     disabled_fields = ('specialization', 'is_active', 'name', 'experience',
                        'description', 'city', 'description', 'salary_from',
-                       'salary_to', 'currency', 'salary_on_hand',)
-    status = forms.ModelChoiceField(widget=forms.Select(),
-                                    queryset=ApprovalStatus.objects.exclude(status='NPV'),  # почему-то exclude не отрабатываеит
-                                    required=False)
+                       'salary_to', 'currency', 'salary_on_hand')
+    status = forms.ModelChoiceField(widget=forms.Select(),queryset=ApprovalStatus.objects.all().exclude(status='NPB'))
 
     class Meta:
         model = Vacancy

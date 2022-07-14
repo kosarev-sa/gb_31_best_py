@@ -4,6 +4,7 @@ import datetime
 
 from django.core.exceptions import ValidationError
 
+from approvals.models import ApprovalStatus
 from cvs.models import CV, Experience, Education, LanguagesSpoken
 from search.models import Category, Currency, Languages, LanguageLevels
 
@@ -93,15 +94,26 @@ class CVUpdateForm(forms.ModelForm):
 
 class ModeratorCVUpdateForm(CVUpdateForm):
     """форма просмотра\редактирования резюме"""
-    disabled_fields = ('is_active', 'post', 'skills', 'education_level', 'moving', 'salary', 'currency')
+    speciality = forms.ModelChoiceField(widget=forms.Select(),
+                                        queryset=Category.objects.all().order_by('name'),
+                                        required=False, label='Специализация')
+    post = forms.CharField(widget=forms.TextInput, required=False, label='Должность')
+    status = forms.ModelChoiceField(widget=forms.Select(),queryset=ApprovalStatus.objects.all().exclude(status='NPB'))
+
+    disabled_fields = ('is_active', 'post', 'skills', 'education_level', 'moving', 'salary', 'currency', 'speciality')
 
     class Meta:
         model = CV
-        exclude = ('worker_profile', 'speciality')
+        exclude = ('worker_profile',)
 
     def __init__(self, *args, **kwargs):
         super(ModeratorCVUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['status'].widget.attrs['class'] = 'selectpicker'
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            if field_name == 'speciality':
+                self.fields['status'].widget.attrs['data-size'] = '5'
+                self.fields['status'].widget.attrs['data-container'] = 'body'
+
         for field in self.disabled_fields:
             self.fields[field].disabled = True
 
