@@ -15,7 +15,7 @@
         {% include 'inc_messages_for_forms.html' %}
     {% endblock %}
 
-    <div class="ptb80" id="blog-post">
+    <div id="blog-post">
         <div class="container">
             <form action="{% url 'news:update_news' object.pk %}" method="post"
                   enctype="multipart/form-data"
