@@ -22,6 +22,17 @@
                 {% csrf_token %}
                 <div class="row">
                     <div class="col-md-12">
+
+                        <div class="form-group">
+                            <label class="custom-file-label" for="{{ form.image.id_for_label }}">Выберите
+                                изображение
+                                <span style="color:red">*</span></label>
+                            {{ form.image }}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="form-group">
                             <label for="{{ form.title.id_for_label }}">Заголовок<span
                                     style="color:red">*</span></label>
@@ -35,17 +46,6 @@
                             <label for="{{ form.body.id_for_label }}">Текст новости<span
                                     style="color:red">*</span></label>
                             {{ form.body }}
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-
-                        <div class="form-group">
-                            <label class="custom-file-label" for="{{ form.image.id_for_label }}">Выберите
-                                изображение
-                                <span style="color:red">*</span></label>
-                            {{ form.image }}
                         </div>
                     </div>
                 </div>

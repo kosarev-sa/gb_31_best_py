@@ -101,7 +101,7 @@ class NewsCreate(CreateView):
     model = News
     template_name = 'news_create.html'
     form_class = NewsCreateForm
-    success_url = reverse_lazy('news:create_news')
+    success_url = reverse_lazy('news:update_news')
 
     def get_context_data(self, **kwargs):
         context = super(NewsCreate, self).get_context_data(**kwargs)
@@ -125,8 +125,8 @@ class NewsCreate(CreateView):
             news.body = form.data['body']
             news.image = form.instance.image
             news.save()
-            messages.success(request, 'Просмотр: "Главная" или "Модерация новостей"')
-            return redirect(self.success_url)
+            messages.success(request, 'Новость успешно создана!')
+            return redirect('news:update_news', pk=news.pk)
         else:
             print(form.errors)
             messages.error(request, 'Проверьте правильность заполнения новости!')

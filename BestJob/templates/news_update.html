@@ -30,9 +30,9 @@
                     <div class="col-md-12">
 
                         <div class="form-group">
-                            {{ form.image }}
-                            <label class="custom-file-label" for="image">Выберите
+                            <label class="custom-file-label" for="{{ form.image.id_for_label }}">Выберите
                                 изображение<span style="color:red">*</span></label>
+                            {{ form.image }}
                         </div>
                     </div>
 
