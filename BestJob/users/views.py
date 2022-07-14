@@ -1,4 +1,5 @@
 # Create your views here.
+from django.db import transaction
 from django.http import HttpResponseRedirect, JsonResponse
 from django.template.loader import render_to_string
 
@@ -15,6 +16,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import UpdateView, FormView, TemplateView, ListView, DetailView
 
 from BestJob import settings
+from BestJob.settings import UserRole
 from approvals.models import ApprovalStatus
 from news.models import News
 from search.models import Category
@@ -305,23 +307,34 @@ class UserRegisterView(FormView):
         context['heading_link'] = 'На главную'
         return context
 
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         """метод сохранения нового юзера. изначально он не активен, нужно подтвердить email"""
+        global user, employer_profile, worker_profile
         form = self.form_class(data=request.POST)
+        sid = transaction.savepoint()
         if form.is_valid():
-            # сохраняем нового юзера
-            user = form.save()
-            # отправляем email с подтверждением почты
-            self.send_verify_link(user)
-            # создаем профиль в зависимости от роли
-            if user.role_id == 2:
-                employer_profile = EmployerProfile(user_id=user.pk)
-                employer_profile.save()
-            elif user.role_id == 3:
-                worker_profile = WorkerProfile(user_id=user.pk)
-                worker_profile.save()
-            messages.success(request, 'Профиль успешно зарегистрирован!')
-            return redirect(self.success_url)
+            try:
+                # сохраняем нового юзера
+                user = form.save()
+                # отправляем email с подтверждением почты
+                self.send_verify_link(user)
+                # создаем профиль в зависимости от роли
+                if user.role_id == UserRole.EMPLOYER:
+                    employer_profile = EmployerProfile(user_id=user.pk)
+                    employer_profile.save()
+                elif user.role_id == UserRole.WORKER:
+                    worker_profile = WorkerProfile(user_id=user.pk)
+                    worker_profile.save()
+
+                transaction.savepoint_commit(sid)
+
+                messages.success(request, 'Профиль успешно зарегистрирован!')
+                return redirect(self.success_url)
+            except Exception as e:
+                transaction.savepoint_rollback(sid)
+                messages.error(request, f'500 внутренняя ошибка сервера\n{e}')
+                return self.form_invalid(form)
         else:
             print(form.errors)
             messages.error(request, 'Проверьте правильность заполнения формы!')
