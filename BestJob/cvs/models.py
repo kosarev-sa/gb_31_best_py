@@ -9,19 +9,19 @@ from vacancies.models import Vacancy
 
 class CV(models.Model):
     """Резюме"""
-    worker_profile = models.ForeignKey(WorkerProfile, on_delete=models.CASCADE)
-    status = models.ForeignKey(ApprovalStatus, on_delete=models.CASCADE)
-    date_create = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField(default=True, db_index=True)
-    speciality = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True)
-    post = models.CharField(max_length=256, blank=True, null=True)
-    skills = models.CharField(max_length=256, blank=True, null=True)
-    education_level = models.PositiveSmallIntegerField(choices=EducationLevel.choices, default=EducationLevel.HIGHER)
-    moving = models.PositiveSmallIntegerField(choices=Moving.choices, default=Moving.UNREAL, null=True)
-    salary = models.DecimalField(max_digits=8, decimal_places=2, blank=True, null=True, verbose_name='Зарплата')
-    currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB, null=True)
-    about = models.TextField(max_length=5000, blank=True, null=True)
-    moderators_comment = models.TextField(max_length=5000,blank=True, null=True)
+    worker_profile = models.ForeignKey(WorkerProfile, on_delete=models.CASCADE, verbose_name='Профиль соискателя')
+    status = models.ForeignKey(ApprovalStatus, on_delete=models.CASCADE, verbose_name='Статус')
+    date_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    is_active = models.BooleanField(default=True, db_index=True, verbose_name='Активна?')
+    speciality = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True, verbose_name='Специализация')
+    post = models.CharField(max_length=256, blank=True, null=True, verbose_name='Название')
+    skills = models.CharField(max_length=256, blank=True, null=True, verbose_name='Навыки')
+    education_level = models.PositiveSmallIntegerField(choices=EducationLevel.choices, default=EducationLevel.HIGHER, verbose_name='Уровень образования')
+    moving = models.PositiveSmallIntegerField(choices=Moving.choices, default=Moving.UNREAL, null=True, verbose_name='Готовность к переезду')
+    salary = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name='Зарплата')
+    currency = models.PositiveSmallIntegerField(choices=Currency.choices, default=Currency.RUB, null=True, verbose_name='Валюта')
+    about = models.TextField(max_length=5000, blank=True, null=True, verbose_name='Обо Мне')
+    moderators_comment = models.TextField(max_length=5000,blank=True, null=True, verbose_name='Комментарий модератора')
 
 
 class CVSkills(models.Model):

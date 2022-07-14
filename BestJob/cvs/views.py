@@ -46,7 +46,7 @@ class ModeratorCVList(TemplateView):
         super(ModeratorCVList, self).get(request, *args, **kwargs)
         context = self.get_context_data()
         context['cvs_list'] = CV.objects.filter(status__status="PUB").exclude(
-                is_active=False).order_by('date_create')
+            is_active=False).order_by('date_create')
         context['title'] = 'Модерация резюме'
         context['heading'] = "Модерация резюме"
         return self.render_to_response(context)
@@ -209,7 +209,7 @@ class CVUpdate(UpdateView):
         if form.is_valid():
             if not form.has_changed():
                 messages.error(request, 'Для сохранения измените хотя бы одно поле!')
-                return self.form_invalid(form)
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             self.object.save()
 
@@ -231,8 +231,22 @@ class CVUpdate(UpdateView):
             return redirect(reverse('cv:update_cv', args=(kwargs.get('pk'),)))
         else:
             print(form.errors)
-            messages.error(request, 'Проверьте правильность заполнения резюме!')
-        return self.form_invalid(form)
+
+            # Generate errors string.
+            error_string = str()
+            for field, errors in form.errors.items():
+
+                model_field = CV._meta.get_field(field)
+                if model_field:
+                    field_verbose_name = model_field.verbose_name
+                    if field_verbose_name:
+                        field = field_verbose_name
+
+                error_string += f'{field}: {",".join(errors)}'
+
+            messages.error(request, f'Проверьте правильность заполнения резюме!\n{error_string}')
+            # return self.form_invalid(form)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 class CVDelete(DeleteView):
