@@ -1,15 +1,18 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.forms import Textarea
 
 from news.models import News
 
 
 class NewsCreateForm(forms.ModelForm):
     title = forms.CharField(label='Заголовок', required=True)
-    body = forms.CharField(label='Текст новости', required=True)
     class Meta:
         model = News
         fields = ['title', 'body', 'image']
+        widgets = {
+            'body': Textarea(attrs={'rows': 7, 'required': True, 'label': 'Текст новости'}),
+        }
 
     def __init__(self, *args, **kwargs):
         super(NewsCreateForm, self).__init__(*args, **kwargs)
