@@ -362,6 +362,7 @@ class UserRegisterView(FormView):
 class UserLogoutView(LogoutView):
     """view для выхода из-под учетки"""
     template_name = 'index.html'
+    success_url = reverse_lazy('index')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(UserLogoutView, self).get_context_data(**kwargs)
@@ -374,6 +375,12 @@ class UserLogoutView(LogoutView):
 
         context['categories'] = Category.objects.all().order_by('name')
         return context
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(self.success_url)
+
+        return super(UserLogoutView, self).get(request, *args, **kwargs)
 
 
 class UserEmailVarifyView(TemplateView):
