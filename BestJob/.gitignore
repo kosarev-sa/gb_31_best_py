@@ -10,4 +10,4 @@ venv/
 whoosh_index/
 for_test_trash.py
 media/
-
+allure_reports/
