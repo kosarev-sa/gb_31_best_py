@@ -67,6 +67,7 @@ class TestData:
             'moderators_comment': dg.faker.text(500)
         },
         {
+            'name': dg.faker.text(10),
             'status': 'replace',
             'specialization': 'replace',
             'is_active': True,
@@ -76,7 +77,7 @@ class TestData:
             'status': 'replace',
             'specialization': 'replace',
             'is_active': True,
-            'name': '1' * 256,
+            'name': dg.faker.text(50),
             'experience': choice(EXPERIENCE)[0],
             'city': '1' * 20,
             'description': dg.faker.text(500),
@@ -181,10 +182,7 @@ class TestData:
     NEWS_URLS = [
         '/news/all/',
         '/news/list/',
-        '/news/detail/2/',
         '/news/create/',
-        '/news/update/2/',
-        '/news/delete/2/',
     ]
 
     VACANCY_URLS = [
