@@ -45,7 +45,8 @@ class ModeratorCVList(TemplateView):
     def get(self, request, *args, **kwargs):
         super(ModeratorCVList, self).get(request, *args, **kwargs)
         context = self.get_context_data()
-        context['cvs_list'] = CV.objects.filter(status__status="PUB").order_by('date_create')
+        context['cvs_list'] = CV.objects.filter(status__status="PUB").exclude(
+            is_active=False).order_by('date_create')
         context['title'] = 'Модерация резюме'
         context['heading'] = "Модерация резюме"
         return self.render_to_response(context)
@@ -106,7 +107,7 @@ class CVCreate(CreateView):
     model = CV
     template_name = 'cv_create.html'
     form_class = CVCreateForm
-    success_url = reverse_lazy('cv:cv_list')
+    success_url = 'cv:update_cv'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVCreate, self).get_context_data(**kwargs)
@@ -125,6 +126,7 @@ class CVCreate(CreateView):
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
+        self.object = None
         worker = WorkerProfile.objects.get(user=request.user.pk)
         start_status = ApprovalStatus.objects.get(status='NPB')
         form = self.form_class(data=request.POST)
@@ -157,9 +159,11 @@ class CVCreate(CreateView):
             if request.POST.get('language', None):
                 return redirect('cv:create_language', cv_id=cv.id)
 
-            return redirect(self.success_url)
+            messages.success(request, 'Резюме успешно создано!')
+            return redirect(self.success_url, pk=cv.id)
         else:
             print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения резюме!')
         return self.form_invalid(form)
 
 
@@ -168,7 +172,7 @@ class CVUpdate(UpdateView):
     model = CV
     template_name = 'cv_update.html'
     form_class = CVUpdateForm
-    success_url = reverse_lazy('cv:cv_list')
+    success_url = reverse_lazy('cv:update_cv')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(CVUpdate, self).get_context_data(**kwargs)
@@ -203,6 +207,9 @@ class CVUpdate(UpdateView):
         form = self.form_class(request.POST, instance=self.object)
 
         if form.is_valid():
+            if not form.has_changed():
+                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             self.object.save()
 
@@ -220,10 +227,26 @@ class CVUpdate(UpdateView):
                     employment = Employments.objects.get(code=value)
                     cv_employment = CVEmployment(cv=self.object, employment=employment)
                     cv_employment.save()
-            return redirect(self.success_url)
+            messages.success(request, 'Резюме успешно отредактировано!')
+            return redirect(reverse('cv:update_cv', args=(kwargs.get('pk'),)))
         else:
             print(form.errors)
-        return self.form_invalid(form)
+
+            # Generate errors string.
+            error_string = str()
+            for field, errors in form.errors.items():
+
+                model_field = CV._meta.get_field(field)
+                if model_field:
+                    field_verbose_name = model_field.verbose_name
+                    if field_verbose_name:
+                        field = field_verbose_name
+
+                error_string += f'{field}: {",".join(errors)}'
+
+            messages.error(request, f'Проверьте правильность заполнения резюме!\n{error_string}')
+            # return self.form_invalid(form)
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 class CVDelete(DeleteView):
@@ -340,6 +363,7 @@ class CVExperienceCreate(CreateView):
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
+        self.object = None
         cv = CV.objects.get(id=self.kwargs.get('pk'))
         form = self.form_class(data=request.POST)
         if form.is_valid():
@@ -347,11 +371,14 @@ class CVExperienceCreate(CreateView):
             experience = form.save(commit=False)
             experience.cv = cv
             experience.save()
+            messages.success(request, 'Опыт работы добавлен!')
             return redirect('cv:update_cv', pk=cv.id)
         else:
-            messages.error(request, form.errors)
+            # messages.error(request, form.errors)
             print(form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(request, 'Проверьте правильность заполнения формы!')
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            return self.form_invalid(form)
 
 
 class CVExperienceUpdate(UpdateView):
@@ -382,12 +409,18 @@ class CVExperienceUpdate(UpdateView):
     def post(self, request, *args, **kwargs):
         super(CVExperienceUpdate, self).post(request, *args, **kwargs)
         self.object = self.get_object()
-        form = self.form_class(data=request.POST)
+        form = self.form_class(data=request.POST, instance=self.object)
         if form.is_valid():
+            # if not form.has_changed():
+            #     messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+            #     return self.form_invalid(form)
+            messages.success(request, 'Опыт работы обновлён!')
             return redirect('cv:update_cv', pk=self.object.cv.id)
         else:
-            messages.error(request, form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # messages.error(request, form.errors)
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(request, 'Проверьте правильность заполнения формы!')
+            return self.form_invalid(form)
 
 
 class CVExperienceDelete(DeleteView):
@@ -425,6 +458,7 @@ class CVEducationCreate(CreateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        self.object = None
         cv = CV.objects.get(id=self.kwargs.get('cv_id'))
         form = self.form_class(data=request.POST)
         if form.is_valid():
@@ -432,11 +466,14 @@ class CVEducationCreate(CreateView):
             education = form.save(commit=False)
             education.cv = cv
             education.save()
+            messages.success(request, 'Обучение успешно добавлено!')
             return redirect('cv:update_cv', pk=cv.id)
         else:
-            messages.error(request, form.errors)
+            # messages.error(request, form.errors)
             print(form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(request, 'Проверьте правильность заполнения формы!')
+            return self.form_invalid(form)
 
 
 class CVEducationUpdate(UpdateView):
@@ -457,12 +494,18 @@ class CVEducationUpdate(UpdateView):
     def post(self, request, *args, **kwargs):
         super(CVEducationUpdate, self).post(request, *args, **kwargs)
         self.object = self.get_object()
-        form = self.form_class(data=request.POST)
+        form = self.form_class(request.POST, instance=self.object)
         if form.is_valid():
+            # if not form.has_changed():
+            #     messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+            #     return self.form_invalid(form)
+            messages.success(request, 'Информация об обучении обновлена!')
             return redirect('cv:update_cv', pk=self.object.cv.id)
         else:
-            messages.error(request, form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # messages.error(request, form.errors)
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(request, 'Проверьте правильность заполнения формы!')
+            return self.form_invalid(form)
 
 
 class CVEducationDelete(DeleteView):
@@ -493,6 +536,7 @@ class CVLanguageCreate(CreateView):
         return context
 
     def post(self, request, *args, **kwargs):
+        self.object = None
         cv = CV.objects.get(id=self.kwargs.get('cv_id'))
         form = self.form_class(data=request.POST)
         if form.is_valid():
@@ -500,11 +544,14 @@ class CVLanguageCreate(CreateView):
             language = form.save(commit=False)
             language.cv = cv
             language.save()
+            messages.success(request, 'Информация о языке добавлена!')
             return redirect('cv:update_cv', pk=cv.id)
         else:
-            messages.error(request, form.errors)
+            # messages.error(request, form.errors)
             print(form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(request, 'Проверьте правильность заполнения формы!')
+            return self.form_invalid(form)
 
 
 class CVLanguageUpdate(UpdateView):
@@ -525,12 +572,18 @@ class CVLanguageUpdate(UpdateView):
     def post(self, request, *args, **kwargs):
         super(CVLanguageUpdate, self).post(request, *args, **kwargs)
         self.object = self.get_object()
-        form = self.form_class(data=request.POST)
+        form = self.form_class(data=request.POST, instance=self.object)
         if form.is_valid():
+            # if not form.has_changed():
+            #     messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+            #     return self.form_invalid(form)
+            messages.success(request, 'Информация о языке обновлена!')
             return redirect('cv:update_cv', pk=self.object.cv.id)
         else:
-            messages.error(request, form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # messages.error(request, form.errors)
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            messages.error(request, 'Проверьте правильность заполнения формы!')
+            return self.form_invalid(form)
 
 
 class CVLanguageDelete(DeleteView):
@@ -552,17 +605,23 @@ def edit_cv_list(request, stat):
 
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # вместо отмершего if request.is_ajax()
         if stat == 'frv':
-            cvs_list = CV.objects.filter(status__status="FRV").order_by('date_create')
+            cvs_list = CV.objects.filter(status__status="FRV").exclude(
+                is_active=False).order_by('date_create')
         elif stat == 'all':
-            cvs_list = CV.objects.exclude(status__status="NPB").order_by('-date_create')
+            cvs_list = CV.objects.exclude(status__status="NPB").exclude(
+                is_active=False).order_by('-date_create')
         elif stat == 'pub':
-            cvs_list = CV.objects.filter(status__status="PUB").order_by('date_create')
+            cvs_list = CV.objects.filter(status__status="PUB").exclude(
+                is_active=False).order_by('date_create')
         elif stat == 'rjc':
-            cvs_list = CV.objects.filter(status__status="RJC").order_by('-date_create')
+            cvs_list = CV.objects.filter(status__status="RJC").exclude(
+                is_active=False).order_by('-date_create')
         elif stat == 'apv':
-            cvs_list = CV.objects.filter(status__status="APV").order_by('-date_create')
+            cvs_list = CV.objects.filter(status__status="APV").exclude(
+                is_active=False).order_by('-date_create')
         else:
-            cvs_list = CV.objects.exclude(status__status="NPB").order_by('-date_create')
+            cvs_list = CV.objects.exclude(status__status="NPB").exclude(
+                is_active=False).order_by('-date_create')
     context = {'cvs_list': cvs_list}
     result = render_to_string('cvs_list.html', context)
 
@@ -580,7 +639,9 @@ class RecomendedCVList(ListView, BaseClassContextMixin):
         vacancy = Vacancy.objects.get(id=self.kwargs['pk'])
         employer = vacancy.employer_profile
         context = {
-            'cvs': CV.objects.filter(speciality=vacancy.specialization),
+            'cvs': CV.objects.filter(speciality=vacancy.specialization).exclude(
+                status__status="NPB").exclude(status__status="RJC").exclude(
+                is_active=False),
             'title': "Рекомендованные резюме",
             'heading': "Рекомендованные резюме",
             'employer': employer

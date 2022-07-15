@@ -10,10 +10,16 @@
 {% endblock %}
 
 {% block content %}
+
+    {% block messages %}
+        {% include 'inc_messages_for_forms.html' %}
+    {% endblock %}
+
     <div class="ptb80" id="post-job">
         <div class="container">
 
-            <form action="{% url 'users:employer_profile' object.user_id %}" method="post" enctype="multipart/form-data"
+            <form action="{% url 'users:employer_profile' object.user_id %}" method="post"
+                  enctype="multipart/form-data"
                   class="post-job-resume mt50">
                 {% csrf_token %}
 
@@ -28,11 +34,13 @@
 
                         <div class="form-group">
                             {{ form.image }}
-                            <label class="custom-file-label" for="image">Выберите изображение</label>
+                            <label class="custom-file-label" for="image">Выберите
+                                изображение</label>
                         </div>
 
                         <div class="form-group">
-                            <label>Название работодателя</label>
+                            <label>Название работодателя
+                                <span style="color:red">*</span></label>
                             {{ form.name }}
                         </div>
 
@@ -41,11 +49,13 @@
                             {{ object.status }}
 
                             {% if object.status.code == 'FRV' %}
-                                <p style="color:#ff0000;">Внимание! Модератор отправил карточку компании на
+                                <p style="color:#ff0000;">Внимание! Модератор отправил карточку
+                                    компании на
                                     доработку!</p>
                                 {{ form.moderators_comment }}
                             {% elif object.status.code == 'RJC' %}
-                                <p style="color:#ff0000;">Внимание! Карточка компании отклонена модератором!</p>
+                                <p style="color:#ff0000;">Внимание! Карточка компании отклонена
+                                    модератором!</p>
                                 {{ form.moderators_comment }}
                             {% endif %}
 
@@ -53,7 +63,8 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="{{ form.city.id_for_label }}">Город местонахождения</label>
+                            <label for="{{ form.city.id_for_label }}">Город местонахождения
+                                <span style="color:red">*</span></label>
                             {{ form.city }}
                         </div>
 
@@ -63,17 +74,20 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="small mb-1" for="{{ form.data.id_for_label }}">Описание компании:</label>
+                            <label class="small mb-1" for="{{ form.data.id_for_label }}">Описание
+                                компании:
+                                <span style="color:red">*</span></label>
                             {{ form.data }}
                         </div>
 
                         <div class="form-group d-flex align-items-center justify-content-around mt-4 mb-0">
-                            <a class="btn btn-blue btn-effect" href="{% url 'index' %}">Вернуться</a>
+                            <a class="btn btn-blue btn-effect"
+                               href="{% url 'index' %}">Вернуться</a>
                             <input class="btn btn-blue btn-effect" type="submit" value="Сохранить">
                             {% if object.status.code == 'NPB' or object.status.code == 'FRV' %}
-                                        <a class="btn btn-blue btn-effect mt15 mb15"
-                                           href="{% url 'users:distribute_company' object.id %}">Опубликовать</a>
-                                    {% endif %}
+                                <a class="btn btn-blue btn-effect mt15 mb15"
+                                   href="{% url 'users:distribute_company' object.id %}">Опубликовать</a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

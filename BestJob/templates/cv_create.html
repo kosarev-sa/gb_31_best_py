@@ -11,6 +11,11 @@
 {% endblock %}
 
 {% block content %}
+
+    {% block messages %}
+        {% include 'inc_messages_for_forms.html' %}
+    {% endblock %}
+
     <!-- ===== Start of Main Wrapper Section ===== -->
     <section class="ptb80" id="post-job">
         <div class="container">
@@ -21,7 +26,8 @@
                 <!-- Start of Profile Picture -->
                 <div class="col-md-3 col-xs-12">
                     <div class="profile-photo">
-                        <img src="{% if worker.image %} {{ worker.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}" class="img-thumbnail">
+                        <img src="{% if worker.image %} {{ worker.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                             class="img-thumbnail">
                     </div>
                 </div>
                 <!-- End of Profile Picture -->
@@ -80,12 +86,14 @@
 
                         <!-- Form Group -->
                         <div class="form-group">
-                            <label for="{{ form.speciality.id_for_label }}">Специализация</label>
+                            <label for="{{ form.speciality.id_for_label }}">Специализация
+                                <span style="color:red">*</span></label>
                             {{ form.speciality }}
                         </div>
                         <!-- Form Group -->
                         <div class="form-group">
-                            <label for="{{ form.post.id_for_label }}">Должность</label>
+                            <label for="{{ form.post.id_for_label }}">Должность
+                                <span style="color:red">*</span></label>
                             {{ form.post }}
                         </div>
                         <!-- Form Group -->
@@ -95,7 +103,8 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-md-12" for="{{ form.salary.id_for_label }}">Зарплата</label>
+                        <label class="col-md-12"
+                               for="{{ form.salary.id_for_label }}">Зарплата</label>
                         <div class="col-md-6 mx-auto">
                             {{ form.salary }}
                         </div>
@@ -107,41 +116,47 @@
                         {#                            <div class="form-group pt30 nomargin" id="last">#}
                         <div class="form-group pt30 nomargin">
                             <label for="experience">Опыт работы</label>
-                            <input type="submit" class="btn btn-blue btn-effect" name="experience" id="experience"
+                            <input type="submit" class="btn btn-blue btn-effect" name="experience"
+                                   id="experience"
                                    value="Добавить опыт работы">
 
                         </div>
                         <!-- Form Group -->
                         <div class="form-group pt30">
-                            <label for="{{ form.education_level.id_for_label }}">Уровень образования</label>
+                            <label for="{{ form.education_level.id_for_label }}">Уровень
+                                образования</label>
                             {{ form.education_level }}
                         </div>
 
                         <div class="form-group nomargin">
                             <label for="education">Образование</label>
 
-                            <input type="submit" class="btn btn-blue btn-effect" value="Добавить место обучения"
+                            <input type="submit" class="btn btn-blue btn-effect"
+                                   value="Добавить место обучения"
                                    name="education" id="education">
 
                         </div>
                         <div class="form-group pt30 nomargin">
                             <label for="language">Владение языками</label>
-                            <input type="submit" class="btn btn-blue btn-effect" value="Добавить язык"
+                            <input type="submit" class="btn btn-blue btn-effect"
+                                   value="Добавить язык"
                                    name="language" id="language">
 
                         </div>
 
                         <div class="form-group pt30 nomargin">
-                            <label for="{{ form.moving.id_for_label }}">Возможность переезда</label>
+                            <label for="{{ form.moving.id_for_label }}">Возможность
+                                переезда</label>
                             {{ form.moving }}
                         </div>
                     </div>
                     {#                        <div class="form-group pt30 nomargin">#}
                     <div class="col-md-6 mx-auto form-group pt30 nomargin">
-                        <label>Занятость </label>
+                        <label>Занятость</label>
                         {% for empl in employments %}
                             <div class="form-check">
-                                <input class="form-check-input" name="empl_{{ empl.code }}" type="checkbox" value="{{ empl.code }}"
+                                <input class="form-check-input" name="empl_{{ empl.code }}"
+                                       type="checkbox" value="{{ empl.code }}"
                                        id="empl_{{ empl.code }}">
                                 <label class="form-check-label" for="empl_{{ empl.code }}">
                                     {{ empl.employment }}
@@ -151,10 +166,11 @@
 
                     </div>
                     <div class="col-md-6 mx-auto form-group pt30 nomargin">
-                        <label>График работы </label>
+                        <label>График работы</label>
                         {% for sch in schedules %}
                             <div class="form-check">
-                                <input class="form-check-input" name="schedule_{{ sch.code }}" type="checkbox" value="{{ sch.code }}"
+                                <input class="form-check-input" name="schedule_{{ sch.code }}"
+                                       type="checkbox" value="{{ sch.code }}"
                                        id="schedule_{{ sch.code }}">
                                 <label class="form-check-label" for="schedule_{{ sch.code }}">
                                     {{ sch.schedule }}

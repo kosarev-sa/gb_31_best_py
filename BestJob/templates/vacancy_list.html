@@ -10,8 +10,13 @@
 {% endblock %}
 
 {% block content %}
+
+    {% block messages %}
+        {% include 'inc_messages_for_forms.html' %}
+    {% endblock %}
+
     <!--    Начало секции Вакансии-->
-    <section class="education ptb80" style="background: #f0f0f0;">
+    <section class="education ptb80">
         <div class="container">
 
             {% for vacancy in  vacancies %}
@@ -109,10 +114,10 @@
                 </div>
             {% endfor %}
 
-            {% if employer %}
-                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'vacancies:create_vacancy' %}">Создать
-                    вакансию</a>
-            {% endif %}
+{#            {% if employer %}#}
+{#                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'vacancies:create_vacancy' %}">Создать#}
+{#                    вакансию</a>#}
+{#            {% endif %}#}
         </div>
     </section>
     <!--    Конец секции МОИ Вакансии-->

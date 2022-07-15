@@ -12,7 +12,7 @@
 
 {% block content %}
     <!--    Начало секции МОИ РЕЗЮМЕ-->
-    <section class="education ptb80" style="background: #f0f0f0;">
+    <section class="education ptb80">
         <div class="container">
 
             {% for cv in cvs %}
@@ -98,9 +98,9 @@
                     </div>
                 </div>
             {% endfor %}
-            {% if worker %}
-                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_cv' %}">Создать резюме</a>
-            {% endif %}
+{#            {% if worker %}#}
+{#                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'cv:create_cv' %}">Создать резюме</a>#}
+{#            {% endif %}#}
         </div>
     </section>
     <!--    Конец секции МОИ РЕЗЮМЕ-->

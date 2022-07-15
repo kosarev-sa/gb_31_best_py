@@ -13,7 +13,7 @@ from BestJob.settings import UserRole
 from cvs.models import CV
 from search.models import Category, Employments, WorkSchedules, Languages, \
     LanguageLevels
-from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDistributeForm, ModeratorVacancyUpdateForm,\
+from vacancies.forms import VacancyCreateForm, VacancyUpdateForm, VacancyDistributeForm, ModeratorVacancyUpdateForm, \
     VacancyDeleteForm
 from vacancies.models import Vacancy
 from users.models import EmployerProfile, WorkerProfile
@@ -53,7 +53,8 @@ class ModeratorVacancyList(TemplateView):
         context = self.get_context_data()
         context['title'] = 'Модерация вакансий'
         context['heading'] = 'Модерация вакансий'
-        context['vacancies_list'] = Vacancy.objects.filter(status__status="PUB")
+        context['vacancies_list'] = Vacancy.objects.filter(status__status="PUB").exclude(
+                is_active=False)
 
         return self.render_to_response(context)
 
@@ -84,7 +85,7 @@ class ModeratorVacancyUpdate(UpdateView):
         vac_id = self.kwargs['pk']
         if form.is_valid():
             Vacancy.objects.filter(pk=vac_id).update(status=form.instance.status,
-                                                    moderators_comment=form.instance.moderators_comment)
+                                                     moderators_comment=form.instance.moderators_comment)
         else:
             print(form.errors)
         return redirect(self.success_url)
@@ -95,7 +96,7 @@ class VacancyCreate(CreateView):
     model = Vacancy
     template_name = 'vacancy_create.html'
     form_class = VacancyCreateForm
-    success_url = reverse_lazy('vacancy:vacancy_list')
+    success_url = 'vacancy:update_vacancy'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(VacancyCreate, self).get_context_data(**kwargs)
@@ -113,9 +114,10 @@ class VacancyCreate(CreateView):
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
+        self.object=None
         employer = EmployerProfile.objects.get(user=request.user.pk)
         start_status = ApprovalStatus.objects.get(status='NPB')
-        form = self.form_class(data=request.POST)
+        form = self.form_class(data=request.POST, files=request.FILES)
         salary_on_hand = request.POST.get('id_salary_on_hand', False)
         is_active = request.POST.get('id_is_active', True)
 
@@ -127,9 +129,11 @@ class VacancyCreate(CreateView):
             vacancy.salary_on_hand = salary_on_hand
             vacancy.is_active = is_active
             vacancy.save()
-            return redirect(self.success_url)
+            messages.success(request, 'Вакансия успешно создана!')
+            return redirect(self.success_url, pk=vacancy.id)
         else:
             print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения вакансии!')
         return self.form_invalid(form)
 
 
@@ -159,24 +163,31 @@ class VacancyUpdate(UpdateView):
         except Exception:
             print(f'Employer {request.user.pk} not exists')
         context['employments'] = Employments.objects.all()
-        if self.object.status.status in ('FRV','RJC'):
+        if self.object.status.status in ('FRV', 'RJC'):
             context['moderators_comment'] = self.object.moderators_comment
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         super(VacancyUpdate, self).post(request, *args, **kwargs)
         self.object = self.get_object()
-        form = self.form_class(data=request.POST)
+        form = self.form_class(data=request.POST)  # ,instance=self.object)
         salary_on_hand = request.POST.get('id_salary_on_hand', False)
         # is_active = request.POST.get('id_is_active', False)
         if form.is_valid():
             self.object.is_active = True
             self.object.salary_on_hand = salary_on_hand
             self.object.save()
+            # if not form.has_changed():
+            #     messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+            #     return self.form_invalid(form)
+            messages.success(request, 'Вакансия успешно отредактирована!')
             return redirect(self.success_url)
         else:
-            messages.error(request, form.errors)
-            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # messages.error(request, form.errors)
+            # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения вакансии!')
+        return self.form_invalid(form)
 
 
 class VacancyDelete(DeleteView):
@@ -235,7 +246,8 @@ class VacancyOpenList(TemplateView, BaseClassContextMixin):
     def get(self, request, *args, **kwargs):
         super(VacancyOpenList, self).get(request, *args, **kwargs)
         context = {
-            'vacancies': Vacancy.objects.filter(is_active=True),
+            'vacancies': Vacancy.objects.filter(is_active=True).exclude(
+                status__status="NPB").exclude(status__status="RJC")
         }
         return self.render_to_response(context)
 
@@ -251,7 +263,9 @@ class RecommendedVacancyList(ListView, BaseClassContextMixin):
         cv = CV.objects.get(id=self.kwargs['pk'])
         worker = cv.worker_profile
         context = {
-            'vacancies': Vacancy.objects.filter(specialization=cv.speciality),
+            'vacancies': Vacancy.objects.filter(specialization=cv.speciality).exclude(
+                status__status="NPB").exclude(status__status="RJC").exclude(
+                is_active=False),
             'worker': worker,
             'title': "Рекомендованные вакансии",
             'heading': "Рекомендованные вакансии",
@@ -291,20 +305,27 @@ class VacancyDetail(DetailView):
 
 def edit_vacancy_list(request, stat):
     """Обновление списка вакансий соглано статусу на странице список акансий у модератора"""
-    vacancies_list = Vacancy.objects.exclude(status__status="NPB")
+    vacancies_list = Vacancy.objects.exclude(status__status="NPB").exclude(
+                is_active=False)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # вместо отмершего if request.is_ajax()
         if stat == 'frv':
-            vacancies_list = Vacancy.objects.filter(status__status="FRV")
+            vacancies_list = Vacancy.objects.filter(status__status="FRV").exclude(
+                is_active=False)
         elif stat == 'all':
-            vacancies_list = Vacancy.objects.exclude(status__status="NPB")
+            vacancies_list = Vacancy.objects.exclude(status__status="NPB").exclude(
+                is_active=False)
         elif stat == 'pub':
-            vacancies_list = Vacancy.objects.filter(status__status="PUB")
+            vacancies_list = Vacancy.objects.filter(status__status="PUB").exclude(
+                is_active=False)
         elif stat == 'rjc':
-            vacancies_list = Vacancy.objects.filter(status__status="RJC")
+            vacancies_list = Vacancy.objects.filter(status__status="RJC").exclude(
+                is_active=False)
         elif stat == 'apv':
-            vacancies_list = Vacancy.objects.filter(status__status="APV")
+            vacancies_list = Vacancy.objects.filter(status__status="APV").exclude(
+                is_active=False)
         else:
-            vacancies_list = Vacancy.objects.exclude(status__status="NPB")
+            vacancies_list = Vacancy.objects.exclude(status__status="NPB").exclude(
+                is_active=False)
     context = {'vacancies_list': vacancies_list}
     result = render_to_string('vac_list.html', context)
 

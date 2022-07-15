@@ -11,9 +11,12 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -35,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap_datepicker_plus',
     'haystack',
     'approvals',
     'cvs',
@@ -97,6 +101,14 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'bestjob',
+#         'USER': 'postgres'
+#     }
+# }
+
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -157,10 +169,19 @@ USER_EMAIL_KEY_LIFETIME = 48
 # для получения в термина ссылки (linux):  sudo python3 -m smtpd -n -c DebuggingServer localhost:25
 # для получения в термина ссылки (windows):  python -m smtpd -n -c DebuggingServer localhost:25
 DOMAIN_NAME = '127.0.0.1:8000'
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 25
-EMAIL_USER_SSL = True if os.getenv('EMAIL_USER_SSL') == 'True' else False
-EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
+
+if os.getenv('EMAIL_HOST'):
+    EMAIL_HOST = os.getenv('EMAIL_HOST')
+    EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_TLS = True if os.getenv('EMAIL_USE_TLS') == 'True' else False
+    EMAIL_USE_SSL = True if os.getenv('EMAIL_USE_SSL') == 'True' else False
+else:
+    EMAIL_HOST = 'localhost'
+    EMAIL_PORT = 25
+    EMAIL_USER_SSL = True if os.getenv('EMAIL_USER_SSL') == 'True' else False
+    EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
 
 import os
 

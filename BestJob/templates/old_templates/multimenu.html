@@ -1,7 +1,0 @@
-{% if user.role|lower == "соискатель" %}
-    {% include "worker_menu.html" %}
-{% elif user.role|lower == "работодатель" %}
-    {% include "employer_menu.html" %}
-{% elif user.role|lower == "модератор" %}
-    {% include "moderator_menu.html" %}
-{% endif %}
