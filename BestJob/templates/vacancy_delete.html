@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block menu %}
+    {% include 'inc_main_menu.html' %}
+{% endblock %}
+
+{% block header %}
+    {% include 'inc_header_menu.html' %}
+{% endblock %}
+
+{% block content %}
+    <section class="education ptb80">
+        <div class="container">
+
+            <div class="col-md-12" style="margin-bottom: 15px;">
+                <div class="item-block shadow-hover" style="background: #ffffff;">
+
+                    <div class="education-header clearfix">
+                        <h5><small>Вакансия -</small><a href="{% url 'vacancy:detail_vacancy' vacancy.id %}">{{ vacancy.name }}</a></h5>
+                        <h5><small>Работодатель -</small> {{ vacancy.employer_profile.name }} </h5>
+                        <h5><small>Зарплата -</small>
+                                    {% if vacancy.salary_from %}
+                                        {{ vacancy.salary_from }}
+                                    {% endif %}
+
+                                    {% if vacancy.salary_from and vacancy.salary_to %}
+                                        -
+                                    {% endif %}
+
+                                    {% if vacancy.salary_to %}
+                                        {{ vacancy.salary_to }}
+                                    {% endif %}</h5>
+                        <h5><small>Дата создания -</small> {{ vacancy.created_at }} </h5>
+                            {% if employer %}
+                                <h5><small>Статус вакансии -</small> {{ vacancy.status }} </h5>
+                                {% if vacancy.status.code == 'FRV' %}
+                                    <p style="color:#ff0000;">Внимание! Модератор отправил вакансию на доработку!
+                                        {% if vacancy.moderators_comment %}
+                                            <p style="color:#ff0000;">Прочесть комментарии модератора можно на форме
+                                                редактирования.</p>
+                                        {% endif %}
+                                {% elif vacancy.status.code == 'RJC' %}
+                                    <p style="color:#ff0000;">Внимание! Вакансия отклонена модератором!
+                                        {% if vacancy.moderators_comment %}
+                                            <p style="color:#ff0000;">Прочесть комментарии модератора можно на форме
+                                                редактирования.</p>
+                                        {% endif %}
+                                {% endif %}
+                            {% endif %}
+                    </div>
+
+                    <div class="col-md-12 text-right mt-4 mb-4" style="background: #ffffff;">
+                        <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'vacancy:detail_vacancy' vacancy.id %}">Просмотр</a>
+                    </div>
+
+                </div>
+            </div>
+
+            <form method="post" action="">
+                {% csrf_token %}
+
+                <div class="col-md-12 text-center">
+                    <h3 class="pb60">Вакансия будет удалена, для восстановления обратитесь к администратору.</h3>
+
+                    <input class="btn btn-red btn-effect mt15 mb15" type="submit" value="Подтвердить удаление">
+                    <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'vacancy:vacancy_list' %}">Отмена</a>
+                </div>
+
+            </form>
+        </div>
+    </section>
+{% endblock %}
+
+{% block footer %}
+    {% include 'inc_footer.html' %}
+{% endblock %}

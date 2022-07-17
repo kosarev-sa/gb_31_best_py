@@ -7,10 +7,15 @@
 {% endblock %}
 
 {% block header %}
-    {% include 'inc_cv_header.html' %}
+    {% include 'inc_header_menu.html' %}
 {% endblock %}
 
 {% block content %}
+
+    {% block messages %}
+        {% include 'inc_messages_for_forms.html' %}
+    {% endblock %}
+
     <!-- ===== Start of Main Wrapper Section ===== -->
     <div class="ptb80" id="post-job">
         <div class="container">
@@ -21,7 +26,8 @@
                 <div class="col-md-3 col-xs-12">
                     <div class="profile-photo">
                         {% if employer.image %}
-                            <img src="{{ employer.image.url }}" class="img-responsive" alt="Нет фото">
+                            <img src="{{ employer.image.url }}" class="img-responsive"
+                                 alt="Нет фото">
                         {% else %}
                             <p>Нет фото</p>
                         {% endif %}
@@ -59,7 +65,8 @@
             <!-- End of Row -->
 
 
-            <form action="{% url 'vacancy:update_vacancy' object.pk %}" method="post" class="post-job-resume mt50">
+            <form action="{% url 'vacancy:update_vacancy' object.pk %}" method="post"
+                  class="post-job-resume mt50">
                 {% csrf_token %}
 
                 <!-- Start of Resume Details -->
@@ -67,7 +74,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label for="{{ form.name.id_for_label }}">Должность</label>
+                            <label for="{{ form.name.id_for_label }}">Должность
+                                <span style="color:red">*</span></label>
                             {{ form.name }}
                         </div>
 
@@ -78,7 +86,8 @@
                         </div>
                         <!-- Form Group -->
                         <div class="form-group">
-                            <label for="{{ form.specialization.id_for_label }}">Специализация</label>
+                            <label for="{{ form.specialization.id_for_label }}">Специализация
+                                <span style="color:red">*</span></label>
                             {{ form.specialization }}
                         </div>
                         <!-- Form Group -->
@@ -113,8 +122,10 @@
                                 <input class="form-check-input" type="checkbox"
                                        name="{{ form.salary_on_hand.id_for_label }}" value=1
                                        id="{{ form.salary_on_hand.id_for_label }}"
-                                        {% if vacancy.salary_on_hand is True %} checked {% endif %}>
-                                <label class="form-check-label" for="{{ form.salary_on_hand.id_for_label }}">
+                                        {% if vacancy.salary_on_hand is True %}
+                                       checked {% endif %}>
+                                <label class="form-check-label"
+                                       for="{{ form.salary_on_hand.id_for_label }}">
                                     Зарплата на руки
                                 </label>
                             </div>
@@ -148,7 +159,8 @@
         <section class="education ptb30" style="background: #f0f0f0;">
             <div class="container">
                 <div class="form-group pt10">
-                    <label for="{{ form.moderators_comment.id_for_label }}">Комментарий модератора:</label>
+                    <label for="{{ form.moderators_comment.id_for_label }}">Комментарий
+                        модератора:</label>
                     {{ form.moderators_comment }}
                 </div>
             </div>

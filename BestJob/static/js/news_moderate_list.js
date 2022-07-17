@@ -1,49 +1,89 @@
-const newsTitleEls = $(".news-title");
-const preBrowse = $(".pre-browse-panel");
-const maxPreBrowseLen = 1000;
-const browseHideButton = $(".btn-browse-hide");
-const newsTextPanel = $(".browse-news");
-newsTextPanel.hide()
-preBrowse.hide();
+let $custom_form_modal = $('.cd-user-modal');
+let $error_message = $("#error_message");
 
+/**
+ * Delete news.
+ */
+function newsDelete() {
+    dropErrorMessage();
+    let csrf_token = $('meta[name="csrf-token"]').attr('content');
+    let news_id = $("#magic_field").val();
 
-function getNewsText(title_el) {
-    return $(title_el).parents(".card-body").find(".news-body").html();
+    if (news_id) {
+        $.ajaxSetup({
+            headers: {
+                "X-CSRFToken": csrf_token
+            }
+        });
+
+        $.ajax({
+            type: 'POST',
+            url: '/news/delete/' + news_id + '/',
+            data: {},
+            success: (data) => {
+                // Not very good solution... but..
+                document.location.reload();
+            },
+            error: (data) => {
+                createErrorMessage('Ошибка 500!');
+            }
+        });
+    }
 }
 
-newsTitleEls.click(function () {
-    let newsText = getNewsText(this);
-    let browseNewsText = $(".browse-news-text");
+/**
+ * Cancel.
+ */
+function cancelDelete() {
+    $custom_form_modal.removeClass('is-visible');
+}
 
-    browseNewsText.text(newsText);
-    newsTextPanel.show();
+/**
+ * Open modal.
+ */
+function openModalForm(news_id) {
+
+    // set magic
+    $("#magic_field").val(news_id);
+
+    //show modal layer
+    $custom_form_modal.addClass('is-visible');
+}
+
+/**
+ * Close modal.
+ */
+$custom_form_modal.on('click', function (event) {
+    if ($(event.target).is($custom_form_modal) || $(event.target).is('.cd-close-form')) {
+        $custom_form_modal.removeClass('is-visible');
+    }
 });
 
-newsTitleEls.hover(
-    function () {
-        let newsText = getNewsText(this);
-        if (newsText.length > maxPreBrowseLen) {
-            console.log("more");
-            console.log(newsText);
-            let slicedText = newsText.slice(0 ,maxPreBrowseLen) + " ...";
-            newsText = slicedText;
-        }
-        $(".docked-prebrowse-text").text(newsText);
-        preBrowse.show();
-    },
-    function () {
-    preBrowse.hide();
+/**
+ * Close modal when clicking the esc keyboard button.
+ */
+$(document).on('keyup', function (event) {
+    if (event.which == '27') {
+        $custom_form_modal.removeClass('is-visible');
+        dropErrorMessage();
     }
-);
-
-browseHideButton.click(function () {
-    newsTextPanel.hide();
 });
 
-for ( el of $(".is_active_text")) {
-    if ($(el).text() == "Да") {
-        $(el).addClass("text-success");
-    } else {
-        $(el).addClass("text-danger");
-    }
+/**
+ * Create error message.
+ * @param text
+ */
+function createErrorMessage(text) {
+    $error_message.addClass('alert');
+    $error_message.addClass('alert-danger');
+    $error_message.text(text);
+}
+
+/**
+ * Drop error message.
+ */
+function dropErrorMessage() {
+    $error_message.removeClass('alert');
+    $error_message.removeClass('alert-danger');
+    $error_message.text('');
 }

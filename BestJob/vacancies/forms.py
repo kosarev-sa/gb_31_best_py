@@ -1,13 +1,17 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 from approvals.models import ApprovalStatus
 from search.models import Category
 from vacancies.models import Vacancy
-from cvs.models import ConnectVacancyCv
 
 
 class VacancyCreateForm(forms.ModelForm):
     """форма создание вакансии"""
+    name = forms.CharField(label='Название вакансии', required=True)
+    specialization = forms.ModelChoiceField(widget=forms.Select(),
+                                            queryset=Category.objects.all().order_by('name'),
+                                            label='Специализация', required=True)
 
     class Meta:
         model = Vacancy
@@ -23,11 +27,19 @@ class VacancyCreateForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        if len(data) > 50:
+            raise ValidationError("Название должно быть не более 50 символов.")
+        return data
+
 
 class VacancyUpdateForm(forms.ModelForm):
     """форма просмотра\редактирования вакансии"""
-    specialization = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'),
-                                            required=False)
+    name = forms.CharField(label='Название вакансии', required=True)
+    specialization = forms.ModelChoiceField(widget=forms.Select(),
+                                            queryset=Category.objects.all().order_by('name'),
+                                            label='Специализация', required=True)
     disabled_fields = ('moderators_comment',)
 
     class Meta:
@@ -51,15 +63,19 @@ class VacancyUpdateForm(forms.ModelForm):
         for field in self.disabled_fields:
             self.fields[field].disabled = True
 
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        if len(data) > 50:
+            raise ValidationError("Название должно быть не более 50 символов.")
+        return data
+
 
 class ModeratorVacancyUpdateForm(VacancyUpdateForm):
     """форма просмотра\редактирования вакансии"""
     disabled_fields = ('specialization', 'is_active', 'name', 'experience',
                        'description', 'city', 'description', 'salary_from',
-                       'salary_to', 'currency', 'salary_on_hand',)
-    status = forms.ModelChoiceField(widget=forms.Select(),
-                                    queryset=ApprovalStatus.objects.exclude(status='NPV'),  # почему-то exclude не отрабатываеит
-                                    required=False)
+                       'salary_to', 'currency', 'salary_on_hand')
+    status = forms.ModelChoiceField(widget=forms.Select(),queryset=ApprovalStatus.objects.all().exclude(status='NPB'))
 
     class Meta:
         model = Vacancy
@@ -79,6 +95,9 @@ class VacancyDeleteForm(forms.ModelForm):
         model = Vacancy
         fields = '__all__'
 
+    def __init__(self, *args, **kwargs):
+        super(VacancyDeleteForm, self).__init__(*args, **kwargs)
+
 
 class VacancyDistributeForm(forms.ModelForm):
     """форма размещения вакансии"""
@@ -92,11 +111,3 @@ class VacancyDistributeForm(forms.ModelForm):
         self.fields['name'].widget.attrs['placeholder'] = 'Backend разработчик'
         self.fields['city'].widget.attrs['placeholder'] = 'Москва'
         self.fields['description'].widget.attrs['placeholder'] = 'Описание вакансии'
-
-
-class VacancyResponseForm(forms.ModelForm):
-    """форма изменения отклика на вакансию"""
-
-    class Meta:
-        model = ConnectVacancyCv
-        exclude = ('cv', 'vacancy', 'status_worker', 'created_at', 'initiator')

@@ -2,6 +2,9 @@ from django import forms
 import time
 import datetime
 
+from django.core.exceptions import ValidationError
+
+from approvals.models import ApprovalStatus
 from cvs.models import CV, Experience, Education, LanguagesSpoken
 from search.models import Category, Currency, Languages, LanguageLevels
 
@@ -10,10 +13,13 @@ now = datetime.datetime.now()
 
 class CVCreateForm(forms.ModelForm):
     """форма создание резюме"""
-    speciality = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'))
-    post = forms.CharField(widget=forms.TextInput, required=False)
+    speciality = forms.ModelChoiceField(widget=forms.Select(),
+                                        queryset=Category.objects.all().order_by('name'),
+                                        required=True, label='Специализация')
+    post = forms.CharField(widget=forms.TextInput, required=True, label='Должность')
     skills = forms.CharField(widget=forms.TextInput, required=False)
     about = forms.CharField(widget=forms.Textarea, required=False)
+    salary = forms.DecimalField(label='Зарплата', required=False)
 
     class Meta:
         model = CV
@@ -36,15 +42,23 @@ class CVCreateForm(forms.ModelForm):
 
         # self.fields['about'].widget.attrs['class'] = "tinymce"
 
+    def clean_post(self):
+        data = self.cleaned_data['post']
+        if len(data) > 30:
+            raise ValidationError("Сократите название должности.")
+        return data
+
 
 class CVUpdateForm(forms.ModelForm):
     """форма просмотра\редактирования резюме"""
-    speciality = forms.ModelChoiceField(widget=forms.Select(), queryset=Category.objects.all().order_by('name'),
-                                        required=False)
-    post = forms.CharField(widget=forms.TextInput, required=False)
+    disabled_fields = ('moderators_comment',)
+    speciality = forms.ModelChoiceField(widget=forms.Select(),
+                                        queryset=Category.objects.all().order_by('name'),
+                                        required=True, label='Специализация')
+    post = forms.CharField(widget=forms.TextInput, required=True, label='Должность')
     skills = forms.CharField(widget=forms.TextInput, required=False)
     about = forms.CharField(widget=forms.Textarea, required=False)
-    disabled_fields = ('moderators_comment',)
+    salary = forms.DecimalField(label='Зарплата', required=False)
 
     class Meta:
         model = CV
@@ -71,18 +85,35 @@ class CVUpdateForm(forms.ModelForm):
 
         # self.fields['about'].widget.attrs['class'] = "tinymce"
 
+    def clean_post(self):
+        data = self.cleaned_data['post']
+        if len(data) > 30:
+            raise ValidationError("Сократите название должности.")
+        return data
+
 
 class ModeratorCVUpdateForm(CVUpdateForm):
     """форма просмотра\редактирования резюме"""
-    disabled_fields = ('is_active', 'post', 'skills', 'education_level', 'moving', 'salary', 'currency')
+    speciality = forms.ModelChoiceField(widget=forms.Select(),
+                                        queryset=Category.objects.all().order_by('name'),
+                                        required=False, label='Специализация')
+    post = forms.CharField(widget=forms.TextInput, required=False, label='Должность')
+    status = forms.ModelChoiceField(widget=forms.Select(),queryset=ApprovalStatus.objects.all().exclude(status='NPB'))
+
+    disabled_fields = ('is_active', 'post', 'skills', 'education_level', 'moving', 'salary', 'currency', 'speciality')
 
     class Meta:
         model = CV
-        exclude = ('worker_profile', 'speciality')
+        exclude = ('worker_profile',)
 
     def __init__(self, *args, **kwargs):
         super(ModeratorCVUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['status'].widget.attrs['class'] = 'selectpicker'
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            if field_name == 'speciality':
+                self.fields['status'].widget.attrs['data-size'] = '5'
+                self.fields['status'].widget.attrs['data-container'] = 'body'
+
         for field in self.disabled_fields:
             self.fields[field].disabled = True
 
@@ -116,9 +147,12 @@ class ExperienceCreateForm(forms.ModelForm):
     """форма создания опыта работы"""
     responsibilities = forms.CharField(widget=forms.Textarea, required=False)
     stack = forms.CharField(widget=forms.TextInput, required=False)
-    year_begin = forms.IntegerField(min_value=1950, max_value=now.year)
+    year_begin = forms.IntegerField(min_value=1950, max_value=now.year, required=True,
+                                    label='Год начала')
     year_end = forms.IntegerField(min_value=1950, max_value=now.year, required=False,
                                   label='Оставьте поле пустым, если продолжаете тут работать')
+    name = forms.CharField(required=True, label='Наименование организации')
+    post = forms.CharField(required=True, label='Должность')
 
     class Meta:
         model = Experience
@@ -156,8 +190,10 @@ class ExperienceCreateForm(forms.ModelForm):
 
 class EducationCreateForm(forms.ModelForm):
     """форма создания места обучения"""
-    date_end = forms.IntegerField(min_value=1950, required=False)
-    department = forms.CharField(widget=forms.TextInput, max_length=256, required=False)
+    name = forms.CharField(max_length=256, required=True, label='Наименование учебного заведения')
+    date_end = forms.IntegerField(min_value=1950, required=True, label='Год окончания')
+    department = forms.CharField(widget=forms.TextInput, max_length=256, required=True,
+                                 label='Факультет')
     specialty = forms.CharField(widget=forms.TextInput, max_length=256, required=False)
 
     class Meta:
@@ -169,11 +205,19 @@ class EducationCreateForm(forms.ModelForm):
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        if len(data) > 50:
+            raise ValidationError("Название должно быть не более 50 символов.")
+        return data
+
 
 class LanguagesCreateForm(forms.ModelForm):
     """форма создания языка"""
-    language = forms.ModelChoiceField(widget=forms.Select(), queryset=Languages.objects.all())
-    level = forms.ModelChoiceField(widget=forms.Select(), queryset=LanguageLevels.objects.all())
+    language = forms.ModelChoiceField(widget=forms.Select(), queryset=Languages.objects.all(),
+                                      label='Язык', required=True)
+    level = forms.ModelChoiceField(widget=forms.Select(), queryset=LanguageLevels.objects.all(),
+                                   label='Уровень', required=True)
 
     class Meta:
         model = LanguagesSpoken
@@ -196,8 +240,10 @@ class LanguagesCreateForm(forms.ModelForm):
 
 
 class LanguagesUpdateForm(forms.ModelForm):
-    language = forms.ModelChoiceField(widget=forms.Select(), queryset=Languages.objects.all())
-    level = forms.ModelChoiceField(widget=forms.Select(), queryset=LanguageLevels.objects.all())
+    language = forms.ModelChoiceField(widget=forms.Select(), queryset=Languages.objects.all(),
+                                      label='Язык', required=True)
+    level = forms.ModelChoiceField(widget=forms.Select(), queryset=LanguageLevels.objects.all(),
+                                   label='Уровень', required=True)
 
     class Meta:
         model = LanguagesSpoken
@@ -210,4 +256,3 @@ class LanguagesUpdateForm(forms.ModelForm):
             field.widget.attrs['class'] = 'selectpicker'
             field.widget.attrs['data-size'] = '5'
             field.widget.attrs['data-container'] = 'body'
-

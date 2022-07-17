@@ -10,15 +10,15 @@
 {% endblock %}
 
 {% block header %}
-    {% include 'inc_header.html' %}
+    {% include 'inc_header_menu.html' %}
 {% endblock %}
 
 {% block content %}
 
-    <section class="search-jobs ptb80" id="version4">
+    <section class="search-jobs ptb80" id="version4" style="background: #ffffff;">
         <div class="container">
 
-            {% for item in favorites_list %}
+            {% for item in page_obj %}
 
                 <div class="col-md-12 mt20">
                     <div class="item-block shadow-hover">
@@ -41,7 +41,9 @@
                                         {% if not item.has_relaton %}
 
                                             <span id="relation_btn_{{ item.cv.pk }}_{{ item.pk }}">
-                                                <a id="employer_modal_trigger" href="#" onclick="openModalForm({{ item.cv.pk }},{{ item.pk }})" class="btn btn-blue btn-small btn-effect" role="button">Отправить приглашение</a>
+                                                <a id="employer_modal_trigger" href="#"
+                                                   onclick="openModalForm({{ item.cv.pk }},{{ item.pk }})"
+                                                   class="btn btn-blue btn-small btn-effect" role="button">Отправить приглашение</a>
                                             </span>
 
                                         {% endif %}
@@ -49,8 +51,8 @@
                                     <li id="has_relaton_{{ item.cv.pk }}_{{ item.pk }}">
                                         {% if item.has_relaton == 1 %}
 
-                                                <a href="{% url 'relations:detail' item.relations_id %}">
-                                                    <h6 class="time">У вас есть взаимодействия по этому резюме</h6></a>
+                                            <a href="{% url 'relations:detail' item.relations_id %}">
+                                                <h6 class="time">У вас есть взаимодействия по этому резюме</h6></a>
 
                                         {% endif %}
                                     </li>
@@ -119,7 +121,9 @@
                                         {% if not item.has_relaton %}
 
                                             <span id="relation_btn_{{ item.vacancy.pk }}_{{ item.pk }}">
-                                                <a id="worker_modal_trigger" href="#" onclick="openModalForm({{ item.vacancy.pk }},{{ item.pk }})" class="btn btn-blue btn-small btn-effect" role="button">Отправить отклик</a>
+                                                <a id="worker_modal_trigger" href="#"
+                                                   onclick="openModalForm({{ item.vacancy.pk }},{{ item.pk }})"
+                                                   class="btn btn-blue btn-small btn-effect" role="button">Отправить отклик</a>
                                             </span>
 
                                         {% endif %}
@@ -184,10 +188,35 @@
                                 {% endif %}
 
                             </div>
+
                         {% endif %}
                     </div>
                 </div>
+
             {% endfor %}
+
+            <div class="col-md-12">
+                <ul class="pagination list-inline text-center">
+                    {% if page_obj.has_previous %}
+                        <li><a href="?page=1">&laquo; первая</a></li>
+                        <li><a href="?page={{ page_obj.previous_page_number }}">предыдущая</a></li>
+
+                    {% endif %}
+
+                    <span class="current">
+                                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+                                </span>
+
+                    <li class="active"><a href="javascript:void(0)">{{ page_obj.number }}</a></li>
+
+                    {% if page_obj.has_next %}
+
+                        <li><a href="?page={{ page_obj.next_page_number }}">следующая</a></li>
+                        <li><a href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+
         </div>
     </section>
 

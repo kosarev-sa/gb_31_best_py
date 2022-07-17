@@ -13,6 +13,8 @@ class VacancyIndex(indexes.SearchIndex, indexes.Indexable):
     salary_from = indexes.IntegerField(model_attr='salary_from', null=True)
     salary_to = indexes.IntegerField(model_attr='salary_to', null=True)
     salary_on_hand = indexes.BooleanField(model_attr='salary_on_hand')
+    status_id = indexes.IntegerField(model_attr='status_id')
+
 
 
     def get_model(self):

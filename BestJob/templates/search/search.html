@@ -9,34 +9,35 @@
 {% endblock %}
 
 {% block header %}
-    <section class="page-header">
-        <div class="container">
+    {% include 'inc_header_menu.html' %}
+    <!--    <section class="page-header">-->
+    <!--        <div class="container">-->
 
-            <!-- Start of Page Title -->
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Поиск</h2>
-                </div>
-            </div>
-            <!-- End of Page Title -->
+    <!--            &lt;!&ndash; Start of Page Title &ndash;&gt;-->
+    <!--            <div class="row">-->
+    <!--                <div class="col-md-12">-->
+    <!--                    <h2>Поиск</h2>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            &lt;!&ndash; End of Page Title &ndash;&gt;-->
 
-            <!-- Start of Breadcrumb -->
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="breadcrumb">
-                        <li><a href="{% url 'index' %}">На главную</a></li>
-                        <li class="active">Поиск</li>
-                        <li><a href="{% url 'search_vacancy' %}">расширенный поиск вакансий</a>
-                        </li>
-                        <li><a href="{% url 'search_cv' %}">расширенный поиск резюме</a></li>
+    <!--            &lt;!&ndash; Start of Breadcrumb &ndash;&gt;-->
+    <!--            <div class="row">-->
+    <!--                <div class="col-md-12">-->
+    <!--                    <ul class="breadcrumb">-->
+    <!--                        <li><a href="{% url 'index' %}">На главную</a></li>-->
+    <!--                        <li class="active">Поиск</li>-->
+    <!--                        <li><a href="{% url 'search_vacancy' %}">расширенный поиск вакансий</a>-->
+    <!--                        </li>-->
+    <!--                        <li><a href="{% url 'search_cv' %}">расширенный поиск резюме</a></li>-->
 
-                    </ul>
-                </div>
-            </div>
-            <!-- End of Breadcrumb -->
+    <!--                    </ul>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--            &lt;!&ndash; End of Breadcrumb &ndash;&gt;-->
 
-        </div>
-    </section>
+    <!--        </div>-->
+    <!--    </section>-->
 {% endblock %}
 
 
@@ -72,140 +73,158 @@
                     <div class="candidate-wrapper">
                         {% if query %}
                             {% for result in page.object_list %}
-                                {% if result.object.post %}
+                                {% if result.object.status_id == 2 or result.object.status_id == 5 %}
+                                    {% if result.object.post %}
 
-                                    <!-- ===== Start of Single Candidate 1 ===== -->
-                                    <div class="single-candidate row nomargin">
+                                        <!-- ===== Start of Single Candidate 1 ===== -->
+                                        <div class="single-candidate row nomargin">
 
-                                        <!-- Candidate Image -->
-                                        <div class="col-md-2 col-xs-3">
-                                            <div class="candidate-img">
-                                                <img width="200" height="200"
-                                                     src="{% if result.object.worker_profile.image %} {{ result.object.worker_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
-                                                     class="img-responsive">
-                                            </div>
-                                        </div>
-
-                                        <!-- Start of Candidate Name & Info -->
-                                        <div class="col-md-8 col-xs-6 ptb20">
-                                            <div class="job-post-header clearfix">
-                                                Резюме
-                                            </div>
-                                            <!-- Candidate Name -->
-                                            <div class="candidate-name">
-                                                {% if user.id != None and user.role.id != 3 %}
-                                                    <a href="{% url 'cv:detail_cv' result.object.id %}">
-                                                        <h5>{{ result.object.post }}</h5></a>
-                                                {% else %}
-                                                    <a href="{% url 'users:login' %}">
-                                                        <h5>{{ result.object.post }}</h5>
-                                                        <p style="color:red"> Просматривать
-                                                            резюме могут только
-                                                            авторизованные
-                                                            работодатели</p></a>
-                                                {% endif %}
+                                            <!-- Candidate Image -->
+                                            <div class="col-md-2 col-xs-3">
+                                                <div class="candidate-img">
+                                                    <img width="200" height="200"
+                                                         src="{% if result.object.worker_profile.image %} {{ result.object.worker_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                                                         class="img-responsive">
+                                                </div>
                                             </div>
 
-                                            <!-- Candidate Info -->
-                                            <div class="candidate-info mt5">
-                                                <ul class="list-inline">
-                                                    <li>
+                                            <!-- Start of Candidate Name & Info -->
+                                            <div class="col-md-8 col-xs-6 ptb20">
+                                                <div class="job-post-header clearfix">
+                                                    Резюме
+                                                </div>
+                                                <!-- Candidate Name -->
+                                                <div class="candidate-name">
+                                                    {% if user.id != None and user.role.id != 3 %}
+                                                        <a href="{% url 'cv:detail_cv' result.object.id %}">
+                                                            <h5>{{ result.object.post }}</h5></a>
+                                                    {% else %}
+                                                        <a href="{% url 'users:login' %}">
+                                                            <h5>{{ result.object.post }}</h5>
+                                                            <p style="color:red"> Просматривать
+                                                                резюме могут только
+                                                                авторизованные
+                                                                работодатели</p></a>
+                                                    {% endif %}
+                                                </div>
+
+                                                <!-- Candidate Info -->
+                                                <div class="candidate-info mt5">
+                                                    <ul class="list-inline">
+                                                        <li>
                                                         <span><i
                                                                 class="fa fa-money"></i>{{ result.object.salary }} RUB</span>
-                                                    </li>
+                                                        </li>
 
-                                                    <li>
+                                                        <li>
                                                         <span><i
                                                                 class="fa fa-map-marker"></i>{{ result.object.worker_profile.city }} </span>
-                                                    </li>
+                                                        </li>
 
-                                                    <li>
+                                                        <li>
                                                         <span><i
                                                                 class="fa fa-briefcase"></i>{{ result.object.speciality.name }} </span>
-                                                    </li>
-                                                </ul>
+                                                        </li>
+                                                    </ul>
 
+                                                </div>
                                             </div>
-                                        </div>
-                                        <!-- End of Candidate Name & Info -->
-                                        <!-- CTA -->
-                                        <div class="col-md-2 col-xs-3">
-                                            <div class="candidate-cta ptb30">
-                                                <a href="{% url 'favorites:employer_add_remove' cv_id=result.object.id %}" style="color: lightgray">
-                                                    <div class="pull-right"><h3>★</h3></div>
-                                                </a>
-                                            </div>
-                                        </div>
+                                            <!-- End of Candidate Name & Info -->
+                                            <!-- CTA -->
+                                            <div class="col-md-2 col-xs-3">
+                                                <div class="candidate-cta ptb30">
+                                                    <a href="{% url 'favorites:employer_add_remove' cv_id=result.object.id %}"
+                                                       style="color: lightgray">
+                                                        {% if result.object.id in favourite_list and user.role_id == 2 %}
 
-                                    </div>
-                                {% endif %}
-                                {% if result.object.name %}
-                                    <div class="single-candidate row nomargin">
 
-                                        <!-- Vacancy Image -->
-                                        <div class="col-md-2 col-xs-3">
-                                            <div class="candidate-img">
-                                                <img width="200" height="200"
-                                                     src="{% if result.object.employer_profile.image %} {{ result.object.employer_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
-                                                     class="img-responsive">
-                                            </div>
-                                        </div>
-
-                                        <!-- Start of Vacancy Name & Info -->
-                                        <div class="col-md-8 col-xs-6 ptb20">
-                                            <div class="job-post-header clearfix">
-                                                Вакансия
-                                            </div>
-                                            <!-- Vacancy Name -->
-                                            <div class="candidate-name">
-                                                {% if user.id != None and user.role.id != 2 %}
-                                                    <a href="{% url 'vacancy:detail_vacancy' result.object.id %}">
-                                                        <h5>{{ result.object.name }}</h5></a>
-                                                {% else %}
-                                                    <a href="{% url 'users:login' %}">
-                                                        <h5>{{ result.object.name }}</h5>
-                                                        <p style="color:red"> Просматривать
-                                                            вакансии могут только
-                                                            авторизованные
-                                                            соискатели</p>
+                                                            <div class="pull-right" style="color: goldenrod"><h3>★</h3>
+                                                            </div>
+                                                        {% else %}
+                                                            <div class="pull-right"><h3>★</h3></div>
+                                                        {% endif %}
                                                     </a>
-                                                {% endif %}
+                                                </div>
                                             </div>
 
-                                            <!-- Vacancy Info -->
-                                            <div class="candidate-info mt5">
-                                                <ul class="list-inline">
-                                                    <li>
+                                        </div>
+                                    {% endif %}
+                                    {% if result.object.name %}
+                                        <div class="single-candidate row nomargin">
+
+                                            <!-- Vacancy Image -->
+                                            <div class="col-md-2 col-xs-3">
+                                                <div class="candidate-img">
+                                                    <img width="200" height="200"
+                                                         src="{% if result.object.employer_profile.image %} {{ result.object.employer_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
+                                                         class="img-responsive">
+                                                </div>
+                                            </div>
+
+                                            <!-- Start of Vacancy Name & Info -->
+                                            <div class="col-md-8 col-xs-6 ptb20">
+                                                <div class="job-post-header clearfix">
+                                                    Вакансия
+                                                </div>
+                                                <!-- Vacancy Name -->
+                                                <div class="candidate-name">
+                                                    {% if user.id != None and user.role.id != 2 %}
+                                                        <a href="{% url 'vacancy:detail_vacancy' result.object.id %}">
+                                                            <h5>{{ result.object.name }}</h5></a>
+                                                    {% else %}
+                                                        <a href="{% url 'users:login' %}">
+                                                            <h5>{{ result.object.name }}</h5>
+                                                            <p style="color:red"> Просматривать
+                                                                вакансии могут только
+                                                                авторизованные
+                                                                соискатели</p>
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+
+                                                <!-- Vacancy Info -->
+                                                <div class="candidate-info mt5">
+                                                    <ul class="list-inline">
+                                                        <li>
                                                         <span><i
                                                                 class="fa fa-money"></i>{{ result.object.salary_from }} - {{ result.object.salary_to }} RUB</span>
-                                                    </li>
+                                                        </li>
 
-                                                    <li>
+                                                        <li>
                                                         <span><i
                                                                 class="fa fa-map-marker"></i>{{ result.object.employer_profile.city }} </span>
-                                                    </li>
+                                                        </li>
 
-                                                    <li>
+                                                        <li>
                                                         <span><i
                                                                 class="fa fa-briefcase"></i>{{ result.object.specialization.name }} </span>
-                                                    </li>
-                                                </ul>
+                                                        </li>
+                                                    </ul>
 
+                                                </div>
                                             </div>
-                                        </div>
-                                        <!-- End of Candidate Name & Info -->
-                                        <!-- CTA -->
-                                        <div class="col-md-2 col-xs-3">
-                                            <div class="candidate-cta ptb30">
-                                                <a href="{% url 'favorites:worker_add_remove' vacancy_id=result.object.id %}" style="color: lightgray">
-                                                    <div class="pull-right"><h3>★</h3></div>
-                                                </a>
+                                            <!-- End of Candidate Name & Info -->
+                                            <!-- CTA -->
+                                            <div class="col-md-2 col-xs-3">
+                                                <div class="candidate-cta ptb30">
+                                                    <a href="{% url 'favorites:worker_add_remove' vacancy_id=result.object.id %}"
+                                                       style="color: lightgray">
+                                                        {% if result.object.id in favourite_list and user.role_id == 3 %}
+
+
+                                                            <div class="pull-right" style="color: goldenrod"><h3>★</h3>
+                                                            </div>
+                                                        {% else %}
+                                                            <div class="pull-right"><h3>★</h3></div>
+                                                        {% endif %}
+                                                    </a>
+                                                </div>
                                             </div>
+
                                         </div>
 
-                                    </div>
-
-                                    <!-- ===== End of Single Candidate ===== -->
+                                        <!-- ===== End of Single Candidate ===== -->
+                                    {% endif %}
                                 {% endif %}
                             {% empty %}
                                 <p>Ничего не найдено...</p>

@@ -1,0 +1,99 @@
+<section id="detail_last_list_section" class="search-jobs ptb80" style="background: #ffffff;">
+    <div class="container">
+        {% for item in page_obj %}
+
+            <div class="col-md-12 mt20">
+                <div class="item-block shadow-hover">
+                    <div id="rel_row_{{ item.relation_id }}">
+                        {% if item.is_employer %}
+
+                            <div class="job-post-header clearfix">
+                                <a href="{% url 'cv:detail_cv' item.cv.pk %}"><img
+                                        src="{{ item.cv.worker_profile.image.url }}" alt=""></a>
+                                <div>
+                                    <a href="{% url 'cv:detail_cv' item.cv.pk %}"><h4>{{ item.cv.post }}</h4></a>
+                                    <div class="h5">{{ item.cv.worker_profile.name }}</div>
+                                    <div class="h5">Вакансия: <a
+                                            href="{% url 'vacancies:detail_vacancy' item.vacancy.pk %}">{{ item.vacancy.name }}</a>
+                                    </div>
+                                </div>
+
+                                <ul class="pull-right">
+                                    <li>{{ item.last_status_date }}</li>
+                                    <li class="fw-bold">{{ item.last_status }}</li>
+                                </ul>
+                            </div>
+
+                        {% elif item.is_worker %}
+
+                            <div class="job-post-header clearfix">
+                                <a href="{% url 'vacancies:detail_vacancy' item.vacancy.pk %}"><img
+                                        src="{{ item.vacancy.employer_profile.image.url }}" alt=""></a>
+                                <div>
+                                    <a href="{% url 'vacancies:detail_vacancy' item.vacancy.pk %}">
+                                        <h4>{{ item.vacancy.name }}</h4>
+                                    </a>
+                                    <div class="h5">{{ item.vacancy.employer_profile.name }}</div>
+                                    <div class="h5">Резюме: <a
+                                            href="{% url 'cvs:detail_cv' item.cv.pk %}">{{ item.cv.post }}</a></div>
+                                </div>
+
+                                <ul class="pull-right">
+                                    <li>{{ item.last_status_date }}</li>
+                                    <li class="fw-bold">{{ item.last_status }}</li>
+                                </ul>
+                            </div>
+
+                        {% endif %}
+
+                        <div class="job-post-footer row">
+                            {% if item.status_info %}
+                                <div>
+                                    <div class="col-md-10 text-right mt-4 mb-4" style="background: #ffffff;">
+                                        <a class="btn btn-blue btn-effect mt15 mb15"
+                                           href="#"
+                                           onclick="openModalForm({{ item.status_info.relation_id }})">{{ item.status_info.button_text }}</a>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="col-md-2 text-right mt-4 mb-4" style="background: #ffffff;">
+                                        <a class="btn btn-blue btn-effect mt15 mb15"
+                                           href="{% url 'relations:detail' item.relation_id %}">Подробности</a>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="col-md-12 text-right mt-4 mb-4" style="background: #ffffff;">
+                                    <a class="btn btn-blue btn-effect mt15 mb15"
+                                       href="{% url 'relations:detail' item.relation_id %}">Подробности</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="col-md-12">
+            <ul class="pagination list-inline text-center">
+                {% if page_obj.has_previous %}
+
+                    <li><a href="?page=1">&laquo; первая</a></li>
+                    <li><a href="?page={{ page_obj.previous_page_number }}">предыдущая</a></li>
+
+                {% endif %}
+
+                <span class="current">Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.</span>
+
+                <li class="active"><a href="javascript:void(0)">{{ page_obj.number }}</a></li>
+
+                {% if page_obj.has_next %}
+
+                    <li><a href="?page={{ page_obj.next_page_number }}">следующая</a></li>
+                    <li><a href="?page={{ page_obj.paginator.num_pages }}">последняя &raquo;</a></li>
+
+                {% endif %}
+            </ul>
+        </div>
+
+    </div>
+</section>

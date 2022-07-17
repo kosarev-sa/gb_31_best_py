@@ -7,13 +7,17 @@
 {% endblock %}
 
 {% block header %}
-    {% include 'inc_vacancy_header.html' %}
+    {% include 'inc_header_menu.html' %}
 {% endblock %}
 
 {% block content %}
 
+    {% block messages %}
+        {% include 'inc_messages_for_forms.html' %}
+    {% endblock %}
+
     <!-- ===== Start of Main Wrapper Job Section ===== -->
-    <section class="ptb80" id="job-page" style="padding: 60px">
+    <section class="ptb80" id="job-page" style="padding: 60px;">
         <div class="container">
 
             <div class="row">
@@ -38,21 +42,17 @@
                         <form action="" method="post" class="post-job-resume mt50">
                         {% csrf_token %}
 
-                            <div class="form-group">
-                                   <input class="form-check-input" name="{{ form.is_active.id_for_label }}" type="checkbox" value=1
-                                       id="{{ form.is_active.id_for_label }}">
-                                <label for="{{ form.is_active.id_for_label }}">Сделать вакансию активной</label>
-                                    {{ form.is_active }}
-                            </div>
 
                             <div class="form-group">
-                                <label for="{{ form.name.id_for_label }}">Название вакансии</label>
+                                <label for="{{ form.name.id_for_label }}">Название вакансии
+                                    <span style="color:red">*</span></label>
                                 {{ form.name }}
                             </div>
 
 
                             <div class="form-group">
-                                <label for="{{ form.specialization.id_for_label }}">Специализация</label>
+                                <label for="{{ form.specialization.id_for_label }}">Специализация
+                                    <span style="color:red">*</span></label>
                                 {{ form.specialization }}
                             </div>
                             <div class="form-group">
