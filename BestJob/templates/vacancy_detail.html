@@ -17,83 +17,113 @@
             <div class="row candidate-profile nomargin">
 
                 <div class="col-md-12 text-center">
-                    <h3 class="pb40">{{ object.name }}</h3>
+                    <h3 class="pb40">{{ object.name }} в </h3>
                 </div>
 
-                <div class="col-md-3 col-xs-12">
-                    <div class="profile-photo">
+
+                <div class="col-md-8 col-xs-12">
+                    <div class="col-md-2" style="margin-bottom: 10pt">
 
                         <img src="{% if object.employer_profile.image %} {{ object.employer_profile.image.url }} {% else %} {% static 'img/users/default_avatar.jpg' %} {% endif %}"
                              class="img-thumbnail">
+
                     </div>
+                    <div class="col-md-10 mt20" style="vertical-align: middle; margin-bottom: 10pt">
+                        <!--                            Название компании-->
+                        {% if object.employer_profile.name %}
+
+                            <h3 class="capitalize align-text-bottom">{{ object.employer_profile.name }}</h3>
+
+                        {% endif %}
+
+                    </div>
+                    <div class="col-md-12 text-justify" style="margin-bottom: 20pt">
+                        <!--                            описание компании-->
+                        {% if object.employer_profile.data %}
+                            {{ object.employer_profile.data }}
+                        {% endif %}
+                    </div>
+
+
+                    {#                        <div class="profile-details mt20">#}
+                    {#                                                        <!--                            Название компании-->#}
+                    {#                            {% if object.employer_profile.name %}#}
+                    {#                                <h2 class="capitalize">{{ object.employer_profile.name }}</h2>#}
+                    {#                            {% endif %}#}
+                    {#                        </div>#}
+
+                    <div class="col-md-12" style="border-top: solid lightgray 1px; padding-top: 5pt">
+
+                        {% if object.description %}
+                            <h4 class="pt10">Описание вакансии:</h4>
+                            <h6 class="pt10 pb25">{{ object.description }}</h6>
+                        {% endif %}
+
+
+
+                        {#                            <!--                            Название компании-->#}
+                        {#                            {% if object.employer_profile.name %}#}
+                        {#                                <h2 class="capitalize">{{ object.employer_profile.name }}</h2>#}
+                        {#                            {% endif %}#}
+                        {#                            <!--                            Название компании-->#}
+                        {#                            {% if object.employer_profile.data %}#}
+                        {#                                {{ object.employer_profile.data }}#}
+                        {#                            {% endif %}#}
+
+                        <!--                            Специализация-->
+                        {% if object.specialization %}
+                            <h4 class="pt10">Специализация: </h4>
+                            <h6 class="pt10 pb25">{{ object.specialization }}</h6>
+                        {% endif %}
+
+                        <!--                            Опыт работы-->
+                        {% if object.experience %}
+                            <h4 class="pt10 ">Опыт работы:
+                            </h4>
+                            <h6 class="pt10 pb25">
+                                {% if object.experience == 'BIG' %}
+                                    Более 6 лет
+                                {% elif object.experience == 'EXP' %}
+                                    От 3 до 6 лет
+                                {% elif object.experience == 'NO' %}
+                                    От 1 года до 3 лет
+                                {% endif %}
+                            </h6>
+                        {% endif %}
+                        <!--                            Город-->
+                        {% if object.city %}
+                            <h4 class="pt10">Город:</h4>
+                            <h6 class="pt10 pb25">{{ object.city }}</h6>
+                        {% endif %}
+                    </div>
+
+
                 </div>
 
-                <div class="col-md-9 col-xs-12">
-                    <div class="profile-descr">
+                <div class="col-md-4 col-xs-12">
+                    <div style="border: solid lightgray 1px; border-radius: 5px; padding: 10px">
 
-                        <div class="profile-title">
-                            <!--                            Название компании-->
-                            {% if object.employer_profile.name %}
-                                <h2 class="capitalize">{{ object.employer_profile.name }}</h2>
-                            {% endif %}
-
-                            <!--                            Специализация-->
-                            {% if object.specialization %}
-                                <h5 class="pt10">Специализация: {{ object.specialization }}</h5>
-                            {% endif %}
-
-                            <!--                            Опыт работы-->
-                            {% if object.experience %}
-                                <h5 class="pt10">Опыт работы:
-                                    {% if object.experience == 'BIG' %}
-                                        Более 6 лет
-                                    {% elif object.experience == 'EXP' %}
-                                        От 3 до 6 лет
-                                    {% elif object.experience == 'NO' %}
-                                        От 1 года до 3 лет
-                                    {% endif %}
-                                </h5>
-                            {% endif %}
-                            <!--                            Описание-->
-
-                            {% if object.description %}
-                                <h5 class="pt10">{{ object.description }}</h5>
-                            {% endif %}
-
-                            <!--                            Город-->
-                            {% if object.city %}
-                                <h5 class="pt10">Город: {{ object.city }}</h5>
-                            {% endif %}
-                        </div>
-
-                        <!--                            Информация о компании-->
-                        <div class="profile-details mt20">
-                            {% if object.employer_profile.data %}
-                                {{ object.employer_profile.data }}
-                            {% endif %}
-                        </div>
-
-                        <ul class=" profile-info mt20 nopadding">
+                        <ul class="mt20" style="font-size: large; color: gray;">
                             {% if object.employer_profile.city %}
-                                <li>
+                                <li class="pb10">
                                     <i class="fa fa-map-marker"></i>
                                     <!--                                Город-->
                                     <span>{{ object.employer_profile.city }}</span>
                                 </li>
                             {% endif %}
 
-                            <li>
+                            <li class="pb10">
                                 <i class="fa fa-globe"></i>
                                 <a href="#">best_job.com</a>
                             </li>
 
                             {% if object.salary_from or object.salary_to %}
-                                <li>
+                                <li class="pb10">
                                     <i class="fa fa-money"></i>
                                     <!--                                Зарплата-->
                                     {% if object.salary_from and object.salary_to %}
                                         <span>
-                                                {{ object.salary_from }} - {{ object.salary_to }} {{ object.get_currency_display }} |
+                                                {{ object.salary_from }} - {{ object.salary_to }} {{ object.get_currency_display }}
                                             {% if object.salary_on_hand %}
                                                 с учётом налогов
                                             {% else %}
@@ -102,7 +132,7 @@
                                         </span>
                                     {% elif object.salary_from %}
                                         <span>
-                                            {{ object.salary_from }} {{ object.get_currency_display }} |
+                                            {{ object.salary_from }} {{ object.get_currency_display }}
                                             {% if object.salary_on_hand %}
                                                 с учётом налогов
                                             {% else %}
@@ -111,7 +141,7 @@
                                         </span>
                                     {% elif object.salary_to %}
                                         <span>
-                                            {{ object.salary_to }} {{ object.get_currency_display }} |
+                                            {{ object.salary_to }} {{ object.get_currency_display }}
                                             {% if object.salary_on_hand %}
                                                 с учётом налогов
                                             {% else %}
@@ -122,27 +152,44 @@
                                 </li>
                             {% endif %}
 
+                            {% if not is_moderating %}
+                                {% if worker %}
+                                    <div>
+                                        {% load extra_tags %}
+                                        {% is_workers_favorite object.id worker.id as favorite %}
+                                        {% if favorite %}
+                                            <p style="color: goldenrod">Уже у Вас в избранном</p>
+                                        {% else %}
+                                            <a class="btn btn-blue btn-effect mt15 mb15"
+                                               href="{% url 'favorites:worker_add_remove' vacancy_id=object.id %}">Добавить
+                                                в
+                                                избранное</a>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+
                         </ul>
 
                     </div>
                 </div>
 
             </div>
-            {% if not is_moderating %}
-                {% if worker %}
-                    <div class="col-md-12 text-right mt30 mb-4">
-                        {% load extra_tags %}
-                        {% is_workers_favorite object.id worker.id as favorite %}
-                        {% if favorite %}
-                            <p>Уже у Вас в избранном</p>
-                        {% else %}
-                            <a class="btn btn-blue btn-effect mt15 mb15"
-                               href="{% url 'favorites:worker_add_remove' vacancy_id=object.id %}">Добавить в
-                                избранное</a>
-                        {% endif %}
-                    </div>
-                {% endif %}
-            {% endif %}
+            {#            {% if not is_moderating %}#}
+            {#                {% if worker %}#}
+            {#                    <div class="col-md-12 text-right mt30 mb-4">#}
+            {#                        {% load extra_tags %}#}
+            {#                        {% is_workers_favorite object.id worker.id as favorite %}#}
+            {#                        {% if favorite %}#}
+            {#                            <p>Уже у Вас в избранном</p>#}
+            {#                        {% else %}#}
+            {#                            <a class="btn btn-blue btn-effect mt15 mb15"#}
+            {#                               href="{% url 'favorites:worker_add_remove' vacancy_id=object.id %}">Добавить в#}
+            {#                                избранное</a>#}
+            {#                        {% endif %}#}
+            {#                    </div>#}
+            {#                {% endif %}#}
+            {#            {% endif %}#}
         </div>
     </section>
     <!-- СЕКЦИЯ РАБОТА МОДЕРАТОРА С РЕЗЮМЕ -->

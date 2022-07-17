@@ -92,9 +92,15 @@ class ModeratorVacancyUpdateForm(VacancyUpdateForm):
 
     def __init__(self, *args, **kwargs):
         super(ModeratorVacancyUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['status'].widget.attrs['class'] = 'selectpicker'
+        # self.fields['status'].widget.attrs['class'] = 'selectpicker'
         for field in self.disabled_fields:
             self.fields[field].disabled = True
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs['class'] = 'form-control'
+            if field_name == 'speciality':
+                self.fields['status'].widget.attrs['data-size'] = '5'
+                self.fields['status'].widget.attrs['data-container'] = 'body'
 
 
 class VacancyDeleteForm(forms.ModelForm):
