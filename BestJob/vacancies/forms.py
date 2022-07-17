@@ -20,8 +20,10 @@ class VacancyCreateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(VacancyCreateForm, self).__init__(*args, **kwargs)
-        self.fields['name'].widget.attrs['placeholder'] = 'Backend разработчик'
-        self.fields['city'].widget.attrs['placeholder'] = 'Москва'
+        self.fields['name'].widget.attrs['placeholder'] = 'Укажите название вакансии'
+        self.fields['salary_from'].widget.attrs['placeholder'] = 'Укажите нижнюю границу заработной платы'
+        self.fields['salary_to'].widget.attrs['placeholder'] = 'Укажите верхнюю границу заработной платы'
+        self.fields['city'].widget.attrs['placeholder'] = 'Укажите город, например: Москва'
         self.fields['description'].widget.attrs['placeholder'] = 'Описание вакансии'
 
         for field_name, field in self.fields.items():
@@ -48,9 +50,16 @@ class VacancyUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(VacancyUpdateForm, self).__init__(*args, **kwargs)
-        self.fields['name'].widget.attrs['placeholder'] = 'Backend разработчик'
-        self.fields['city'].widget.attrs['placeholder'] = 'Москва'
-        self.fields['description'].widget.attrs['placeholder'] = 'Описание вакансии'
+        self.fields['name'].widget.attrs[
+            'placeholder'] = 'Укажите название вакансии'
+        self.fields['salary_from'].widget.attrs[
+            'placeholder'] = 'Укажите нижнюю границу заработной платы'
+        self.fields['salary_to'].widget.attrs[
+            'placeholder'] = 'Укажите верхнюю границу заработной платы'
+        self.fields['city'].widget.attrs[
+            'placeholder'] = 'Укажите город, например: Москва'
+        self.fields['description'].widget.attrs[
+            'placeholder'] = 'Описание вакансии'
 
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
