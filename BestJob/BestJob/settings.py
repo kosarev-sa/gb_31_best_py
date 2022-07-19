@@ -11,9 +11,12 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -35,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap_datepicker_plus',
     'haystack',
     'approvals',
     'cvs',
@@ -75,7 +79,12 @@ TEMPLATES = [
 
                 # Контекстный процессор для footer
                 'users.context_processors.footer_lists',
+                # Контекстный процессор для ролей
+                'users.context_processors.roles'
             ],
+            'libraries': {
+                'extra_tags': 'favorites.context_processors',
+            }
         },
     },
 ]
@@ -91,6 +100,14 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'bestjob',
+#         'USER': 'postgres'
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -152,12 +169,22 @@ USER_EMAIL_KEY_LIFETIME = 48
 # для получения в термина ссылки (linux):  sudo python3 -m smtpd -n -c DebuggingServer localhost:25
 # для получения в термина ссылки (windows):  python -m smtpd -n -c DebuggingServer localhost:25
 DOMAIN_NAME = '127.0.0.1:8000'
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = 25
-EMAIL_USER_SSL = True if os.getenv('EMAIL_USER_SSL') == 'True' else False
-EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
+
+if os.getenv('EMAIL_HOST'):
+    EMAIL_HOST = os.getenv('EMAIL_HOST')
+    EMAIL_PORT = int(os.getenv('EMAIL_PORT'))
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+    EMAIL_USE_TLS = True if os.getenv('EMAIL_USE_TLS') == 'True' else False
+    EMAIL_USE_SSL = True if os.getenv('EMAIL_USE_SSL') == 'True' else False
+else:
+    EMAIL_HOST = 'localhost'
+    EMAIL_PORT = 25
+    EMAIL_USER_SSL = True if os.getenv('EMAIL_USER_SSL') == 'True' else False
+    EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
 
 import os
+
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
@@ -171,6 +198,7 @@ NEWS_BODY_LEN_ON_NEWS_LIST = 297
 
 HAYSTACK_SEARCH_RESULTS_PER_PAGE = 4  # пагинация. кол-во на странице (HAYSTACK)
 
+
 # Константы ролей пользователей.
 class UserRole:
     # Модератор.
@@ -179,3 +207,23 @@ class UserRole:
     EMPLOYER = 2
     # Соискатель.
     WORKER = 3
+
+
+# Константы статусов откликов и приглашений.
+class RelationStatuses:
+    # Приглашение.
+    INVITATION = 1
+    # Отклик.
+    RESPONSE = 2
+    # Приглашение не просмотрено.
+    INVITATION_NOT_VIEWED = 3
+    # Резюме не просмотрено.
+    RESUME_NOT_VIEWED = 4
+    # Приглашение просмотрено.
+    INVITATION_VIEWED = 5
+    # Резюме просмотрено.
+    RESUME_VIEWED = 6
+    # Отказ.
+    REFUSAL = 7
+    # Встреча согласована.
+    MEETING_AGREED = 8

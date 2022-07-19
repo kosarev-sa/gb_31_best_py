@@ -1,0 +1,165 @@
+{% if user.role_id == 3 %}
+<section class="page-header">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{{ heading }}</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="{% url 'index' %}">Главная</a>
+                    </li>
+                    <li>
+                        <a style="{% if request.resolver_match.url_name == 'worker_profile' %}color: #949396 ;{% endif %}"
+                           href="{% url 'users:worker_profile' user.id %}">Профиль</a>
+                    </li>
+
+                    <li class="dropdown simple-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                            style="{% if request.resolver_match.url_name == 'create_cv' or request.resolver_match.url_name == 'cv_list' or request.resolver_match.url_name == 'list' %}color: #949396 ;{% endif %}">Резюме<i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'cvs:create_cv' %}">Создать резюме</a>
+                            </li>
+                            <li><a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'cvs:cv_list' %}">Список Ваших резюме</a>
+                            </li>
+                            <li><a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'relations:list' %}">Отклики и приглашения на резюме</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a  style="{% if request.resolver_match.url_name == 'search_vacancy' %}color: #949396 ;{% endif %}" href="{% url 'search_vacancy' %}">Поиск вакансий</a>
+                    </li>
+
+                    <li>
+                        <a style="{% if request.resolver_match.url_name == 'worker_list' %}color: #949396 ;{% endif %}"
+                           href="{% url 'favorites:worker_list' %}">Избранное</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endif %}
+
+{% if user.role_id == 2 %}
+<section class="page-header">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{{ heading }}</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="{% url 'index' %}">Главная</a>
+                    </li>
+                    <li>
+                        <a style="{% if request.resolver_match.url_name == 'employer_profile' %}color: #949396 ;{% endif %}"
+                           href="{% url 'users:employer_profile' user.id %}">Профиль</a>
+                    </li>
+
+                    <li class="dropdown simple-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                            style="{% if request.resolver_match.url_name == 'create_vacancy' or request.resolver_match.url_name == 'vacancy_list' or request.resolver_match.url_name == 'list' %}color: #949396 ;{% endif %}">Вакансии<i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'vacancies:create_vacancy' %}">Создать вакансию</a>
+                            </li>
+                            <li><a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'vacancies:vacancy_list' %}">Список Ваших вакансий</a>
+                            </li>
+                            <li><a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'relations:list' %}">Отклики и приглашения на вакансии</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a  style="{% if request.resolver_match.url_name == 'search_cv' %}color: #949396 ;{% endif %}" href="{% url 'search_cv' %}">Поиск резюме</a>
+                    </li>
+
+                    <li>
+                        <a style="{% if request.resolver_match.url_name == 'employer_list' %}color: #949396 ;{% endif %}"
+                           href="{% url 'favorites:employer_list' %}">Избранное</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endif %}
+
+{% if user.role_id == 1 %}
+<section class="page-header">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12">
+                <h2>{{ heading }}</h2>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="{% url 'index' %}">Главная</a>
+                    </li>
+                    <li>
+                        <a style="{% if request.resolver_match.url_name == 'moderator_profile' %}color: #949396 ;{% endif %}"
+                           href="{% url 'users:moderator_profile' user.id %}">Профиль</a>
+                    </li>
+
+                    <li class="dropdown simple-menu">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                           style="{% if request.resolver_match.url_name == 'moderate_news' or request.resolver_match.url_name == 'moderator_cvs_list' or request.resolver_match.url_name == 'moderator_cvs_approve' or request.resolver_match.url_name == 'moderator_companies_list' or request.resolver_match.url_name == 'moderator_company_approve' or request.resolver_match.url_name == 'moderator_vacancy_list' or request.resolver_match.url_name == 'moderator_vacancy_approve' %}color: #949396 ;{% endif %}">Модерация<i class="fa fa-angle-down"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'news:create_news' %}">Создание новости</a>
+                            </li>
+                            <li>
+                                <a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'news:moderate_news' %}">Модерация новостей</a>
+                            </li>
+                            <li>
+                                <a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'cv:moderator_cvs_list' %}">Модерация резюме</a>
+                            </li>
+                            <li>
+                                <a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'users:moderator_companies_list' %}">Модерация компаний</a>
+                            </li>
+                            <li>
+                                <a style="color: #666666;
+                                    font-weight: bold;" href="{% url 'vacancies:moderator_vacancy_list' %}">Модерация вакансий</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</section>
+{% endif %}

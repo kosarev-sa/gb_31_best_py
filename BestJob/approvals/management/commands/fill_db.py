@@ -22,13 +22,13 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # Роли раскомитить на проде. На dev роли создаются в fill_test_user.
-        # roles = load_from_json(JSON_PATH_ROLES + 'roles.json')
-        # Role.objects.all().delete()
-        #
-        # for role in roles:
-        #     new_role = Role(pk=role['pk'],
-        #                     role_name=role['role_name'])
-        #     new_role.save()
+        roles = load_from_json(JSON_PATH_ROLES + 'roles.json')
+        Role.objects.all().delete()
+
+        for role in roles:
+            new_role = Role(pk=role['pk'],
+                            role_name=role['role_name'])
+            new_role.save()
 
         languages = load_from_json(JSON_PATH_SEARCH + 'languages.json')
         Languages.objects.all().delete()

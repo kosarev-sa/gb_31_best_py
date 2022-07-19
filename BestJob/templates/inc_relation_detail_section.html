@@ -1,0 +1,71 @@
+<section id="relation_detail_section" class="search-jobs ptb80" style="background: #ffffff;">
+    <div class="container">
+
+        <div class="col-md-12 mt20">
+            <div class="item-block shadow-hover">
+
+                {% if relation_history %}
+
+                    {% if relation_history.is_employer %}
+
+                        <div class="job-post-header clearfix">
+                            <a href="{% url 'cv:detail_cv' relation_history.cv.pk %}"><img
+                                    src="{{ relation_history.cv.worker_profile.image.url }}" alt=""></a>
+                            <div>
+                                <a href="{% url 'cv:detail_cv' relation_history.cv.pk %}"><h4>{{ relation_history.cv.post }}</h4></a>
+                                <div class="h5">{{ relation_history.cv.worker_profile.name }}</div>
+                                <div class="h5">Вакансия: <a
+                                        href="{% url 'vacancies:detail_vacancy' relation_history.vacancy.pk %}">{{ relation_history.vacancy.name }}</a>
+                                </div>
+                            </div>
+
+                            <ul class="pull-right">
+                                <li>{{ relation_history.last_status_date }}</li>
+                                <li class="fw-bold">{{ relation_history.last_status }}</li>
+                            </ul>
+                        </div>
+
+                    {% elif relation_history.is_worker %}
+
+                        <div class="job-post-header clearfix">
+                            <a href="{% url 'vacancies:detail_vacancy' relation_history.vacancy.pk %}"><img
+                                    src="{{ relation_history.vacancy.employer_profile.image.url }}" alt=""></a>
+                            <div>
+                                <a href="{% url 'vacancies:detail_vacancy' relation_history.vacancy.pk %}">
+                                    <h4>{{ relation_history.vacancy.name }}</h4>
+                                </a>
+                                <div class="h5">{{ relation_history.vacancy.employer_profile.name }}</div>
+                                <div class="h5">Резюме: <a href="{% url 'cvs:detail_cv' relation_history.cv.pk %}">{{ relation_history.cv.post }}</a></div>
+                            </div>
+
+                            <ul class="pull-right">
+                                <li>{{ relation_history.last_status_date }}</li>
+                                <li class="fw-bold">{{ relation_history.last_status }}</li>
+                            </ul>
+                        </div>
+
+                    {% endif %}
+
+                    {% for history_item in relation_history %}
+                        <div class="col-md-12" style="background: #ffffff; margin-bottom: 15px; margin-top: 15px; padding-top: 15px; padding-bottom: 15px;">
+                            <h5><small>Дата: </small> {{ history_item.created }} </h5>
+                            <h5><small>Статус: </small> {{ history_item.status.name }} </h5>
+                            {% if history_item.comment %}
+                                <h5><small>Комментарий: </small> {{ history_item.comment }} </h5>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    {% if custom_relation_model %}
+                        <div class="col-md-12 text-right mt-4 mb-4">
+                            <a class="btn btn-blue btn-effect mt15 mb15"
+                               href="#"
+                               onclick="openModalForm({{ custom_relation_model.relation_id }})">{{ custom_relation_model.button_text }}</a>
+                        </div>
+                    {% endif %}
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,30 +1,35 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block additional_styles %}
+    <meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
+
 {% block menu %}
     {% include 'inc_main_menu.html' %}
 {% endblock %}
 
 {% block header %}
-    {% include 'inc_news_list_header.html' %}
+    {% if user.role_id == roles.MODERATOR %}
+        {% include 'inc_header_menu.html' %}
+    {% else %}
+        {% include 'inc_header_menu.html' %}
+    {% endif %}
 {% endblock %}
+
 
 {% block content %}
 
-
-    <!-- ===== Start of Blog Listing Section ===== -->
     <section class="blog-listing ptb80" id="version1">
         <div class="container">
             <div class="row">
 
-                <!-- Start of Blog Posts -->
                 <div class="col-md-12 blog-posts-wrapper">
 
                     {% for item in page_obj %}
 
                         <article class="col-md-12 blog-post">
 
-                            <!-- Blog Post Thumbnail -->
                             <div class="col-md-4 blog-thumbnail">
                                 <a href="{% url 'news:detail_news' item.pk %}" class="hover-link"><img
                                         src="{{ item.image.url }}"
@@ -36,7 +41,6 @@
                                 </div>
                             </div>
 
-                            <!-- Blog Post Description -->
                             <div class="col-md-8 blog-desc">
                                 <h5><a href="{% url 'news:detail_news' item.pk %}">{{ item.title }}</a></h5>
                                 <div class="post-detail pt10 pb20">
@@ -45,17 +49,26 @@
                                 </div>
 
                                 <p>{{ item.body }}</p>
-                                <a href="{% url 'news:detail_news' item.pk %}" class="btn btn-blue btn-effect mt10">подробнее</a>
+                                {% if user.role_id == roles.MODERATOR %}
+                                    <a href="{% url 'news:update_news' item.pk %}" class="btn btn-blue btn-effect mt10">Редактировать</a>
+                                    <a href="#" onclick="openModalForm({{ item.pk }})"
+                                       class="btn btn-blue btn-effect mt10" role="button">Удалить</a>
+                                {% else %}
+                                    <a href="{% url 'news:detail_news' item.pk %}"
+                                       class="btn btn-blue btn-effect mt10">подробнее</a>
+                                {% endif %}
                             </div>
+
                         </article>
 
                     {% endfor %}
 
+                    <!-- Start Pagination -->
                     <div class="col-md-12">
                         <ul class="pagination list-inline text-center">
                             {% if page_obj.has_previous %}
                                 <li><a href="?page=1">&laquo; первая</a></li>
-                                <li><a href="?page={{ page_obj.previous_page_number }}">следующая</a></li>
+                                <li><a href="?page={{ page_obj.previous_page_number }}">предыдущая</a></li>
 
                             {% endif %}
 
@@ -73,17 +86,20 @@
                         </ul>
                     </div>
                     <!-- End of Pagination -->
-
                 </div>
-                <!-- End of Blog Posts -->
-
             </div>
         </div>
     </section>
-    <!-- ===== End of Blog Listing Section ===== -->
+
+    {% include 'inc_news_delete_confirm_modal_form.html' %}
 
 {% endblock %}
 
 {% block footer %}
     {% include 'inc_footer.html' %}
 {% endblock %}
+
+{% block additional_script %}
+    <script src="{% static 'js/news_moderate_list.js' %}"></script>
+{% endblock %}
+

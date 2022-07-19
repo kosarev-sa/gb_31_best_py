@@ -4,4 +4,5 @@
 {{ object.salary_on_hand}}
 {{ object.specialization}}
 {{ object.experience}}
+{{ object.status_id}}
 

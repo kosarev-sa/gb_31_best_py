@@ -7,32 +7,7 @@
 {% endblock %}
 
 {% block header %}
-    <section class="page-header">
-        <div class="container">
-
-            <!-- Start of Page Title -->
-            <div class="row">
-                <div class="col-md-12">
-                    <h2>Резюме</h2>
-                </div>
-            </div>
-            <!-- End of Page Title -->
-
-            <!-- Start of Breadcrumb -->
-            <div class="row">
-                <div class="col-md-12">
-                    <ul class="breadcrumb">
-                        <li><a href="{% url 'users:moderator_companies_list' %}">Компании</a></li>
-                        <li><a href="{% url 'vacancies:moderator_vacancy_list' %}">Вакансии</a></li>
-                        <li class="active">Резюме</li>
-                        <li><a href="{% url 'news:moderate_news' %}">Новости</a></li>
-                    </ul>
-                </div>
-            </div>
-            <!-- End of Breadcrumb -->
-
-        </div>
-    </section>
+    {% include 'inc_header_menu.html'%}
 {% endblock %}
 
 {% block content %}
@@ -46,7 +21,7 @@
 
                     <div class="col-md-2 col-sm-6">
                         <label style="display: inline-block"><input style="display: inline-block" type="radio"
-                                                                    name="cvs" value="pub"  checked>Опубликовано</label>
+                                                                    name="cvs" value="pub" checked>Опубликовано</label>
                     </div>
                     <div class="col-md-2 col-sm-6">
                         <label style="display: inline-block"><input style="display: inline-block" type="radio"

@@ -48,7 +48,7 @@ urlpatterns = [
 
     path('moderator_company_approve/<int:pk>/', ModeratorCompanyUpdate.as_view(), name='moderator_company_approve'),
     path('moderator_companies_list/', ModeratorCompaniesList.as_view(), name='moderator_companies_list'),
-    path('edit_comp_list/<str:stat>/', edit_comp_list, name='edit_comp_list') ,
+    path('edit_comp_list/<str:stat>/', edit_comp_list, name='edit_comp_list'),
     path('distribute_company/<int:pk>/', set_public_status, name='distribute_company'),
 
 ]

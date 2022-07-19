@@ -1,0 +1,29 @@
+{% extends 'base_modal_form.html' %}
+
+<div class="cd-user-modal">
+    {% block content %}
+        <div id="cd-relation">
+            <!-- relation form -->
+            <div class="cd-form">
+                <p class="fieldset hidden">
+                    <label for="magic_field">magic_field</label>
+                    <input id="magic_field" name="magic_field" type="number">
+                </p>
+
+                <div id="error_message"></div>
+
+                <p>Вы подтверждаете удаление новости?</p>
+
+                <div class="fieldset text-center">
+                    <button type="submit" id="cancel_delete_news" class="btn btn-blue btn-effect"
+                            onclick="cancelDelete()" style="background: #29b1fd;">Отмена
+                    </button>
+                    <button type="submit" id="delete_news" class="btn btn-blue btn-effect"
+                            onclick="newsDelete()" style="background: #29b1fd;">Удалить
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    {% endblock %}
+</div>

@@ -6,12 +6,17 @@
 {% endblock %}
 
 {% block header %}
-    {% include 'inc_vacancy_header.html' %}
+    {% include 'inc_header_menu.html' %}
 {% endblock %}
 
 {% block content %}
+
+    {% block messages %}
+        {% include 'inc_messages_for_forms.html' %}
+    {% endblock %}
+
     <!--    Начало секции Вакансии-->
-    <section class="education ptb80" style="background: #f0f0f0;">
+    <section class="education ptb80">
         <div class="container">
 
             {% for vacancy in  vacancies %}
@@ -19,40 +24,66 @@
                     <div class="item-block shadow-hover" style="background: #ffffff;">
 
                         <div class="education-header clearfix">
-                            <h5><small>Вакансия -</small><a
-                                    href="{% url 'vacancies:detail_vacancy' vacancy.id %}">{{ vacancy.name }}</a></h5>
-                            <h5><small>Работодатель -</small> {{ vacancy.employer_profile.name }} </h5>
-                            <h5><small>Зарплата -</small>
-                                {% if vacancy.salary_from %}
-                                    {{ vacancy.salary_from }}
+                            <div class="col-md-8 col-xs-6 ptb20">
+                                <h5><small>Вакансия -</small><a
+                                        href="{% url 'vacancies:detail_vacancy' vacancy.id %}">{{ vacancy.name }}</a>
+                                </h5>
+                                <h5><small>Работодатель -</small> {{ vacancy.employer_profile.name }} </h5>
+                                <h5><small>Зарплата -</small>
+                                    {% if vacancy.salary_from %}
+                                        {{ vacancy.salary_from }}
+                                    {% endif %}
+
+                                    {% if vacancy.salary_from and vacancy.salary_to %}
+                                        -
+                                    {% endif %}
+
+                                    {% if vacancy.salary_to %}
+                                        {{ vacancy.salary_to }}
+                                    {% endif %}</h5>
+                                <h5><small>Дата создания -</small> {{ vacancy.created_at }} </h5>
+
+                                {% if employer %}
+                                    <h5><small>Статус вакансии -</small> {{ vacancy.status }} </h5>
+                                    {% if vacancy.status.code == 'FRV' %}
+                                        <p style="color:#ff0000;">Внимание! Модератор отправил вакансию на доработку!
+                                            {% if vacancy.moderators_comment %}
+                                                <p style="color:#ff0000;">Прочесть комментарии модератора можно на форме
+                                                    редактирования.</p>
+                                            {% endif %}
+                                    {% elif vacancy.status.code == 'RJC' %}
+                                        <p style="color:#ff0000;">Внимание! Вакансия отклонена модератором!
+                                            {% if vacancy.moderators_comment %}
+                                                <p style="color:#ff0000;">Прочесть комментарии модератора можно на форме
+                                                    редактирования.</p>
+                                            {% endif %}
+                                    {% endif %}
+
                                 {% endif %}
-
-                                {% if vacancy.salary_from and vacancy.salary_to %}
-                                    -
-                                {% endif %}
-
-                                {% if vacancy.salary_to %}
-                                    {{ vacancy.salary_to }}
-                                {% endif %}</h5>
-                            <h5><small>Дата создания -</small> {{ vacancy.created_at }} </h5>
-
-                            {% if employer %}
-                                <h5><small>Статус вакансии -</small> {{ vacancy.status }} </h5>
-                                {% if vacancy.status.code == 'FRV' %}
-                                    <p style="color:#ff0000;">Внимание! Модератор отправил вакансию на доработку!
-                                        {% if vacancy.moderators_comment %}
-                                            <p style="color:#ff0000;">Прочесть комментарии модератора можно на форме
-                                                редактирования.</p>
+                            </div>
+                            <div class="col-md-2 col-xs-3 ptb20">
+                                <div class="candidate-cta ptb30">
+                                    {% load extra_tags %}
+                                    {% if worker %}
+                                        {% is_workers_favorite vacancy.id worker.id as favorite %}
+                                        {% if favorite %}
+                                            <a href="{% url 'favorites:worker_add_remove' vacancy_id=vacancy.id %}"
+                                               style="color: orange">
+                                            <div data-toggle="tooltip" data-placement="bottom"
+                                                 title="Уже у Вас в избранном" class="pull-right">
+                                                <h3>★</h3>
+                                            </div>
+                                            </a>
+                                        {% else %}
+                                            <a href="{% url 'favorites:worker_add_remove' vacancy_id=vacancy.id %}"
+                                               style="color: lightgray">
+                                                <div class="pull-right"><h3>★</h3></div>
+                                            </a>
                                         {% endif %}
-                                {% elif vacancy.status.code == 'RJC' %}
-                                    <p style="color:#ff0000;">Внимание! Вакансия отклонена модератором!
-                                        {% if vacancy.moderators_comment %}
-                                            <p style="color:#ff0000;">Прочесть комментарии модератора можно на форме
-                                                редактирования.</p>
-                                        {% endif %}
-                                {% endif %}
+                                    {% endif %}
 
-                            {% endif %}
+                                </div>
+                            </div>
                         </div>
                         {% if employer %}
                             <div>
@@ -83,10 +114,10 @@
                 </div>
             {% endfor %}
 
-            {% if employer %}
-                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'vacancies:create_vacancy' %}">Создать
-                    вакансию</a>
-            {% endif %}
+{#            {% if employer %}#}
+{#                <a class="btn btn-blue btn-effect mt15 mb15" href="{% url 'vacancies:create_vacancy' %}">Создать#}
+{#                    вакансию</a>#}
+{#            {% endif %}#}
         </div>
     </section>
     <!--    Конец секции МОИ Вакансии-->

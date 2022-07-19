@@ -51,7 +51,7 @@ function sendData() {
 
         $.ajax({
             type: 'POST',
-            url: '/relations/create_from_val/' + magic_field + '/' + select_picker + '/' + letter + '/',
+            url: '/relations/create_from_fav/' + magic_field + '/' + select_picker + '/' + letter + '/',
             data: {},
             success: (data) => {
                 if (data) {

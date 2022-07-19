@@ -1,10 +1,11 @@
 # Create your views here.
+from django.db import transaction
 from django.http import HttpResponseRedirect, JsonResponse
 from django.template.loader import render_to_string
 
 from BestJob.mixin import BaseClassContextMixin, UserDispatchMixin
 
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView, PasswordResetDoneView, \
     PasswordResetConfirmView, PasswordResetCompleteView
 from django.core.mail import send_mail
@@ -15,6 +16,7 @@ from django.urls import reverse_lazy, reverse
 from django.views.generic import UpdateView, FormView, TemplateView, ListView, DetailView
 
 from BestJob import settings
+from BestJob.settings import UserRole
 from approvals.models import ApprovalStatus
 from news.models import News
 from search.models import Category
@@ -48,13 +50,13 @@ class WorkerProfileView(UpdateView):
 
         context['title'] = "Профиль соискателя"
         context['heading'] = "Профиль соискателя"
-        context['link'] = "/cvs/all/"
-        context['heading_link'] = "Список резюме"
+        # context['link'] = "/cvs/all/"
+        # context['heading_link'] = "Список резюме"
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = self.form_class(data=request.POST, files=request.FILES)
+        form = self.form_class(data=request.POST, files=request.FILES, instance=self.object)
         user_id = self.kwargs['pk']
 
         workerProfile = WorkerProfile.objects.filter(user_id=user_id)
@@ -72,8 +74,17 @@ class WorkerProfileView(UpdateView):
             form.instance.user_id = user_id
             form.instance.user = User.objects.get(pk=user_id)
 
-        form.save()
-        return redirect(reverse("users:worker_profile", args=(user_id,)))
+        if form.is_valid():
+            if not form.has_changed():
+                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+                return self.form_invalid(form)
+            form.save()
+            messages.success(request, 'Профиль успешно отредактирован!')
+            return redirect(reverse("users:worker_profile", args=(user_id,)))
+        else:
+            print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения Профиля!')
+        return self.form_invalid(form)
 
 
 class EmployersProfileView(ListView, BaseClassContextMixin):
@@ -103,6 +114,7 @@ class EmployerDetailView(DetailView, BaseClassContextMixin):
         company = EmployerProfile.objects.get(id=comp_id)
         context['object'] = company
         context['title'] = company.name
+        context['heading'] = 'Карточка работодателя'
         context['is_moderating'] = False
         return context
 
@@ -120,8 +132,11 @@ class ModeratorCompanyUpdate(UpdateView):
         comp_id = self.kwargs['pk']
         company = EmployerProfile.objects.get(id=comp_id)
         context['object'] = company
-        context['title'] = company.name
+        # context['title'] = company.name
         context['is_moderating'] = True
+
+        context['title'] = "Модерация компании"
+        context['heading'] = "Модерация компании"
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
@@ -144,23 +159,26 @@ class EmployerProfileView(UpdateView):
     title = 'BestJob | Профайл работодателя'
 
     def get_object(self, queryset=None):
-        user_id = self.kwargs['pk']
-        employer_profile = EmployerProfile.objects.filter(user_id=user_id)
+        pk = self.kwargs['pk']
+
+        employer_profile = EmployerProfile.objects.filter(user_id=pk)
 
         if employer_profile:
             return employer_profile.first()
         else:
-            employer_profile = EmployerProfile()
-            employer_profile.user = User.objects.get(pk=user_id)
-            return employer_profile
+            employer_profile = EmployerProfile.objects.filter(pk=pk)
+            if employer_profile:
+                return employer_profile.first()
+            else:
+                employer_profile = EmployerProfile()
+                employer_profile.user = User.objects.get(pk=pk)
+                return employer_profile
 
     def get_context_data(self, **kwargs):
         context = super(EmployerProfileView, self).get_context_data(**kwargs)
 
         context['title'] = "Профиль работодателя"
         context['heading'] = "Профиль работодателя"
-        context['link'] = "/vacancy/all/"
-        context['heading_link'] = "Список вакансий"
         return context
 
     def post(self, request, *args, **kwargs):
@@ -186,10 +204,15 @@ class EmployerProfileView(UpdateView):
             form.instance.user = User.objects.get(pk=user_id)
 
         if form.is_valid():
+            if not form.has_changed():
+                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+                return self.form_invalid(form)
             form.save()
+            messages.success(request, 'Профиль успешно отредактирован!')
             return redirect(reverse("users:employer_profile", args=(user_id,)))
         else:
             print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения Профиля!')
         return self.form_invalid(form)
 
 
@@ -224,7 +247,7 @@ class ModeratorProfileView(UpdateView):
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
 
-        form = self.form_class(data=request.POST, files=request.FILES)
+        form = self.form_class(data=request.POST, files=request.FILES, instance=self.object)
         user_id = self.kwargs['pk']
         moderatorProfile = ModeratorProfile.objects.filter(user_id=user_id)
 
@@ -242,8 +265,17 @@ class ModeratorProfileView(UpdateView):
             form.instance.user_id = user_id
             form.instance.user = User.objects.get(pk=user_id)
 
-        form.save()
-        return redirect(reverse("users:moderator_profile", args=(user_id,)))
+        if form.is_valid():
+            if not form.has_changed():
+                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+                return self.form_invalid(form)
+            form.save()
+            messages.success(request, 'Профиль успешно отредактирован!')
+            return redirect(reverse("users:moderator_profile", args=(user_id,)))
+        else:
+            print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения Профиля!')
+        return self.form_invalid(form)
 
 
 class UserLoginView(LoginView):
@@ -275,25 +307,37 @@ class UserRegisterView(FormView):
         context['heading_link'] = 'На главную'
         return context
 
+    @transaction.atomic
     def post(self, request, *args, **kwargs):
         """метод сохранения нового юзера. изначально он не активен, нужно подтвердить email"""
+        global user, employer_profile, worker_profile
         form = self.form_class(data=request.POST)
+        sid = transaction.savepoint()
         if form.is_valid():
-            # сохраняем нового юзера
-            user = form.save()
-            # отправляем email с подтверждением почты
-            self.send_verify_link(user)
-            # создаем профиль в зависимости от роли
-            if user.role_id == 2:
-                employer_profile = EmployerProfile(user_id=user.pk)
-                employer_profile.save()
-            elif user.role_id == 3:
-                worker_profile = WorkerProfile(user_id=user.pk)
-                worker_profile.save()
+            try:
+                # сохраняем нового юзера
+                user = form.save()
+                # отправляем email с подтверждением почты
+                self.send_verify_link(user)
+                # создаем профиль в зависимости от роли
+                if user.role_id == UserRole.EMPLOYER:
+                    employer_profile = EmployerProfile(user_id=user.pk)
+                    employer_profile.save()
+                elif user.role_id == UserRole.WORKER:
+                    worker_profile = WorkerProfile(user_id=user.pk)
+                    worker_profile.save()
 
-            return redirect(self.success_url)
+                transaction.savepoint_commit(sid)
+
+                messages.success(request, 'Профиль успешно зарегистрирован!')
+                return redirect(self.success_url)
+            except Exception as e:
+                transaction.savepoint_rollback(sid)
+                messages.error(request, f'500 внутренняя ошибка сервера\n{e}')
+                return self.form_invalid(form)
         else:
             print(form.errors)
+            messages.error(request, 'Проверьте правильность заполнения формы!')
         return self.form_invalid(form)
 
     def send_verify_link(self, user):
@@ -318,6 +362,7 @@ class UserRegisterView(FormView):
 class UserLogoutView(LogoutView):
     """view для выхода из-под учетки"""
     template_name = 'index.html'
+    success_url = reverse_lazy('index')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(UserLogoutView, self).get_context_data(**kwargs)
@@ -330,6 +375,12 @@ class UserLogoutView(LogoutView):
 
         context['categories'] = Category.objects.all().order_by('name')
         return context
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(self.success_url)
+
+        return super(UserLogoutView, self).get(request, *args, **kwargs)
 
 
 class UserEmailVarifyView(TemplateView):
@@ -424,6 +475,8 @@ class ModeratorCompaniesList(TemplateView):
         context = self.get_context_data()
         context['companies_list'] = EmployerProfile.objects.filter(status__status="PUB")
         # EmployerProfile.objects.exclude(status__status="NPB")
+        context['title'] = 'Модерация компаний'
+        context['heading'] = 'Модерация компаний'
         return self.render_to_response(context)
 
 
