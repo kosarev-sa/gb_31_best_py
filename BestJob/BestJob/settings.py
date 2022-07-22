@@ -25,7 +25,7 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = 'django-insecure-@+k6dcw1r6e1^w3ywn94wmav3*l^6(ivj_ljsynrye((n6gc31'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -143,7 +143,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = (BASE_DIR / 'static',)
-
+STATIC_ROOT = '/var/www/bestjob/static'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -168,7 +168,7 @@ USER_EMAIL_KEY_LIFETIME = 48
 # настройки для подтверждения email
 # для получения в термина ссылки (linux):  sudo python3 -m smtpd -n -c DebuggingServer localhost:25
 # для получения в термина ссылки (windows):  python -m smtpd -n -c DebuggingServer localhost:25
-DOMAIN_NAME = '127.0.0.1:8000'
+DOMAIN_NAME = 'http://185.46.11.244'
 
 if os.getenv('EMAIL_HOST'):
     EMAIL_HOST = os.getenv('EMAIL_HOST')
