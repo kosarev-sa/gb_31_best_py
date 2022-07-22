@@ -51,7 +51,10 @@ cat /root/.ssh/id_rsa.pub
 ###Важно!!! 
 ```
 Потребуется минимальная подготовка репозитория. 
-В файле settings.py в переменную DOMAIN_NAME впишите ссылку на будущий сайт.
+В файле settings.py нужно выполнить следующие действия:
+1) В переменную DOMAIN_NAME впишите ссылку на будущий сайт
+2) Раскомментируйте строку с переменной STATIC_ROOT
+3) Если требуется, поменяйте значение переменной DEBUG
 В нашем случае мы использовали адрес в виде ip сервера:
 http://80.78.247.147
 Также потребуется внести правку в файл Nginx в третью строку
@@ -116,6 +119,7 @@ python3 manage.py createsuperuser
 Теперь вы можете войти в админку сайта с использованием введенного в процессе создания логина и пароля. Теперь сайт полностью готов к работе.
 
 ### Autotests
+Функционал покрыт автотестами и ниже показаны способы их запуска.
 
 Запуск автотестов из директории проекта - `python -m pytest -v -m all tests/`
 
@@ -123,6 +127,14 @@ python3 manage.py createsuperuser
 `python -m pytest -v -m 'all and urls and not negative' tests/`
 
 ### Allure
+Документация на allure: 
+`https://docs.qameta.io/allure/#_installing_a_commandline`
+Для отображения UI отчёта необходимо установить allure:
+```
+apt-add-repository ppa:qameta/allure
+apt-get update 
+apt-get install allure
+```
 Запуск с формированием allure отчета
 `python -m pytest --alluredir=allure_reports -v -m all tests/` где allure_reports - имя для временной папки с отчетами
 
