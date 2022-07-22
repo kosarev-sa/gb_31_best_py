@@ -1,6 +1,5 @@
 #!/bin/bash
 
-git checkout dev
 python3 -m venv env
 source env/bin/activate
 cd BestJob/
