@@ -81,6 +81,7 @@ class VacancyUpdateForm(forms.ModelForm):
 
 class ModeratorVacancyUpdateForm(VacancyUpdateForm):
     """форма просмотра\редактирования вакансии"""
+    name = forms.CharField(label='Название вакансии', required=False)
     disabled_fields = ('specialization', 'is_active', 'name', 'experience',
                        'description', 'city', 'description', 'salary_from',
                        'salary_to', 'currency', 'salary_on_hand')
