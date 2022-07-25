@@ -84,6 +84,9 @@ class ModeratorVacancyUpdateForm(VacancyUpdateForm):
     disabled_fields = ('specialization', 'is_active', 'name', 'experience',
                        'description', 'city', 'description', 'salary_from',
                        'salary_to', 'currency', 'salary_on_hand')
+    specialization = forms.ModelChoiceField(widget=forms.Select(),
+                                            queryset=Category.objects.all().order_by('name'),
+                                            label='Специализация', required=False)
     status = forms.ModelChoiceField(widget=forms.Select(),queryset=ApprovalStatus.objects.all().exclude(status='NPB'))
 
     class Meta:
