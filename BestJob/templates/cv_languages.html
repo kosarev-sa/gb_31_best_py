@@ -1,7 +1,10 @@
-
 {% extends "base.html" %}
 
 {% load static %}
+
+{% block additional_styles %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/cv_languages.css' %}">
+{% endblock %}
 
 {% block header %}
     {% include 'inc_header_menu.html' %}
@@ -13,88 +16,35 @@
         {% include 'inc_messages_for_forms.html' %}
     {% endblock %}
 
-<!-- =============== Start of Page Header 1 Section =============== -->
-<!--<section class="page-header">-->
-<!--    <div class="container">-->
+    <!-- ===== Start of Messages Section ===== -->
+    <form action="" method="post">
+        {% csrf_token %}
 
-<!--        &lt;!&ndash; Start of Page Title &ndash;&gt;-->
-<!--        <div class="row">-->
-<!--            <div class="col-md-12">-->
-<!--                <h2>Знание языка</h2>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        &lt;!&ndash; End of Page Title &ndash;&gt;-->
-
-<!--        &lt;!&ndash; Start of Breadcrumb &ndash;&gt;-->
-<!--        <div class="row">-->
-<!--            <div class="col-md-12">-->
-<!--                <ul class="breadcrumb">-->
-<!--                    <li><a href="{% url 'cv:update_cv' cv_id %}">вернуться к резюме</a></li>-->
-<!--                    <li class="active">Знание языка</li>-->
-<!--                </ul>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--        &lt;!&ndash; End of Breadcrumb &ndash;&gt;-->
-
-<!--    </div>-->
-<!--</section>-->
-<!-- =============== End of Page Header 1 Section =============== -->
-
-
-<!-- ===== Start of Messages Section ===== -->
-<form action="" method="post">
-    {% csrf_token %}
-{#    <section class="pricing-tables pb80">#}
-{#        <div class="container">#}
-{#            {% if messages %}#}
-{##}
-{#                <div class="alert alert-warning alert-dismissible show" role="alert"#}
-{#                     style="margin-top: 50px;">#}
-{#                выводим ошибки#}
-{#                    {% for message in messages %}#}
-{#                        {{ message }}#}
-{#                    {% endfor %}#}
-{#                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">#}
-{#                        <span aria-hidden="true">&times;</span>#}
-{#                    </button>#}
-{#                </div>#}
-{#            {% endif %}#}
-{#        </div>#}
-{#    </section>#}
-
-    <!-- ===== End of Messages Section ===== -->
-
-    <!-- ===== Start of Language Section ===== -->
-
-    <section class="pricing-tables pb80" style="background: #ffffff">
-        <div class="container">
-            <!-- Start Row -->
-            <div class="row">
-                <div class="col-md-12 col-xs-12 mt80">
-                    <div class="pricing-body">
+        <section class="pricing-tables pb80" style="background: #ffffff">
+            <div class="container">
+                <!-- Start Row -->
+                <div class="row">
+                    <div class="form-group pt10 col-md-12">
                         <div class="form-group pt30">
                             <label for="{{ form.language.id_for_label }}">Язык
                                 <span style="color:red">*</span></label>
                             {{ form.language }}
                         </div>
-
                         <div class="form-group pt30">
                             <label for="{{ form.level.id_for_label }}">Уровень
                                 <span style="color:red">*</span></label>
                             {{ form.level }}
                         </div>
-                    </div>
-                    <input type="hidden" name="cv_id" value="{{ cv_id }}">
-                    <!-- Pricing Footer -->
-                    <div class="pricing-footer">
-                        <input type="submit" class="btn btn-blue btn-effect" value="Cохранить">
+                        <input type="hidden" name="cv_id" value="{{ cv_id }}">
+                        <!-- Pricing Footer -->
+                        <div class="pricing-footer">
+                            <input type="submit" class="btn btn-blue btn-effect" value="Cохранить">
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- ===== End of Language Section ===== -->
-</form>
+        </section>
+    </form>
 
 {% endblock %}
 
