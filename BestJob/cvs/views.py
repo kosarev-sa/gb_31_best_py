@@ -207,9 +207,9 @@ class CVUpdate(UpdateView):
         form = self.form_class(request.POST, instance=self.object)
 
         if form.is_valid():
-            if not form.has_changed():
-                messages.error(request, 'Для сохранения измените хотя бы одно поле!')
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+            # if not form.has_changed():
+            #     messages.error(request, 'Для сохранения измените хотя бы одно поле!')
+            #     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
             self.object.save()
 
